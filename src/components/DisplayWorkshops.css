@@ -1,0 +1,50 @@
+.workshops-container {
+  padding: 15px;
+  font-family: Arial, sans-serif;
+}
+
+.workshop-title {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.workshop-subtitle {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.workshop-table-container {
+  overflow-x: auto;
+}
+
+.workshop-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1rem;
+  border: 1px solid black;
+}
+
+.workshop-table th, .workshop-table td {
+  padding: 8px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.workshop-table th {
+  background-color: orange;
+  font-weight: bold;
+}
+
+.no-data {
+  text-align: center;
+  padding: 10px;
+}
+
+.self-assessment {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}

@@ -1,0 +1,77 @@
+.accept-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.research-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.research-item {
+  background: #fff;
+  padding: 15px 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.research-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 10px;
+}
+
+.research-description {
+  margin: 0 0 15px;
+  color: #555;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.approve-button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 150px;
+  transition: background-color 0.3s ease;
+}
+
+.approve-button:hover {
+  background-color: #218838;
+}
+
+.reject-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 150px;
+  transition: background-color 0.3s ease;
+}
+
+.reject-button:hover {
+  background-color: #c82333;
+}
+
+.no-research {
+  font-size: 18px;
+  color: #888;
+}

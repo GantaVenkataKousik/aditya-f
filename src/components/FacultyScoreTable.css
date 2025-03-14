@@ -1,0 +1,46 @@
+.table-container {
+    width: 100%;
+    
+    margin: 20px auto;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.table-title {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: rgb(255, 127, 39); /* Orange Title */
+}
+
+.faculty-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.faculty-table th, .faculty-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.faculty-table th {
+    background-color: rgb(255, 127, 39); /* Orange Header */
+    font-weight: bold;
+    color: white;
+}
+
+.faculty-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.faculty-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.total-row {
+    font-weight: bold;
+    background-color: #e0e0e0;
+}

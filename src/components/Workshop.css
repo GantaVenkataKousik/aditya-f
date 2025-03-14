@@ -1,0 +1,132 @@
+/* Articles.css */
+
+/* General Reset */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  
+
+}
+
+.articles-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  
+  border-radius: 8px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: orange;
+}
+
+.post-button {
+  display: flex;
+  align-items: center;
+  background-color: orange;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.post-button:hover {
+  background-color: #ddb533;
+}
+
+.post-button svg {
+  margin-right: 8px;
+}
+
+.divider {
+  border: none;
+  height: 2px;
+  background-color: orange;
+  margin: 20px 0;
+}
+
+/* Navbar styles */
+.navbar {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.navbar a:hover {
+  color: #ffc107;
+}
+
+/* DisplayWorkshops styling */
+.display-workshops {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.workshop-card {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.workshop-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.workshop-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.workshop-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .post-button {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+}

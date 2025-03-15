@@ -8,13 +8,10 @@ const Faculty = (props) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem('token');
-        console.log(token);
-        const response = await fetch('https://aditya-b.onrender.com/fetchData', {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/fetchData?userId=${userId}`, {
           method: 'GET',
-          credentials: 'include',  // This line is important (Error occurs if this is not there).
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });

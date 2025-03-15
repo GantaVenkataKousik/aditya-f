@@ -15,12 +15,10 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
     const fetchLecturerDetails = async () => {
       if (initialDetails) return;
       try {
-        const token = localStorage.getItem("token");
-        const response = await fetch("https://aditya-b.onrender.com/fetchData", {
+        const userId = localStorage.getItem("userId");
+        const response = await fetch(`https://aditya-b.onrender.com/fetchData?userId=${userId}`, {
           method: "GET",
-          credentials: "include",
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });

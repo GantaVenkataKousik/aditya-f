@@ -10,7 +10,7 @@ const OthersResearch = ({ Id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/research/otherResearch/${Id}`);
+        const response = await fetch(`https://aditya-b.onrender.com/research/otherResearch/${Id}`);
         if (response.ok) {
           const data = await response.json();
           setResearches(data);
@@ -27,7 +27,7 @@ const OthersResearch = ({ Id }) => {
   }, [])
 
   const handleEdit = async (id) => {
-    const data = await fetch(`http://localhost:5000/research/update/${id}`, {
+    const data = await fetch(`https://aditya-b.onrender.com/research/update/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const OthersResearch = ({ Id }) => {
   };
 
   const handleDelete = async (id) => {
-    const data = await fetch(`http://localhost:5000/research/delete/${id}`, {
+    const data = await fetch(`https://aditya-b.onrender.com/research/delete/${id}`, {
       method: 'DELETE',
     });
     if (data.ok) {

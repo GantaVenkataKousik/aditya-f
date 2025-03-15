@@ -10,7 +10,7 @@ const PatentsFiled = () => {
     const fetchPatentsFiled = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/research/pfiled', {
+        const response = await fetch('https://aditya-b.onrender.com/research/pfiled', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

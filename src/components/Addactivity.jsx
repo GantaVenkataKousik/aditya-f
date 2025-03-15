@@ -9,10 +9,10 @@ const AddActivity = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/others/addactivity', {
+      const response = await fetch('https://aditya-b.onrender.com/others/addactivity', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -20,7 +20,7 @@ const AddActivity = () => {
         },
         body: JSON.stringify({ activityDetails })
       });
-      
+
       if (response.ok) {
         navigate('/partb');
       } else {

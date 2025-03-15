@@ -11,7 +11,7 @@ const Proposals = () => {
     const fetchProposals = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/research/proposals', {
+        const response = await fetch('https://aditya-b.onrender.com/research/proposals', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -50,7 +50,7 @@ const Proposals = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/research/upload-proposal", {
+      const response = await fetch("https://aditya-b.onrender.com/research/upload-proposal", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`
@@ -72,7 +72,7 @@ const Proposals = () => {
   return (
     <div style={{ padding: '15px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', marginBottom: '10px' }}>
-        
+
         {/* File Upload Input */}
         <input
           type="file"
@@ -96,8 +96,8 @@ const Proposals = () => {
         </button>
 
         {/* Add Proposal Button */}
-        <button 
-          onClick={() => navigate('/addproposals')} 
+        <button
+          onClick={() => navigate('/addproposals')}
           style={{
             padding: '8px 12px',
             fontSize: '14px',

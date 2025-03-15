@@ -11,7 +11,7 @@ const UserButton = ({ lecturerDetails: initialDetails }) => {
   useEffect(() => {
     const fetchButtonState = async () => {
       try {
-        const response = await fetch("http://localhost:5000/settings/get-button-state");
+        const response = await fetch("https://aditya-b.onrender.com/settings/get-button-state");
         const data = await response.json();
         setIsDisabled(data.updateButtonDisabled);
       } catch (error) {

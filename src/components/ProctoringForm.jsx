@@ -16,7 +16,7 @@ const ProctoringForm = () => {
         const fetchUserId = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const response = await fetch("http://localhost:5000/fetchData", {
+                const response = await fetch("https://aditya-b.onrender.com/fetchData", {
                     method: "GET",
                     credentials: "include",
                     headers: {
@@ -50,7 +50,7 @@ const ProctoringForm = () => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.post(
-                "http://localhost:5000/proc/proctoring-data",
+                "https://aditya-b.onrender.com/proc/proctoring-data",
                 formData,
                 {
                     credentials: "include",

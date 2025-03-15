@@ -17,7 +17,7 @@ const Teacher = ({ faculty }) => {
   useEffect(() => {
     const fetchTeacherData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/fetchdata/teachers/${id}`);
+        const response = await fetch(`https://aditya-b.onrender.com/fetchdata/teachers/${id}`);
         const result = await response.json();
         if (result.success) {
           setTeacherData(result.data);

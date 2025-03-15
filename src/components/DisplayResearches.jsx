@@ -20,7 +20,7 @@ const DisplayResearches = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/research/data', {
+        const response = await fetch('https://aditya-b.onrender.com/research/data', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -45,7 +45,7 @@ const DisplayResearches = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/research/delete/${id}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/research/delete/${id}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -72,7 +72,7 @@ const DisplayResearches = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/research/update/${id}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/research/update/${id}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {

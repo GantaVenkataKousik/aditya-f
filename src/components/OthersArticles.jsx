@@ -7,7 +7,7 @@ const OthersArticles = ({ Id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/article/othersArticles/${Id}`);
+        const response = await fetch(`https://aditya-b.onrender.com/article/othersArticles/${Id}`);
         if (response.ok) {
           const data = await response.json();
           setArticles(data);
@@ -24,7 +24,7 @@ const OthersArticles = ({ Id }) => {
   }, [])
 
   const handleEdit = async (id) => {
-    const data = await fetch(`http://localhost:5000/article/update/${id}`, {
+    const data = await fetch(`https://aditya-b.onrender.com/article/update/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const OthersArticles = ({ Id }) => {
   };
 
   const handleDelete = async (id) => {
-    const data = await fetch(`http://localhost:5000/article/delete/${id}`, {
+    const data = await fetch(`https://aditya-b.onrender.com/article/delete/${id}`, {
       method: 'DELETE',
     });
     if (data.ok) {

@@ -6,8 +6,8 @@ const AddPGranted = () => {
   const [formData, setFormData] = useState({
     PTitle: '',
     PNumber: '',
-    CountryGranted:'',
-    GrantedDate:''
+    CountryGranted: '',
+    GrantedDate: ''
   });
 
   const handleChange = (e) => {
@@ -16,10 +16,10 @@ const AddPGranted = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/research/addpgranted', {
+      const response = await fetch('https://aditya-b.onrender.com/research/addpgranted', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,15 +27,17 @@ const AddPGranted = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Patents Granted submitted successfully!");
-        setFormData({  PTitle: '',
+        setFormData({
+          PTitle: '',
           PNumber: '',
-          CountryGranted:'',
-          GrantedDate:'' });
+          CountryGranted: '',
+          GrantedDate: ''
+        });
         navigate('/patentsgranted');
-        
+
       } else {
         alert("Error submitting article");
       }
@@ -43,7 +45,7 @@ const AddPGranted = () => {
       console.error("Error:", error);
       alert("Server error");
     }
-  }; 
+  };
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
@@ -86,16 +88,16 @@ const AddPGranted = () => {
         </div>
 
         <div>
-  <label className="block text-sm font-medium">Granted Date  :  </label>
-  <input
-    type="date" // Changed from text to date input
-    name="GrantedDate"
-    value={formData.GrantedDate}
-    onChange={handleChange}
-    className="w-full p-2 border rounded-md"
-    required
-  />
-</div>
+          <label className="block text-sm font-medium">Granted Date  :  </label>
+          <input
+            type="date" // Changed from text to date input
+            name="GrantedDate"
+            value={formData.GrantedDate}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
 
 
         <button

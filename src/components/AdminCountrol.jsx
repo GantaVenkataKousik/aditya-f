@@ -6,7 +6,7 @@ const AdminControl = () => {
   useEffect(() => {
     const fetchButtonState = async () => {
       try {
-        const response = await fetch("http://localhost:5000/settings/get-button-state");
+        const response = await fetch("https://aditya-b.onrender.com/settings/get-button-state");
         const data = await response.json();
         setIsDisabled(data.updateButtonDisabled);
       } catch (error) {
@@ -20,7 +20,7 @@ const AdminControl = () => {
   const toggleButtonState = async () => {
     try {
       const newState = !isDisabled;
-      await fetch("http://localhost:5000/settings/set-button-state", {
+      await fetch("https://aditya-b.onrender.com/settings/set-button-state", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

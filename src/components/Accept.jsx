@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Accept.css'; 
+import './Accept.css';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ const Accept = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/research/process', {
+        const response = await fetch('https://aditya-b.onrender.com/research/process', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -35,7 +35,7 @@ const Accept = () => {
   const handleApprove = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/research/approve/${id}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/research/approve/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const Accept = () => {
 
       if (response.ok) {
         console.log(`Approved research ID: ${id}`);
-       
+
         setUnapproved((prev) => prev.filter((item) => item._id !== id));
       } else {
         console.error('Failed to approve research:', response.statusText);
@@ -58,7 +58,7 @@ const Accept = () => {
   const handleReject = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5000/research/reject/${id}`, {
+      const res = await fetch(`https://aditya-b.onrender.com/research/reject/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const Accept = () => {
 
       if (res.ok) {
         console.log(`Rejected research ID: ${id}`);
-      
+
         setUnapproved((prev) => prev.filter((item) => item._id !== id));
       } else {
         console.error('Failed to approve research:', response.statusText);

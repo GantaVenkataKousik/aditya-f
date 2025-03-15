@@ -16,10 +16,10 @@ const AddPapers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/research/addpapers', {
+      const response = await fetch('https://aditya-b.onrender.com/research/addpapers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,12 +27,12 @@ const AddPapers = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Papers submitted successfully!");
         setFormData({ paperDetails: '', authorPosition: '' });
         navigate('/papers');
-        
+
       } else {
         alert("Error submitting article");
       }

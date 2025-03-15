@@ -10,7 +10,7 @@ const Chapters = () => {
     const fetchChapters = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/research/chapters', {
+        const response = await fetch('https://aditya-b.onrender.com/research/chapters', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

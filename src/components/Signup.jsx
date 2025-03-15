@@ -36,7 +36,7 @@ const Signup = () => {
     const newErrors = validateForm(formData);
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await fetch('http://localhost:5000/signup/register', {
+        const response = await fetch('https://aditya-b.onrender.com/signup/register', {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
@@ -222,7 +222,7 @@ const Signup = () => {
             </div>
           )}
 
-         
+
 
           <button
             type="submit"

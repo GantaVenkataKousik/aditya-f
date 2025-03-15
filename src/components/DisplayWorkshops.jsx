@@ -38,7 +38,7 @@ const DisplayWorkshops = ({ data: propsData }) => {
   const fetchWorkshops = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/workshop/data', {
+      const response = await fetch('https://aditya-b.onrender.com/workshop/data', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const DisplayWorkshops = ({ data: propsData }) => {
   };
 
   const handleDelete = async (id) => {
-    const response = await fetch(`http://localhost:5000/workshops/${id}`, {
+    const response = await fetch(`https://aditya-b.onrender.com/workshops/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const DisplayWorkshops = ({ data: propsData }) => {
   };
 
   const handleEdit = async () => {
-    const response = await fetch(`http://localhost:5000/workshops/${selectedWorkshop._id}`, {
+    const response = await fetch(`https://aditya-b.onrender.com/workshops/${selectedWorkshop._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

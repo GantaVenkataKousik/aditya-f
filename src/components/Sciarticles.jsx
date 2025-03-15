@@ -10,8 +10,8 @@ const SciArticles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const token = localStorage.getItem('token'); 
-        const response = await fetch('http://localhost:5000/research/sciarticles', {
+        const token = localStorage.getItem('token');
+        const response = await fetch('https://aditya-b.onrender.com/research/sciarticles', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -50,7 +50,7 @@ const SciArticles = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/research/upload-sci", {
+      const response = await fetch("https://aditya-b.onrender.com/research/upload-sci", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`
@@ -72,7 +72,7 @@ const SciArticles = () => {
   return (
     <div style={{ padding: '15px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', marginBottom: '10px' }}>
-        
+
         {/* File Upload Input */}
         <input
           type="file"
@@ -96,8 +96,8 @@ const SciArticles = () => {
         </button>
 
         {/* Add Article Button */}
-        <button 
-          onClick={() => navigate('/sci-articles')} 
+        <button
+          onClick={() => navigate('/sci-articles')}
           style={{
             padding: '8px 12px',
             fontSize: '14px',

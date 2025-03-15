@@ -6,8 +6,8 @@ const AddPFiled = () => {
   const [formData, setFormData] = useState({
     PTitle: '',
     PNumber: '',
-    FiledinCountry:'',
-    PublishedDate:''
+    FiledinCountry: '',
+    PublishedDate: ''
   });
 
   const handleChange = (e) => {
@@ -16,10 +16,10 @@ const AddPFiled = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/research/addpfiled', {
+      const response = await fetch('https://aditya-b.onrender.com/research/addpfiled', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,15 +27,17 @@ const AddPFiled = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Patents Filed submitted successfully!");
-        setFormData({  PTitle: '',
+        setFormData({
+          PTitle: '',
           PNumber: '',
-          FiledinCountry:'',
-          PublishedDate:'' });
+          FiledinCountry: '',
+          PublishedDate: ''
+        });
         navigate('/patentsfiled');
-        
+
       } else {
         alert("Error submitting article");
       }
@@ -86,16 +88,16 @@ const AddPFiled = () => {
         </div>
 
         <div>
-  <label className="block text-sm font-medium">Published Date  :  </label>
-  <input
-    type="date" // Changed from text to date input
-    name="PublishedDate"
-    value={formData.PublishedDate}
-    onChange={handleChange}
-    className="w-full p-2 border rounded-md"
-    required
-  />
-</div>
+          <label className="block text-sm font-medium">Published Date  :  </label>
+          <input
+            type="date" // Changed from text to date input
+            name="PublishedDate"
+            value={formData.PublishedDate}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
 
 
         <button

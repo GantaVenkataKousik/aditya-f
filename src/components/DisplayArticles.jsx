@@ -9,7 +9,7 @@ const DisplayArticles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('http://localhost:5000/article/data', { 
+        const response = await fetch('https://aditya-b.onrender.com/article/data', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -35,7 +35,7 @@ const DisplayArticles = () => {
     };
 
     fetchArticles();
-  }, [token]); 
+  }, [token]);
 
   const handleLike = async (articleId) => {
     setArticles(prevArticles =>
@@ -48,7 +48,7 @@ const DisplayArticles = () => {
 
     // Update like count on the server
     try {
-      await fetch(`http://localhost:5000/article/${articleId}/like`, {
+      await fetch(`https://aditya-b.onrender.com/article/${articleId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -71,7 +71,7 @@ const DisplayArticles = () => {
 
     // Update dislike count on the server
     try {
-      await fetch(`http://localhost:5000/article/${articleId}/dislike`, {
+      await fetch(`https://aditya-b.onrender.com/article/${articleId}/dislike`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -146,7 +146,7 @@ const actionsStyle = {
   display: 'flex',
   justifyContent: 'center',
   marginTop: '15px',
-  gap:'20px'
+  gap: '20px'
 };
 
 const likeButtonStyle = {
@@ -159,7 +159,7 @@ const likeButtonStyle = {
   borderRadius: '4px',
   cursor: 'pointer',
   fontSize: '16px',
-  width:'80px'
+  width: '80px'
 };
 
 const dislikeButtonStyle = {
@@ -172,7 +172,7 @@ const dislikeButtonStyle = {
   borderRadius: '4px',
   cursor: 'pointer',
   fontSize: '16px',
-   width:'80px'
+  width: '80px'
 };
 
 export default DisplayArticles;

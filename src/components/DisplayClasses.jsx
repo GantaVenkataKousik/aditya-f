@@ -24,7 +24,7 @@ const DisplayClasses = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:5000/update/data', {
+        const response = await fetch('https://aditya-b.onrender.com/update/data', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -76,7 +76,7 @@ const DisplayClasses = () => {
   return (
     <div style={{ padding: '30px', fontFamily: 'Arial, sans-serif' }}>
 
-      
+
       <h1 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>Class Performance Dashboard</h1>
       <h2 style={{
         textAlign: 'center',
@@ -127,7 +127,7 @@ const DisplayClasses = () => {
                     fontSize: '1.5rem',
                     color: '#4CAF50',
                   }}>
-                   
+
                     {classItem.courseName}
                   </h3>
                   <span style={{
@@ -160,7 +160,7 @@ const DisplayClasses = () => {
                     <p><strong>Pass Percentage:</strong> {classItem.passPercentage}%</p>
                   </div>
                 </div>
-        
+
                 <div style={{
                   marginTop: '20px',
                   padding: '10px',
@@ -168,26 +168,26 @@ const DisplayClasses = () => {
                   borderRadius: '5px',
                   border: '1px solid #eee',
                 }}>
-               
+
                   <MyPieChart id={`chart-${classItem._id}`} chartData={chartData} />
                 </div>
-                
+
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '20px' }}>
                   <span style={{ fontSize: '1rem', color: '#333', fontWeight: '500' }}>
                     Share this link to the Students for Feedback
                   </span>
-                  <button className='no-print' onClick={generateLink} style={{ 
-                    padding: '10px 15px', 
-                    backgroundColor: "rgb(117 117 117)", 
-                    color: '#fff', 
-                    width: '150px', 
-                    border: 'none', 
-                    borderRadius: '5px', 
+                  <button className='no-print' onClick={generateLink} style={{
+                    padding: '10px 15px',
+                    backgroundColor: "rgb(117 117 117)",
+                    color: '#fff',
+                    width: '150px',
+                    border: 'none',
+                    borderRadius: '5px',
                     cursor: 'pointer',
                     transition: 'background-color 0.3s ease',
-                  }} 
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#rgb(117 117 117)'}>
+                  }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#rgb(117 117 117)'}>
                     Share Link
                   </button>
                 </div>

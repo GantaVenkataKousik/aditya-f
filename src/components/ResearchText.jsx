@@ -14,7 +14,7 @@ const ResearchText = ({ data: propsData }) => {
             return;
           }
 
-          const response = await fetch('http://localhost:5000/research/researchtext', {
+          const response = await fetch('https://aditya-b.onrender.com/research/researchtext', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -79,7 +79,7 @@ const ResearchText = ({ data: propsData }) => {
               <th>Research Item</th>
               <th>Count</th>
               <th>Marks Obtained</th>
-              
+
             </tr>
           </thead>
           <tbody>

@@ -20,12 +20,12 @@ const OthersClass = ({ Id }) => {
     console.log("Generated chartData:", data); // Check here
     return data;
   };
-  
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/update/otherclass/${Id}`);
+        const response = await fetch(`https://aditya-b.onrender.com/update/otherclass/${Id}`);
         if (response.ok) {
           const data = await response.json();
           setClasses(data);

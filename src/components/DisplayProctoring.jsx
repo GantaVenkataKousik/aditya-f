@@ -23,7 +23,7 @@ const ProctoringTable = ({ proctoringData }) => {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/proc/proctoring-data', {
+            const response = await fetch('https://aditya-b.onrender.com/proc/proctoring-data', {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -72,7 +72,7 @@ const ProctoringTable = ({ proctoringData }) => {
         setFormData({ ...formData, [name]: value });
     };
     const handleEdit = async () => {
-        const response = await fetch(`http://localhost:5000/proctoring/${selectedProctor._id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${selectedProctor._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ const ProctoringTable = ({ proctoringData }) => {
         }
     };
     const handleDelete = async (id) => {
-        const response = await fetch(`http://localhost:5000/proctoring/${id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

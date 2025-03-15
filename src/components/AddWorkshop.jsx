@@ -13,7 +13,7 @@ const AddWorkshop = () => {
     EndTime: '',
     Venue: '',
     Mode: '',
-    OrganizedBy:'',
+    OrganizedBy: '',
   });
 
   const handleChange = (e) => {
@@ -29,7 +29,7 @@ const AddWorkshop = () => {
     try {
       const token = localStorage.getItem('token');
       console.log(token);
-      const response = await fetch('http://localhost:5000/workshop/add', {
+      const response = await fetch('https://aditya-b.onrender.com/workshop/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

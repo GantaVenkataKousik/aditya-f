@@ -10,10 +10,10 @@ const AddAward = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/others/addaward', {
+      const response = await fetch('https://aditya-b.onrender.com/others/addaward', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -21,7 +21,7 @@ const AddAward = () => {
         },
         body: JSON.stringify({ Award, IssuingOrg })
       });
-      
+
       if (response.ok) {
         navigate('/partb');
       } else {

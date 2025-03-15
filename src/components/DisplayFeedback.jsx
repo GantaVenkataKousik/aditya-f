@@ -26,7 +26,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/update/fdata', {
+            const response = await fetch('https://aditya-b.onrender.com/update/fdata', {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -76,7 +76,7 @@ const DisplayFeedback = ({ feedbackData }) => {
 
     const handleEdit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`http://localhost:5000/feedback/${selectedFeedback._id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/feedback/${selectedFeedback._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     };
 
     const handleDelete = async (id) => {
-        const response = await fetch(`http://localhost:5000/feedback/${id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/feedback/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

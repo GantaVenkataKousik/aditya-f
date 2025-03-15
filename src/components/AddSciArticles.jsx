@@ -1,9 +1,9 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AddSciArticles = () => {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     articleDetails: '',
     ISSN: '',
@@ -16,10 +16,10 @@ const AddSciArticles = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/research/addsciarticles', {
+      const response = await fetch('https://aditya-b.onrender.com/research/addsciarticles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,12 +27,12 @@ const AddSciArticles = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Article submitted successfully!");
         setFormData({ articleDetails: '', ISSN: '', authorPosition: '' });
         navigate('/sciarticles');
-        
+
       } else {
         alert("Error submitting article");
       }
@@ -41,7 +41,7 @@ const AddSciArticles = () => {
       alert("Server error");
     }
   };
-  
+
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">

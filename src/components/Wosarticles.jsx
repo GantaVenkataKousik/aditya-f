@@ -11,7 +11,7 @@ const WosArticles = () => {
     const fetchArticles = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/research/wosarticles', {
+        const response = await fetch('https://aditya-b.onrender.com/research/wosarticles', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -50,7 +50,7 @@ const WosArticles = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/research/upload-wos", {
+      const response = await fetch("https://aditya-b.onrender.com/research/upload-wos", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`
@@ -72,7 +72,7 @@ const WosArticles = () => {
   return (
     <div style={{ padding: '15px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', marginBottom: '10px' }}>
-        
+
         {/* File Upload Input */}
         <input
           type="file"
@@ -96,8 +96,8 @@ const WosArticles = () => {
         </button>
 
         {/* Add Article Button */}
-        <button 
-          onClick={() => navigate('/wos-articles')} 
+        <button
+          onClick={() => navigate('/wos-articles')}
           style={{
             padding: '8px 12px',
             fontSize: '14px',

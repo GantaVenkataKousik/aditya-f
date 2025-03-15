@@ -17,10 +17,10 @@ const AddWosArticles = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/research/addwosarticles', {
+      const response = await fetch('https://aditya-b.onrender.com/research/addwosarticles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,12 +28,12 @@ const AddWosArticles = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Article submitted successfully!");
         setFormData({ articleDetails: '', ISSN: '', authorPosition: '' });
         navigate('/wosarticles');
-        
+
       } else {
         alert("Error submitting article");
       }

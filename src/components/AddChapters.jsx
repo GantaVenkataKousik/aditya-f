@@ -6,8 +6,8 @@ const AddChapters = () => {
   const [formData, setFormData] = useState({
     chapterDetails: '',
     Publisher: '',
-    ISBN:'',
-    authorPosition:''
+    ISBN: '',
+    authorPosition: ''
   });
 
   const handleChange = (e) => {
@@ -16,10 +16,10 @@ const AddChapters = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/research/addchapters', {
+      const response = await fetch('https://aditya-b.onrender.com/research/addchapters', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,15 +27,17 @@ const AddChapters = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Chapters submitted successfully!");
-        setFormData({ chapterDetails: '',
+        setFormData({
+          chapterDetails: '',
           Publisher: '',
-          ISBN:'',
-          authorPosition:'' });
+          ISBN: '',
+          authorPosition: ''
+        });
         navigate('/chapters');
-        
+
       } else {
         alert("Error submitting Chapter");
       }
@@ -52,13 +54,13 @@ const AddChapters = () => {
         <div>
           <label className="block text-sm font-medium">Chapters Authored</label>
           <textarea
-             name="chapterDetails"
-             value={formData.chapterDetails}
-             onChange={handleChange}
-              className="w-full p-2 border rounded-md"
-              rows="3"
-              required
-             ></textarea>
+            name="chapterDetails"
+            value={formData.chapterDetails}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            rows="3"
+            required
+          ></textarea>
         </div>
 
         <div>

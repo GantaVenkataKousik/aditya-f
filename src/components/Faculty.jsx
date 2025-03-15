@@ -10,7 +10,7 @@ const Faculty = (props) => {
       try {
         const token = localStorage.getItem('token');
         console.log(token);
-        const response = await fetch('http://localhost:5000/fetchData', { 
+        const response = await fetch('https://aditya-b.onrender.com/fetchData', {
           method: 'GET',
           credentials: 'include',  // This line is important (Error occurs if this is not there).
           headers: {
@@ -33,7 +33,7 @@ const Faculty = (props) => {
   }, []);
 
   const renderFaculty = props.faculty
-    .filter((teacher) => teacher.department === user.department && teacher.designation!=='HOD' )
+    .filter((teacher) => teacher.department === user.department && teacher.designation !== 'HOD')
     .map((teacher) => (
       <div
         key={teacher._id}
@@ -48,26 +48,26 @@ const Faculty = (props) => {
         }}
       >
         <div
-         style={{
-         borderRadius: '50%',
-         width: '80px',
-         height: '80px',
-         backgroundColor: '#ccc',
-         margin: '0 auto',
-         overflow: 'hidden', // Prevents overflow
-       }}
-       >
-      <img
-      src={Profile}
-      alt="Profile"
-      style={{
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover', // Ensures the image scales properly
-        borderRadius: '50%', // Matches the parent container for circular shape
-     }}
-    />
-    </div>
+          style={{
+            borderRadius: '50%',
+            width: '80px',
+            height: '80px',
+            backgroundColor: '#ccc',
+            margin: '0 auto',
+            overflow: 'hidden', // Prevents overflow
+          }}
+        >
+          <img
+            src={Profile}
+            alt="Profile"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover', // Ensures the image scales properly
+              borderRadius: '50%', // Matches the parent container for circular shape
+            }}
+          />
+        </div>
 
         <div style={{ marginTop: '10px', fontWeight: 'bold', fontSize: '18px' }}>
           {teacher.fullName}
@@ -112,26 +112,26 @@ const Faculty = (props) => {
         }}
       >
         <div
-         style={{
-         borderRadius: '50%',
-         width: '80px',
-         height: '80px',
-         backgroundColor: '#ccc',
-         margin: '0 auto',
-         overflow: 'hidden', // Prevents overflow
-        }}
-      >
-      <img
-       src={Profile}
-       alt="Profile"
-        style={{
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover', // Ensures the image scales properly
-        borderRadius: '50%', // Matches the parent container for circular shape
-      }}
-     />
-    </div>
+          style={{
+            borderRadius: '50%',
+            width: '80px',
+            height: '80px',
+            backgroundColor: '#ccc',
+            margin: '0 auto',
+            overflow: 'hidden', // Prevents overflow
+          }}
+        >
+          <img
+            src={Profile}
+            alt="Profile"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover', // Ensures the image scales properly
+              borderRadius: '50%', // Matches the parent container for circular shape
+            }}
+          />
+        </div>
 
         <div style={{ marginTop: '10px', fontWeight: 'bold', fontSize: '18px' }}>
           {teacher.fullName}
@@ -160,7 +160,7 @@ const Faculty = (props) => {
       </div>
     ));
 
-    const renderOverAll = props.faculty
+  const renderOverAll = props.faculty
     .filter((teacher) => teacher.designation !== 'Admin')
     .map((teacher) => (
       <div
@@ -177,25 +177,25 @@ const Faculty = (props) => {
       >
         <div
           style={{
-          borderRadius: '50%',
-          width: '80px',
-          height: '80px',
-          backgroundColor: '#ccc',
-          margin: '0 auto',
-          overflow: 'hidden', // Prevents overflow
-         }}
-       >
-       <img
-        src={Profile}
-        alt="Profile"
-        style={{
-         width: '100%',
-         height: '100%',
-         objectFit: 'cover', // Ensures the image scales properly
-         borderRadius: '50%', // Matches the parent container for circular shape
-       }}
-      />
-    </div>
+            borderRadius: '50%',
+            width: '80px',
+            height: '80px',
+            backgroundColor: '#ccc',
+            margin: '0 auto',
+            overflow: 'hidden', // Prevents overflow
+          }}
+        >
+          <img
+            src={Profile}
+            alt="Profile"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover', // Ensures the image scales properly
+              borderRadius: '50%', // Matches the parent container for circular shape
+            }}
+          />
+        </div>
 
         <div style={{ marginTop: '10px', fontWeight: 'bold', fontSize: '18px' }}>
           {teacher.fullName}
@@ -227,7 +227,7 @@ const Faculty = (props) => {
   return (
     <div>
 
-      {user.designation==='HOD' && <h2
+      {user.designation === 'HOD' && <h2
         style={{
           fontWeight: 'bold',
           fontSize: '28px',
@@ -236,7 +236,7 @@ const Faculty = (props) => {
         }}
       >
         Faculty Details of {user.department} department:
-      </h2> }
+      </h2>}
       {/* {user.designation==='Dean' && <h2
         style={{
           fontWeight: 'bold',
@@ -247,7 +247,7 @@ const Faculty = (props) => {
       >
         Details of Faculties:
       </h2> } */}
-     
+
       <div
         style={{
           display: 'flex',

@@ -6,7 +6,7 @@ const AddArticle = () => {
   const [content, setContent] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newArticle = {
       title,
@@ -15,7 +15,7 @@ const AddArticle = () => {
     };
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/article/add', {
+      const response = await fetch('https://aditya-b.onrender.com/article/add', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -31,7 +31,7 @@ const AddArticle = () => {
         setContent('');
         console.log('Article added:', newArticle);
         navigate('/articles');
-        
+
       } else {
         alert('Failed to post');
       }
@@ -39,7 +39,7 @@ const AddArticle = () => {
       console.error('Error:', error);
       alert('An error occurred while posting an article');
     }
-    
+
   };
 
   return (

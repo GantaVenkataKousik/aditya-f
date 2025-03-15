@@ -77,7 +77,7 @@ function App() {
 
     const fetchData = async () => {
       try {
-        const facultyData = await axios.get('http://localhost:5000/fetchData/faculty');
+        const facultyData = await axios.get('https://aditya-b.onrender.com/fetchData/faculty');
         setFaculty(facultyData.data);
         console.log(faculty);
       } catch (error) {

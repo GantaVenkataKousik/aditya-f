@@ -31,7 +31,7 @@ const ImageUploader = ({ sectionType, sectionId, itemIndex = -1, onUploadSuccess
             formData.append('itemIndex', itemIndex);
             formData.append('caption', caption);
 
-            const response = await fetch('http://localhost:5000/images/upload', {
+            const response = await fetch('https://aditya-b.onrender.com/images/upload', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

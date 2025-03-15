@@ -6,12 +6,12 @@ import { Navigate, useNavigate } from 'react-router-dom';
 const UpdateClass = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-       
+
         courseName: '',
         semester: '',
-      
+
         numberOfStudents: '',
-     
+
         passCount: '',
 
 
@@ -22,8 +22,8 @@ const UpdateClass = () => {
         const fetchUserId = async () => {
             try {
                 const token = localStorage.getItem('token');
-             
-                const response = await fetch('http://localhost:5000/fetchData', {
+
+                const response = await fetch('https://aditya-b.onrender.com/fetchData', {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
@@ -60,7 +60,7 @@ const UpdateClass = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:5000/update/classes', formData, {
+            const response = await axios.post('https://aditya-b.onrender.com/update/classes', formData, {
                 credentials: 'include',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -78,16 +78,16 @@ const UpdateClass = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-           
+
             <input type="text" name="courseName" value={formData.courseName} onChange={handleChange} placeholder="Course Name" required />
             <input type="text" name="semester" value={formData.semester} onChange={handleChange} placeholder="Semester-Branch-sec" required />
-           
+
             <input type="number" name="numberOfStudents" value={formData.numberOfStudents} onChange={handleChange} placeholder="Number of Students Appeared" required />
 
             <input type="number" name="passCount" value={formData.passCount} onChange={handleChange} placeholder="Pass Count" required />
-            
-          
-           
+
+
+
             <button type="submit">Update Class</button>
         </form>
     );

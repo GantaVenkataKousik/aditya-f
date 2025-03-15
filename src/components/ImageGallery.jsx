@@ -14,7 +14,7 @@ const ImageGallery = ({ sectionType, sectionId, itemIndex = -1, refreshTrigger }
             setLoading(true);
             const token = localStorage.getItem('token');
 
-            let url = `http://localhost:5000/images/section?sectionType=${sectionType}`;
+            let url = `https://aditya-b.onrender.com/images/section?sectionType=${sectionType}`;
             if (sectionId) url += `&sectionId=${sectionId}`;
             if (itemIndex !== -1) url += `&itemIndex=${itemIndex}`;
 

@@ -10,10 +10,10 @@ const AddContribution = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/others/addcontribution', {
+      const response = await fetch('https://aditya-b.onrender.com/others/addcontribution', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -21,7 +21,7 @@ const AddContribution = () => {
         },
         body: JSON.stringify({ contributionDetails, Benefit })
       });
-      
+
       if (response.ok) {
         navigate('/partb');
       } else {

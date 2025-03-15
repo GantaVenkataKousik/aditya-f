@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 const AddResearch = () => {
   const location = useLocation();
-  const token = location.state?.token; 
+  const token = location.state?.token;
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
@@ -24,7 +24,7 @@ const AddResearch = () => {
     e.preventDefault();
     console.log('Form Data:', formData);
     try {
-      const response = await fetch('http://localhost:5000/research/add', {
+      const response = await fetch('https://aditya-b.onrender.com/research/add', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -33,7 +33,7 @@ const AddResearch = () => {
         },
         body: JSON.stringify(formData),
       });
-     console.log("Token at AddResearch:",token);
+      console.log("Token at AddResearch:", token);
       if (response.ok) {
         alert('Research added successfully!');
         navigate('/research');

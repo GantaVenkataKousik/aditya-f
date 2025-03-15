@@ -46,7 +46,7 @@ const Others = ({ data: propsData }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/others/data', {
+      const response = await fetch('https://aditya-b.onrender.com/others/data', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -107,7 +107,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // FIXED: Now using userId instead of document ID
-      const response = await fetch(`http://localhost:5000/activities/${userId}/${currentIndex}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -160,7 +160,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // FIXED: Now using userId instead of document ID
-      const response = await fetch(`http://localhost:5000/activities/${userId}/${index}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -212,7 +212,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // FIXED: Now using userId instead of document ID
-      const response = await fetch(`http://localhost:5000/responsibilities/${userId}/${currentIndex}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/responsibilities/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -269,7 +269,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // FIXED: Now using userId instead of document ID
-      const response = await fetch(`http://localhost:5000/responsibilities/${userId}/${index}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/responsibilities/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -321,7 +321,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // FIXED: Now using userId instead of document ID
-      const response = await fetch(`http://localhost:5000/contribution/${userId}/${currentIndex}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/contribution/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -378,7 +378,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // FIXED: Now using userId instead of document ID
-      const response = await fetch(`http://localhost:5000/contribution/${userId}/${index}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/contribution/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -430,7 +430,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // FIXED: Now using userId instead of document ID
-      const response = await fetch(`http://localhost:5000/awards/${userId}/${currentIndex}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -487,7 +487,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // FIXED: Now using userId instead of document ID
-      const response = await fetch(`http://localhost:5000/awards/${userId}/${index}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

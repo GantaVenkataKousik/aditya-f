@@ -27,7 +27,7 @@ const AllImages = () => {
             setLoading(true);
             const token = localStorage.getItem('token');
 
-            const response = await fetch('http://localhost:5000/images/all', {
+            const response = await fetch('https://aditya-b.onrender.com/images/all', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -58,7 +58,7 @@ const AllImages = () => {
         try {
             const token = localStorage.getItem('token');
 
-            const response = await fetch(`http://localhost:5000/images/${id}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/images/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

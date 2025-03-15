@@ -9,7 +9,7 @@ const FacultyScoreTable = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/research/getdata', {
+        const response = await fetch('https://aditya-b.onrender.com/research/getdata', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -50,7 +50,7 @@ const FacultyScoreTable = () => {
   }, []);
 
   const handleEdit = async (id) => {
-    const data = await fetch(`http://localhost:5000/research/update/${id}`, {
+    const data = await fetch(`https://aditya-b.onrender.com/research/update/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const FacultyScoreTable = () => {
   };
 
   const handleDelete = async (id) => {
-    const data = await fetch(`http://localhost:5000/research/delete/${id}`, {
+    const data = await fetch(`https://aditya-b.onrender.com/research/delete/${id}`, {
       method: 'DELETE',
     });
     if (data.ok) {

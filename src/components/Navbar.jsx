@@ -13,7 +13,7 @@ const Navbar = () => {
 
   const Remove = async () => {
     try {
-      const response = await fetch('http://localhost:5000/logout', {
+      const response = await fetch('https://aditya-b.onrender.com/logout', {
         method: 'GET',
         credentials: 'include',
       });

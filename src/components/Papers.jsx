@@ -11,7 +11,7 @@ const Papers = () => {
     const fetchPapers = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/research/papers', {
+        const response = await fetch('https://aditya-b.onrender.com/research/papers', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

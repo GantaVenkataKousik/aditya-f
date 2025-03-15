@@ -16,7 +16,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
       if (initialDetails) return;
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:5000/fetchData", {
+        const response = await fetch("https://aditya-b.onrender.com/fetchData", {
           method: "GET",
           credentials: "include",
           headers: {

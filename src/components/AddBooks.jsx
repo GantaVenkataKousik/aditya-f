@@ -14,10 +14,10 @@ const AddBooks = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/research/addbooks', {
+      const response = await fetch('https://aditya-b.onrender.com/research/addbooks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,12 +25,12 @@ const AddBooks = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         alert("Books submitted successfully!");
         setFormData({ bookDetails: '', ISBN: '' });
         navigate('/books');
-        
+
       } else {
         alert("Error submitting article");
       }

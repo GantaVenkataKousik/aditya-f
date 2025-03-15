@@ -45,11 +45,9 @@ const Others = ({ data: propsData }) => {
   const fetchAll = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/others/data', {
+      const response = await fetch('https://aditya-b.onrender.com/others-data', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });

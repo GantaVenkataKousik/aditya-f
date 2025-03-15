@@ -6,15 +6,10 @@ import { Navigate, useNavigate } from 'react-router-dom';
 const UpdateClass = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-
         courseName: '',
         semester: '',
-
         numberOfStudents: '',
-
         passCount: '',
-
-
         teacher: ''
     });
 
@@ -56,14 +51,14 @@ const UpdateClass = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post('https://aditya-b.onrender.com/update/classes', formData, {
-                credentials: 'include',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+            const response = await axios.put(`https://aditya-b.onrender.com/classes/${classId}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
-            });
+            );
             console.log('Class updated successfully:', response.data);
             navigate('/classes')
         } catch (error) {
@@ -75,16 +70,12 @@ const UpdateClass = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-
             <input type="text" name="courseName" value={formData.courseName} onChange={handleChange} placeholder="Course Name" required />
             <input type="text" name="semester" value={formData.semester} onChange={handleChange} placeholder="Semester-Branch-sec" required />
 
             <input type="number" name="numberOfStudents" value={formData.numberOfStudents} onChange={handleChange} placeholder="Number of Students Appeared" required />
 
             <input type="number" name="passCount" value={formData.passCount} onChange={handleChange} placeholder="Pass Count" required />
-
-
-
             <button type="submit">Update Class</button>
         </form>
     );

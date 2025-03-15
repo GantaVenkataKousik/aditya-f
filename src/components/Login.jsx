@@ -14,7 +14,6 @@ const Signin = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
-        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -29,7 +28,7 @@ const Signin = () => {
 
       navigate("/home");
     } catch (error) {
-      console.error('fetching fail ra ungmaaa', error.message);
+      console.error('fetching failed', error.message);
     }
   };
 

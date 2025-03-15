@@ -10,7 +10,7 @@ const Signin = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://aditya-b.onrender.com/login', {
+      const response = await fetch('https://aditya-b.onrender.com/login/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

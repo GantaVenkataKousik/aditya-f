@@ -87,7 +87,6 @@ const FacultyScoreTable = () => {
               <th className="border border-gray-400 px-4 py-2">Min Score for Doctorate</th>
               <th className="border border-gray-400 px-4 py-2">Min Score for Non-Doctorate</th>
               <th className="border border-gray-400 px-4 py-2">Obtained Score</th>
-              <th className="border border-gray-400 px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -100,14 +99,6 @@ const FacultyScoreTable = () => {
                   <td className="border border-gray-400 px-4 py-2">{row.min_score_doctorate}</td>
                   <td className="border border-gray-400 px-4 py-2">{row.min_score_non_doctorate}</td>
                   <td className="border border-gray-400 px-4 py-2">{row.obtained_score}</td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                      <button onClick={() => handleEdit(row._id)} style={{ width: 'auto' }}>
-                        <FaEdit />
-                      </button>
-                      <button onClick={() => handleDelete(row._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>  <FaTrash /> </button>
-                    </div>
-                  </td>
                 </tr>
               ))
             ) : (

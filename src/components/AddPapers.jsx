@@ -19,7 +19,7 @@ const AddPapers = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/research/addpapers', {
+      const response = await fetch('https://aditya-b.onrender.com/add-papers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

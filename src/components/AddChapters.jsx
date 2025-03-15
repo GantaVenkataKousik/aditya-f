@@ -19,7 +19,7 @@ const AddChapters = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/research/addchapters', {
+      const response = await fetch('https://aditya-b.onrender.com/add-chapters', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

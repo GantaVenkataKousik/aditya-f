@@ -15,7 +15,7 @@ const AddArticle = () => {
     };
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/article/add', {
+      const response = await fetch('https://aditya-b.onrender.com/add-article/', {
         method: 'POST',
         credentials: 'include',
         headers: {

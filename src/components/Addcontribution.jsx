@@ -13,7 +13,7 @@ const AddContribution = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/others/addcontribution', {
+      const response = await fetch('https://aditya-b.onrender.com/add-contribution', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

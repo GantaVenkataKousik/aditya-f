@@ -37,12 +37,11 @@ const DisplayWorkshops = ({ data: propsData }) => {
 
   const fetchWorkshops = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/workshop/data', {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/data?userId=${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -68,7 +67,7 @@ const DisplayWorkshops = ({ data: propsData }) => {
   };
 
   const handleDelete = async (id) => {
-    const response = await fetch(`https://aditya-b.onrender.com/workshops/${id}`, {
+    const response = await fetch(`https://aditya-b.onrender.com/workshop/delete/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +88,7 @@ const DisplayWorkshops = ({ data: propsData }) => {
   };
 
   const handleEdit = async () => {
-    const response = await fetch(`https://aditya-b.onrender.com/workshops/${selectedWorkshop._id}`, {
+    const response = await fetch(`https://aditya-b.onrender.com/workshop/update/${selectedWorkshop._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

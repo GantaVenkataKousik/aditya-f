@@ -11,21 +11,19 @@ const DisplayResearches = () => {
 
   const hoverStyle = {
     cursor: 'pointer',
-    color: hover ? '#007bff' : '#000', // Changes color on hover
-    textDecoration: hover ? 'underline' : 'none', // Adds underline on hover
-    transition: 'color 0.1s, text-decoration 0.1s', // Smooth transition
+    color: hover ? '#007bff' : '#000',
+    textDecoration: hover ? 'underline' : 'none',
+    transition: 'color 0.1s, text-decoration 0.1s',
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('https://aditya-b.onrender.com/research/data', {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/research/data?userId=${userId}`, {
           method: 'GET',
-          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
           },
         });
         if (response.ok) {
@@ -44,12 +42,10 @@ const DisplayResearches = () => {
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch(`https://aditya-b.onrender.com/research/delete/${id}`, {
         method: 'DELETE',
-        credentials: 'include',
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 

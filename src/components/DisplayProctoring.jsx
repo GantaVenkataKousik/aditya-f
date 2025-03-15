@@ -25,10 +25,8 @@ const ProctoringTable = ({ proctoringData }) => {
 
             const response = await fetch('https://aditya-b.onrender.com/proc/proctoring-data', {
                 method: 'GET',
-                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
                 },
             });
 

@@ -25,10 +25,9 @@ const DisplayFeedback = ({ feedbackData }) => {
                 console.error("No token found in localStorage");
                 return;
             }
-
-            const response = await fetch('https://aditya-b.onrender.com/update/fdata', {
+            const userId = localStorage.getItem('userId');
+            const response = await fetch(`https://aditya-b.onrender.com/feedback/fdata?userId=${userId}`, {
                 method: 'GET',
-                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,

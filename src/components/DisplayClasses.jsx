@@ -23,10 +23,9 @@ const DisplayClasses = () => {
           console.error("No token found in localStorage");
           return;
         }
-
-        const response = await fetch('https://aditya-b.onrender.com/update/data', {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/classes/raw?userId=${userId}`, {
           method: 'GET',
-          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -99,9 +98,9 @@ const DisplayClasses = () => {
         }}>
           {classes.map((classItem) => {
             const generateLink = () => {
-              const link = `http://localhost:5173/rate/${classItem._id}`; // Replace with your actual link structure
-              navigator.clipboard.writeText(link); // Copy link to clipboard
-              alert('Link copied to clipboard!'); // Notify user
+              const link = `http://localhost:5173/rate/${classItem._id}`;
+              navigator.clipboard.writeText(link);
+              alert('Link copied to clipboard!');
             };
 
             return (
@@ -113,7 +112,7 @@ const DisplayClasses = () => {
                   padding: '20px',
                   backgroundColor: '#fdfdfd',
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-                  width: '100%', // Ensure full width to take large card space
+                  width: '100%',
                 }}
               >
                 <div style={{

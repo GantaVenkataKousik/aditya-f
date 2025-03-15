@@ -17,18 +17,11 @@ const DisplayCourses = ({ coursesData }) => {
         if (!coursesData) {
             const fetchData = async () => {
                 try {
-                    const token = localStorage.getItem('token');
-                    if (!token) {
-                        console.error('No token found in localStorage');
-                        return;
-                    }
-
-                    const response = await fetch('https://aditya-b.onrender.com/update/raw', {
+                    const userId = localStorage.getItem('userId');
+                    const response = await fetch(`https://aditya-b.onrender.com/classes/fdata?userId=${userId}`, {
                         method: 'GET',
-                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`,
                         },
                     });
 
@@ -57,7 +50,7 @@ const DisplayCourses = ({ coursesData }) => {
             return;
         }
         try {
-            const response = await fetch(`https://aditya-b.onrender.com/update/courses/${id}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${id}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -86,17 +79,10 @@ const DisplayCourses = ({ coursesData }) => {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('No token found in localStorage');
-                return;
-            }
-
-            const response = await fetch(`https://aditya-b.onrender.com/update/courses/${selectedCourse._id}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${selectedCourse._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(formData),
             });

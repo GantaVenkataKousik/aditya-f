@@ -8,17 +8,10 @@ const ResearchText = ({ data: propsData }) => {
     if (!propsData) {
       const fetchData = async () => {
         try {
-          const token = localStorage.getItem('token');
-          if (!token) {
-            console.error('No token found in localStorage');
-            return;
-          }
-
-          const response = await fetch('https://aditya-b.onrender.com/research/researchtext', {
+          const userId = localStorage.getItem('userId');
+          const response = await fetch(`https://aditya-b.onrender.com/research/researchtext?userId=${userId}`, {
             method: 'GET',
-            credentials: 'include',
             headers: {
-              Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
           });

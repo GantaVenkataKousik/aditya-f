@@ -8,12 +8,10 @@ const FacultyScoreTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('https://aditya-b.onrender.com/research/getdata', {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/research/getdata?userId=${userId}`, {
           method: 'GET',
-          credentials: 'include',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });

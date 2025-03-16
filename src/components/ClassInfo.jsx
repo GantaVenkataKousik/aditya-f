@@ -42,7 +42,7 @@ const ClassInfo = () => {
           <h2 className="title">2.Course Feedback:</h2>
           <div className="flex items-center gap-2">
             <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-            <button className=" bg-blue-500 text-white rounded text-sm w-21 h-8 flex items-center justify-center no-print" onClick={handleUpload} >Upload</button>
+            {/* <button className=" bg-blue-500 text-white rounded text-sm w-21 h-8 flex items-center justify-center no-print" onClick={handleUpload} >Upload</button> */}
             <button className=" bg-blue-500 text-white rounded text-sm h-8 w-21 flex items-center justify-center no-print" onClick={() => navigate('/feedback')} >
               <IoMdAdd /> Add
             </button>
@@ -56,7 +56,7 @@ const ClassInfo = () => {
           <h2 className="title">3.Proctoring Students Average Pass Percentage:</h2>
           <div className="flex items-center gap-2">
             <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-            <button className=" bg-blue-500 text-white rounded text-sm w-21 h-8 flex items-center justify-center no-print" onClick={handleUpload}>Upload</button>
+            {/* <button className=" bg-blue-500 text-white rounded text-sm w-21 h-8 flex items-center justify-center no-print" onClick={handleUpload}>Upload</button> */}
             <button className=" bg-blue-500 text-white rounded text-sm w-21 h-8 flex items-center justify-center no-print" onClick={() => navigate('/proctoring')} >
               <IoMdAdd /> Add
             </button>

@@ -2,16 +2,19 @@ import React, { useEffect, useState } from 'react';
 import './DisplayCourses.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
+
 const DisplayCourses = ({ coursesData }) => {
     const [data, setData] = useState(coursesData || []);
     const [selectedCourse, setSelectedCourse] = useState(null);
-    const [showForm, setShowForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const [showAddForm, setShowAddForm] = useState(false);
     const [formData, setFormData] = useState({
         courseName: '',
         semester: '',
         numberOfStudents: '',
         passCount: ''
     });
+
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');
@@ -30,13 +33,14 @@ const DisplayCourses = ({ coursesData }) => {
             toast.error('Failed to fetch data');
         }
     };
+
     useEffect(() => {
         fetchData();
     }, [coursesData]);
 
     const handleRowSelect = (course) => {
         setSelectedCourse(course);
-        setShowForm(false);
+        setShowEditForm(false);
     };
 
     const handleDelete = async (id) => {
@@ -60,10 +64,22 @@ const DisplayCourses = ({ coursesData }) => {
         }
     };
 
-    const handleUpdateClick = (course) => {
+    const handleEditClick = (course) => {
         setSelectedCourse(course);
         setFormData(course);
-        setShowForm(true);
+        setShowEditForm(true);
+        setShowAddForm(false);
+    };
+
+    const handleAddClick = () => {
+        setFormData({
+            courseName: '',
+            semester: '',
+            numberOfStudents: '',
+            passCount: ''
+        });
+        setShowAddForm(true);
+        setShowEditForm(false);
     };
 
     const handleInputChange = (e) => {
@@ -71,7 +87,7 @@ const DisplayCourses = ({ coursesData }) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleFormSubmit = async (e) => {
+    const handleEditFormSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${selectedCourse._id}`, {
@@ -92,7 +108,7 @@ const DisplayCourses = ({ coursesData }) => {
                     )
                 );
 
-                setShowForm(false); // Close the form after successful update
+                setShowEditForm(false); // Close the form after successful update
                 setSelectedCourse(null); // Clear the selection
                 toast.success('Course updated successfully');
             } else {
@@ -104,6 +120,30 @@ const DisplayCourses = ({ coursesData }) => {
         }
     };
 
+    const handleAddFormSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/addclass`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                const newCourse = await response.json();
+                setData([...data, newCourse]);
+                setShowAddForm(false); // Close the form after successful addition
+                toast.success('Course added successfully');
+            } else {
+                toast.error('Failed to add course');
+            }
+        } catch (error) {
+            console.error('Error adding course:', error);
+            toast.error('Failed to add course');
+        }
+    };
 
     // **Calculate average pass percentage and self-assessment marks**
     const totalPassPercentage = data && data.length > 0 ? data.reduce((acc, cls) => acc + cls.passPercentage, 0) : 0;
@@ -121,6 +161,7 @@ const DisplayCourses = ({ coursesData }) => {
     return (
         <div>
             <ToastContainer />
+            <button onClick={handleAddClick}>Add Course</button>
             <table className='courses-table'>
                 <thead>
                     <tr>
@@ -160,9 +201,8 @@ const DisplayCourses = ({ coursesData }) => {
                                 )}
 
                                 <td style={{ display: 'flex', justifyContent: 'center' }}>
-
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); handleUpdateClick(course); }}
+                                        onClick={(e) => { e.stopPropagation(); handleEditClick(course); }}
                                         style={{
                                             fontSize: "16px",
                                             margin: "2px",
@@ -200,8 +240,8 @@ const DisplayCourses = ({ coursesData }) => {
                                     >
                                         <FaTrash />
                                     </button>
-                                </td >
-                            </tr >
+                                </td>
+                            </tr>
                         ))
                     ) : (
                         <tr>
@@ -210,23 +250,37 @@ const DisplayCourses = ({ coursesData }) => {
                             </td>
                         </tr>
                     )}
-                </tbody >
-            </table >
+                </tbody>
+            </table>
 
-            {showForm && (
+            {showEditForm && (
                 <div className='update-form'>
                     <h2>Update Course</h2>
-                    <form onSubmit={handleFormSubmit}>
+                    <form onSubmit={handleEditFormSubmit}>
                         <input type='text' name='courseName' value={formData.courseName} onChange={handleInputChange} placeholder='Course Name' required />
                         <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
                         <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
                         <input type='number' name='passCount' value={formData.passCount} onChange={handleInputChange} placeholder='Pass Count' required />
                         <button type='submit'>Save Changes</button>
-                        <button type='button' onClick={() => setShowForm(false)}>Cancel</button>
+                        <button type='button' onClick={() => setShowEditForm(false)}>Cancel</button>
                     </form>
                 </div>
             )}
-        </div >
+
+            {showAddForm && (
+                <div className='add-form'>
+                    <h2>Add Course</h2>
+                    <form onSubmit={handleAddFormSubmit}>
+                        <input type='text' name='courseName' value={formData.courseName} onChange={handleInputChange} placeholder='Course Name' required />
+                        <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
+                        <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
+                        <input type='number' name='passCount' value={formData.passCount} onChange={handleInputChange} placeholder='Pass Count' required />
+                        <button type='submit'>Add Course</button>
+                        <button type='button' onClick={() => setShowAddForm(false)}>Cancel</button>
+                    </form>
+                </div>
+            )}
+        </div>
     );
 };
 

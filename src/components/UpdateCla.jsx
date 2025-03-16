@@ -25,13 +25,15 @@ const UpdateCla = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('https://aditya-b.onrender.com/update/feedback', formData, {
-                credentials: 'include',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await axios.post('https://aditya-b.onrender.com/classes/feedback',
+                {
+                    body: formData,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
             console.log('Feedback updated successfully:', response.data);
             navigate('/classes')
         } catch (error) {

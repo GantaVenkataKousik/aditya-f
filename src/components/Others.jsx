@@ -53,10 +53,8 @@ const Others = ({ data: propsData }) => {
         },
       });
 
-      if (response.ok) {
+      if (response.success) {
         let data = await response.json();
-        data = data[0]
-        // Set data to state
         setActivities(data.Activities || []);
         setResponsibilities(data.Responsibilities || []);
         setContribution(data.Contribution || []);

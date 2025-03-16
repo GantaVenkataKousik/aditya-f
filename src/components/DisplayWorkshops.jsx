@@ -1,88 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import './DisplayWorkshops.css';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import { toast, ToastContainer } from 'react-toastify';
 
-const DisplayWorkshops = ({ data: propsData }) => {
-  const [workshops, setWorkshops] = useState(propsData?.workshops || []);
-  const [totalMarks, setTotalMarks] = useState(propsData?.totalMarks || 0);
-  const [loading, setLoading] = useState(!propsData);
+const DisplayWorkshops = () => {
   const navigate = useNavigate();
+  const [workshops, setWorkshops] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    Description: '',
-    Category: '',
-    Date: '',
-    Venue: '',
-    OrganizedBy: '',
+    workshopTitle: '',
+    organizer: '',
+    date: '',
+    location: ''
   });
 
-  const calculateDuration = (startTime, endTime) => {
-    if (!startTime || !endTime) return "-";
-    const [startHours, startMinutes] = startTime.split(":").map(Number);
-    const [endHours, endMinutes] = endTime.split(":").map(Number);
-    const start = new Date();
-    start.setHours(startHours, startMinutes, 0);
-    const end = new Date();
-    end.setHours(endHours, endMinutes, 0);
-    let diff = (end - start) / (1000 * 60);
-    if (diff < 0) diff += 24 * 60;
-    const hours = Math.floor(diff / 60);
-    const minutes = diff % 60;
-    return `${hours}h ${minutes}m`;
-  };
-
-  const fetchWorkshops = async () => {
-    try {
-      const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      if (data.success) {
-        setWorkshops(data.Workshops);
-        setTotalMarks(data.TotalMarks);
-      } else {
-        console.error('Failed to fetch workshops:', data.message);
-      }
-    } catch (error) {
-      console.error('Error fetching workshops:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (!propsData) {
-      fetchWorkshops();
-    }
-  }, [propsData]);
+    const fetchWorkshops = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-  const handleUpdateClick = (workshop) => {
-    setShowEditForm(true);
-    setShowAddForm(false);
-    setSelectedWorkshop(workshop);
-    setFormData(workshop);
-  };
+        if (response.ok) {
+          const data = await response.json();
+          setWorkshops(data);
+        } else {
+          console.error("Error fetching workshops");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWorkshops();
+  }, []);
 
   const handleAddClick = () => {
     setFormData({
-      title: '',
-      Description: '',
-      Category: '',
-      Date: '',
-      Venue: '',
-      OrganizedBy: '',
+      workshopTitle: '',
+      organizer: '',
+      date: '',
+      location: ''
     });
     setShowAddForm(true);
     setShowEditForm(false);
+  };
+
+  const handleUpdateClick = (workshop, index) => {
+    setShowEditForm(true);
+    setShowAddForm(false);
+    setSelectedWorkshop({ ...workshop, index });
+    setFormData(workshop);
   };
 
   const handleInputChange = (e) => {
@@ -93,133 +70,147 @@ const DisplayWorkshops = ({ data: propsData }) => {
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${selectedWorkshop._id}`, {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}/${selectedWorkshop.index}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
       });
+
       if (response.ok) {
-        toast.success("Workshop updated successfully!");
-        fetchWorkshops();
+        alert("Workshop updated successfully!");
         setShowEditForm(false);
+        fetchWorkshops();
       } else {
-        toast.error("Failed to update workshop.");
+        console.error("Error updating workshop");
       }
     } catch (error) {
-      console.error("Error updating workshop:", error);
-      toast.error("Server error.");
+      console.error("Error:", error);
     }
   };
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
       });
+
       if (response.ok) {
-        toast.success("Workshop added successfully!");
-        fetchWorkshops();
+        alert("Workshop added successfully!");
         setShowAddForm(false);
+        fetchWorkshops();
       } else {
-        toast.error("Failed to add workshop.");
+        console.error("Error adding workshop");
       }
     } catch (error) {
-      console.error("Error adding workshop:", error);
-      toast.error("Server error.");
+      console.error("Error:", error);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (index) => {
     try {
-      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${id}`, {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
+
       if (response.ok) {
-        toast.success("Workshop deleted successfully!");
+        alert("Workshop deleted successfully!");
         fetchWorkshops();
       } else {
-        toast.error("Failed to delete workshop.");
+        console.error("Error deleting workshop");
       }
     } catch (error) {
-      console.error("Error deleting workshop:", error);
-      toast.error("Server error.");
+      console.error("Error:", error);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Workshops</h2>
-      <button onClick={handleAddClick} className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print">+ Add</button>
+    <div style={{ padding: '15px' }}>
+      <div style={{ width: '90px', marginLeft: '1100px' }}>
+        <button onClick={handleAddClick}> + Add</button>
+      </div>
+      <h3 style={{ fontWeight: 'bold', fontSize: '1.125rem', marginBottom: '1rem' }}>
+        Workshops:
+      </h3>
+
       {loading ? (
-        <p>Loading workshops...</p>
+        <p>Loading...</p>
       ) : (
-        <div className="workshop-table-container">
-          <table className="workshop-table">
+        <div style={{ overflowX: 'auto' }}>
+          <table
+            style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              textAlign: 'left',
+              fontSize: '1rem',
+            }}
+          >
             <thead>
-              <tr>
-                <th>S.No</th>
-                <th>Program</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Date & Place</th>
-                <th>Organized by</th>
-                <th>Actions</th>
+              <tr style={{ backgroundColor: '#d0e8f2', fontWeight: 'bold' }}>
+                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>S.No</th>
+                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Workshop Title</th>
+                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Organizer</th>
+                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Date</th>
+                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Location</th>
+                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {workshops.length > 0 ? (
                 workshops.map((workshop, index) => (
-                  <tr key={workshop._id}>
-                    <td>{index + 1}</td>
-                    <td>{workshop.title || '-'}</td>
-                    <td>{workshop.Description || '-'}</td>
-                    <td>{workshop.Category || '-'}</td>
-                    <td>
-                      {new Date(workshop.Date).toLocaleDateString()} <br />
-                      {workshop.Venue || '-'}
-                    </td>
-                    <td>{workshop.OrganizedBy || '-'}</td>
-                    <td style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                      <button onClick={() => handleUpdateClick(workshop)} className="p-1 bg-blue-500 text-white rounded text-m  w-auto no-print"><FaEdit /></button>
-                      <button onClick={() => handleDelete(workshop._id)} className="p-1 bg-red-500 text-white rounded text-m w-auto no-print "><FaTrash /></button>
+                  <tr key={index} style={{ textAlign: 'center' }}>
+                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{index + 1}</td>
+                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.workshopTitle || '-'}</td>
+                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.organizer || '-'}</td>
+                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.date || '-'}</td>
+                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.location || '-'}</td>
+                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button onClick={() => handleUpdateClick(workshop, index)} style={{ width: 'auto' }}>
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(index)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="no-data">No workshops available</td>
+                  <td colSpan="6" style={{ textAlign: 'center', padding: '1rem' }}>No workshops found</td>
                 </tr>
               )}
-              {/* Self-Assessment Marks row */}
-              <tr>
-                <td colSpan="5" className="text-right font-bold">Self-Assessment Marks (Max: 20):</td>
-                <td className="font-bold">{totalMarks}</td>
-              </tr>
             </tbody>
           </table>
           {showEditForm && (
             <div className="update-form">
               <h2>Update Workshop</h2>
               <form onSubmit={handleEdit}>
-                <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" />
-                <input type="text" name="Description" value={formData.Description} onChange={handleInputChange} placeholder="Description" />
-                <input type="text" name="Category" value={formData.Category} onChange={handleInputChange} placeholder="Category" />
-                <input type="date" name="Date" value={formData.Date} onChange={handleInputChange} placeholder="Date" />
-                <input type="text" name="Venue" value={formData.Venue} onChange={handleInputChange} placeholder="Venue" />
-                <input type="text" name="OrganizedBy" value={formData.OrganizedBy} onChange={handleInputChange} placeholder="Organized By" />
-                <button className='no-print' type="submit">Save Changes</button>
-                <button className='no-print' type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
+                <input type="text" name="workshopTitle" value={formData.workshopTitle} onChange={handleInputChange} placeholder="Workshop Title" required />
+                <input type="text" name="organizer" value={formData.organizer} onChange={handleInputChange} placeholder="Organizer" required />
+                <input type="date" name="date" value={formData.date} onChange={handleInputChange} placeholder="Date" required />
+                <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" required />
+                <button type="submit">Save Changes</button>
+                <button type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
               </form>
             </div>
           )}
@@ -227,14 +218,12 @@ const DisplayWorkshops = ({ data: propsData }) => {
             <div className="add-form">
               <h2>Add Workshop</h2>
               <form onSubmit={handleAddFormSubmit}>
-                <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" />
-                <input type="text" name="Description" value={formData.Description} onChange={handleInputChange} placeholder="Description" />
-                <input type="text" name="Category" value={formData.Category} onChange={handleInputChange} placeholder="Category" />
-                <input type="date" name="Date" value={formData.Date} onChange={handleInputChange} placeholder="Date" />
-                <input type="text" name="Venue" value={formData.Venue} onChange={handleInputChange} placeholder="Venue" />
-                <input type="text" name="OrganizedBy" value={formData.OrganizedBy} onChange={handleInputChange} placeholder="Organized By" />
-                <button className='no-print' type="submit">Add Workshop</button>
-                <button className='no-print' type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
+                <input type="text" name="workshopTitle" value={formData.workshopTitle} onChange={handleInputChange} placeholder="Workshop Title" required />
+                <input type="text" name="organizer" value={formData.organizer} onChange={handleInputChange} placeholder="Organizer" required />
+                <input type="date" name="date" value={formData.date} onChange={handleInputChange} placeholder="Date" required />
+                <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" required />
+                <button type="submit">Add Workshop</button>
+                <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
               </form>
             </div>
           )}

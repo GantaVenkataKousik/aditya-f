@@ -109,7 +109,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.length > 0 ? (
+                    {data && data.length > 0 ? (
                         data.map((feedback, index) => (
                             <tr key={feedback._id || index}>
                                 <td>{index + 1}</td>

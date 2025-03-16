@@ -136,7 +136,7 @@ const DisplayCourses = ({ coursesData }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {Array.isArray(data) && data.length > 0 ? (
+                    {data && data.length > 0 ? (
                         data.map((course, index) => (
                             <tr
                                 key={course._id || index}

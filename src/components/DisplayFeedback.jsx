@@ -44,9 +44,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     };
 
     useEffect(() => {
-        if (!feedbackData) {
-            fetchData();
-        }
+        fetchData();
     }, [feedbackData]);
 
     const handleUpdateClick = (feedback) => {

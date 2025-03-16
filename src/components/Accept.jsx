@@ -11,6 +11,10 @@ const Accept = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
         const response = await fetch('https://aditya-b.onrender.com/research/process', {
           method: 'GET',
           credentials: 'include',
@@ -23,7 +27,7 @@ const Accept = () => {
           const data = await response.json();
           setUnapproved(data);
         } else {
-          console.error('Failed to fetch user:', response.statusText);
+          console.error('Failed to fetch user:', response.status, response.statusText);
         }
       } catch (error) {
         console.error('Error occurred:', error);

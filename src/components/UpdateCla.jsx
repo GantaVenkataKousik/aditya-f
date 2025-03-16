@@ -25,7 +25,7 @@ const UpdateCla = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('https://aditya-b.onrender.com/classes/feedback',
+            const response = await axios.post(`https://aditya-b.onrender.com/classes/courses/${classId}`,
                 {
                     body: formData,
                     credentials: 'include',

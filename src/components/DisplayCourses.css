@@ -5,17 +5,23 @@
     margin: 20px 0;
 }
 
-.courses-table th, .courses-table td {
+.courses-table th,
+.courses-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
 }
 
 .courses-table th {
-    font-family: Arial, sans-serif; /* Common professional font */
-    font-weight: normal; /* Remove bold styling */
-    background-color: rgb(255, 127, 39);;
-} /* Orange Title */
+    font-family: Arial, sans-serif;
+    /* Common professional font */
+    font-weight: normal;
+    /* Remove bold styling */
+    background-color: rgb(255, 127, 39);
+    ;
+}
+
+/* Orange Title */
 
 .courses-table tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -24,6 +30,7 @@
 .courses-table tr:hover {
     background-color: #f1f1f1;
 }
+
 .add-button {
     display: flex;
     align-items: center;
@@ -39,19 +46,19 @@
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     width: 100px;
-  }
-  
-  .add-button:hover {
+}
+
+.add-button:hover {
     background-color: #515151;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
+}
 
 
 
 
 
 
-  .update-form {
+.update-form {
     margin-top: 20px;
     padding: 10px;
     border: 1px solid #ddd;

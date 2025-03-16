@@ -18,7 +18,7 @@ const AddAward = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ Award, IssuingOrg })
+        body: JSON.stringify({ award: Award, issuingOrg: IssuingOrg })
       });
 
       if (response.ok) {

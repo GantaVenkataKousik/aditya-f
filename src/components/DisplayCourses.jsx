@@ -12,30 +12,26 @@ const DisplayCourses = ({ coursesData }) => {
         numberOfStudents: '',
         passCount: ''
     });
-
-    useEffect(() => {
-        if (!coursesData) {
-            const fetchData = async () => {
-                try {
-                    const userId = localStorage.getItem('userId');
-                    const response = await fetch(`https://aditya-b.onrender.com/classes/fdata?userId=${userId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
-                    const res = await response.json();
-                    if (res.success) {
-                        setData(res.data);
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                    toast.error('Failed to fetch data');
-                }
-            };
-
-            fetchData();
+    const fetchData = async () => {
+        try {
+            const userId = localStorage.getItem('userId');
+            const response = await fetch(`https://aditya-b.onrender.com/classes/fdata?userId=${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const res = await response.json();
+            if (res.success) {
+                setData(res.data[0]);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            toast.error('Failed to fetch data');
         }
+    };
+    useEffect(() => {
+        fetchData();
     }, [coursesData]);
 
     const handleRowSelect = (course) => {

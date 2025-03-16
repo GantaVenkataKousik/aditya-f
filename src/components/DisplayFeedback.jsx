@@ -31,7 +31,7 @@ const DisplayFeedback = ({ feedbackData }) => {
             const res = await response.json();
 
             if (res.success) {
-                setData(res.data);
+                setData(res.data[0]);
             } else {
                 console.error("Unexpected API response format:", res);
                 setData([]);

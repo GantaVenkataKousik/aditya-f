@@ -14,12 +14,10 @@ const AddArticle = () => {
       createdAt: new Date(),
     };
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/add-article/', {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/add-article?userId=${userId}`, {
         method: 'POST',
-        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newArticle),

@@ -16,12 +16,11 @@ const AddBooks = () => {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/add-books', {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/add-books?userId=${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });

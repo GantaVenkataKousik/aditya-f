@@ -9,7 +9,8 @@ const DisplayWorkshops = ({ data: propsData }) => {
   const [totalMarks, setTotalMarks] = useState(propsData?.totalMarks || 0);
   const [loading, setLoading] = useState(!propsData);
   const navigate = useNavigate();
-  const [showForm, setShowForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
@@ -38,15 +39,19 @@ const DisplayWorkshops = ({ data: propsData }) => {
   const fetchWorkshops = async () => {
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/data?userId=${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       });
       const data = await response.json();
-      setWorkshops(data.Workshops);
-      setTotalMarks(data.TotalMarks);
+      if (data.success) {
+        setWorkshops(data.Workshops);
+        setTotalMarks(data.TotalMarks);
+      } else {
+        console.error('Failed to fetch workshops:', data.message);
+      }
     } catch (error) {
       console.error('Error fetching workshops:', error);
     } finally {
@@ -61,13 +66,78 @@ const DisplayWorkshops = ({ data: propsData }) => {
   }, [propsData]);
 
   const handleUpdateClick = (workshop) => {
-    setShowForm(true);
+    setShowEditForm(true);
+    setShowAddForm(false);
     setSelectedWorkshop(workshop);
     setFormData(workshop);
   };
 
+  const handleAddClick = () => {
+    setFormData({
+      title: '',
+      Description: '',
+      Category: '',
+      Date: '',
+      Venue: '',
+      OrganizedBy: '',
+    });
+    setShowAddForm(true);
+    setShowEditForm(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    const response = await fetch(`https://aditya-b.onrender.com/workshop/${selectedWorkshop._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await response.json();
+    if (data.success) {
+      toast.success('Workshop updated successfully');
+      setShowEditForm(false);
+      fetchWorkshops();
+    } else {
+      toast.error('Failed to update workshop');
+    }
+  };
+
+  const handleAddFormSubmit = async (e) => {
+    e.preventDefault();
+    const userId = localStorage.getItem('userId');
+    try {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const newWorkshop = await response.json();
+        setWorkshops([...workshops, newWorkshop]);
+        setShowAddForm(false); // Close the form after successful addition
+        fetchWorkshops();
+        toast.success('Workshop added successfully');
+      } else {
+        toast.error('Failed to add workshop');
+      }
+    } catch (error) {
+      console.error('Error adding workshop:', error);
+      toast.error('Failed to add workshop');
+    }
+  };
+
   const handleDelete = async (id) => {
-    const response = await fetch(`https://aditya-b.onrender.com/workshop/delete/${id}`, {
+    const response = await fetch(`https://aditya-b.onrender.com/workshop/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -82,32 +152,6 @@ const DisplayWorkshops = ({ data: propsData }) => {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleEdit = async () => {
-    const response = await fetch(`https://aditya-b.onrender.com/workshop/update/${selectedWorkshop._id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await response.json();
-    if (data.success) {
-      toast.success('Workshop updated successfully');
-      fetchWorkshops();
-    } else {
-      toast.error('Failed to update workshop');
-    }
-  };
-
-  const handleUpload = async () => {
-    toast.success('Image uploaded successfully');
-  }
-
   return (
     <div className="workshops-container">
       <ToastContainer />
@@ -116,7 +160,7 @@ const DisplayWorkshops = ({ data: propsData }) => {
         <div className="flex items-center gap-2">
           <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
           {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
-          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addworkshop')}>+ Add</button>
+          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleAddClick}>+ Add</button>
         </div>
       </div>
 
@@ -167,7 +211,7 @@ const DisplayWorkshops = ({ data: propsData }) => {
               </tr>
             </tbody>
           </table>
-          {showForm && (
+          {showEditForm && (
             <div className="update-form">
               <h2>Update Workshop</h2>
               <form onSubmit={handleEdit}>
@@ -178,7 +222,22 @@ const DisplayWorkshops = ({ data: propsData }) => {
                 <input type="text" name="Venue" value={formData.Venue} onChange={handleInputChange} placeholder="Venue" />
                 <input type="text" name="OrganizedBy" value={formData.OrganizedBy} onChange={handleInputChange} placeholder="Organized By" />
                 <button className='no-print' type="submit">Save Changes</button>
-                <button className='no-print' type="button" onClick={() => setShowForm(false)}>Cancel</button>
+                <button className='no-print' type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
+              </form>
+            </div>
+          )}
+          {showAddForm && (
+            <div className="add-form">
+              <h2>Add Workshop</h2>
+              <form onSubmit={handleAddFormSubmit}>
+                <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" />
+                <input type="text" name="Description" value={formData.Description} onChange={handleInputChange} placeholder="Description" />
+                <input type="text" name="Category" value={formData.Category} onChange={handleInputChange} placeholder="Category" />
+                <input type="date" name="Date" value={formData.Date} onChange={handleInputChange} placeholder="Date" />
+                <input type="text" name="Venue" value={formData.Venue} onChange={handleInputChange} placeholder="Venue" />
+                <input type="text" name="OrganizedBy" value={formData.OrganizedBy} onChange={handleInputChange} placeholder="Organized By" />
+                <button className='no-print' type="submit">Add Workshop</button>
+                <button className='no-print' type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
               </form>
             </div>
           )}

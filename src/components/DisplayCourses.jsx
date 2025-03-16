@@ -122,8 +122,9 @@ const DisplayCourses = ({ coursesData }) => {
 
     const handleAddFormSubmit = async (e) => {
         e.preventDefault();
+        const userId = localStorage.getItem('userId');
         try {
-            const response = await fetch(`https://aditya-b.onrender.com/classes/addclass`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/addclass/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
 const AddActivity = () => {
   const navigate = useNavigate();
   const [activityDetails, setActivityDetails] = useState('');
@@ -19,8 +19,9 @@ const AddActivity = () => {
         },
         body: JSON.stringify({ activityDetails })
       });
-
-      if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        toast.success("Activity added successfully!");
         navigate('/partb');
       } else {
         console.error('Error adding activity');

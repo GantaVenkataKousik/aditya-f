@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const AddArticle = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -22,9 +23,9 @@ const AddArticle = () => {
         },
         body: JSON.stringify(newArticle),
       });
-
-      if (response.ok) {
-        alert('Article posted successfully');
+      const data = await response.json();
+      if (data.success) {
+        toast.success("Article posted successfully");
         setTitle('');
         setContent('');
         console.log('Article added:', newArticle);
@@ -42,6 +43,7 @@ const AddArticle = () => {
 
   return (
     <div className="add-article-container">
+      <ToastContainer />
       <form onSubmit={handleSubmit}>
         <div>
           <label>Title:</label>

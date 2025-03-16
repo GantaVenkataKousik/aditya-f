@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const AddResponsibility = () => {
   const navigate = useNavigate();
   const [Responsibility, setResponsibility] = useState('');
@@ -22,8 +23,9 @@ const AddResponsibility = () => {
         },
         body: JSON.stringify({ Responsibility, assignedBy })
       });
-
-      if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        toast.success("Responsibility added successfully!");
         navigate('/partb');
       } else {
         console.error('Error adding responsibility');
@@ -36,7 +38,8 @@ const AddResponsibility = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
+    <div className="add-article-container">
+      <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">Add Responsibility</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

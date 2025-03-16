@@ -154,8 +154,8 @@ const DisplayCourses = ({ coursesData }) => {
 
                                 {index === 0 && (
                                     <>
-                                        <td rowSpan={data.length}>{averagePassPercentage}</td>
-                                        <td rowSpan={data.length}>{selfAssessmentMarks}</td>
+                                        <td rowSpan={data && data.length}>{averagePassPercentage}</td>
+                                        <td rowSpan={data && data.length}>{selfAssessmentMarks}</td>
                                     </>
                                 )}
 

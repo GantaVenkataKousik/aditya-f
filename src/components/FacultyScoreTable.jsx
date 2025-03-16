@@ -90,7 +90,7 @@ const FacultyScoreTable = () => {
             </tr>
           </thead>
           <tbody>
-            {data.length > 0 ? (
+            {data && data.length > 0 ? (
               data.map((row, index) => (
                 <tr key={index} className="text-center border border-gray-400">
                   <td className="border border-gray-400 px-4 py-2">{row.s_no}</td>
@@ -112,7 +112,7 @@ const FacultyScoreTable = () => {
               <td className="border border-gray-400 px-4 py-2">135</td>
               <td className="border border-gray-400 px-4 py-2">110</td>
               <td className="border border-gray-400 px-4 py-2">
-                {data.reduce((sum, row) => sum + (row.obtained_score !== '-' ? Number(row.obtained_score) : 0), 0)}
+                {data && data.length > 0 ? data.reduce((sum, row) => sum + (row.obtained_score !== '-' ? Number(row.obtained_score) : 0), 0) : 0}
               </td>
             </tr>
           </tbody>

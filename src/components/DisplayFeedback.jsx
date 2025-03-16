@@ -6,13 +6,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const DisplayFeedback = ({ feedbackData }) => {
     const [data, setData] = useState(feedbackData || []);
-    const [showForm, setShowForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const [showAddForm, setShowAddForm] = useState(false);
     const [selectedFeedback, setSelectedFeedback] = useState(null);
     const [formData, setFormData] = useState({
         courseName: '',
         semester: '',
         numberOfStudents: '',
-        passCount: '',
         feedbackPercentage: '',
         averagePercentage: '',
         selfAssessmentMarks: ''
@@ -21,7 +21,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/fdata?userId=${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/fdata/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,9 +47,23 @@ const DisplayFeedback = ({ feedbackData }) => {
     }, [feedbackData]);
 
     const handleUpdateClick = (feedback) => {
-        setShowForm(true);
+        setShowEditForm(true);
+        setShowAddForm(false);
         setSelectedFeedback(feedback);
         setFormData(feedback);
+    };
+
+    const handleAddClick = () => {
+        setFormData({
+            courseName: '',
+            semester: '',
+            numberOfStudents: '',
+            feedbackPercentage: '',
+            averagePercentage: '',
+            selfAssessmentMarks: ''
+        });
+        setShowAddForm(true);
+        setShowEditForm(false);
     };
 
     const handleInputChange = (e) => {
@@ -69,14 +83,45 @@ const DisplayFeedback = ({ feedbackData }) => {
         const data = await response.json();
         if (data.success) {
             toast.success("Feedback updated successfully");
-            setShowForm(false);
+            setShowEditForm(false);
             fetchData();
         } else {
             toast.error("Failed to update feedback");
         }
     };
 
+    const handleAddFormSubmit = async (e) => {
+        e.preventDefault();
+        const userId = localStorage.getItem('userId');
+        try {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                const newFeedback = await response.json();
+                setData([...data, newFeedback]);
+                setShowAddForm(false); // Close the form after successful addition
+                fetchData();
+                toast.success('Feedback added successfully');
+            } else {
+                toast.error('Failed to add feedback');
+            }
+        } catch (error) {
+            console.error('Error adding feedback:', error);
+            toast.error('Failed to add feedback');
+        }
+    };
+
     const handleDelete = async (id) => {
+        if (!id) {
+            console.error('Feedback ID is undefined');
+            return;
+        }
         const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${id}`, {
             method: 'DELETE',
             headers: {
@@ -95,6 +140,9 @@ const DisplayFeedback = ({ feedbackData }) => {
     return (
         <div>
             <ToastContainer />
+            <div className='add-feedback-button-container' style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', marginTop: '20px' }}>
+                <button onClick={handleAddClick} className='add-feedback-button' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Feedback</button>
+            </div>
             <table className="courses-table">
                 <thead>
                     <tr>
@@ -138,7 +186,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                     )}
                 </tbody>
             </table>
-            {showForm && (
+            {showEditForm && (
                 <div className='update-form'>
                     <h2>Update Feedback</h2>
                     <form onSubmit={handleEdit}>
@@ -149,7 +197,22 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <input type='number' name='averagePercentage' value={formData.averagePercentage} onChange={handleInputChange} placeholder='Average Percentage' required />
                         <input type='number' name='selfAssessmentMarks' value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder='Self-Assessment Marks' required />
                         <button type='submit' className='no-print'>Save Changes</button>
-                        <button type='button' onClick={() => setShowForm(false)} className='no-print'>Cancel</button>
+                        <button type='button' onClick={() => setShowEditForm(false)} className='no-print'>Cancel</button>
+                    </form>
+                </div>
+            )}
+            {showAddForm && (
+                <div className='add-form'>
+                    <h2>Add Feedback</h2>
+                    <form onSubmit={handleAddFormSubmit}>
+                        <input type='text' name='courseName' value={formData.courseName} onChange={handleInputChange} placeholder='Course Name' required />
+                        <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
+                        <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
+                        <input type='number' name='feedbackPercentage' value={formData.feedbackPercentage} onChange={handleInputChange} placeholder='Feedback Percentage' required />
+                        <input type='number' name='averagePercentage' value={formData.averagePercentage} onChange={handleInputChange} placeholder='Average Percentage' required />
+                        <input type='number' name='selfAssessmentMarks' value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder='Self-Assessment Marks' required />
+                        <button type='submit' className='no-print'>Add Feedback</button>
+                        <button type='button' onClick={() => setShowAddForm(false)} className='no-print'>Cancel</button>
                     </form>
                 </div>
             )}

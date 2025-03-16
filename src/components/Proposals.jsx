@@ -5,13 +5,21 @@ const Proposals = () => {
   const navigate = useNavigate();
   const [proposals, setProposals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [file, setFile] = useState(null);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [selectedProposal, setSelectedProposal] = useState(null);
+  const [formData, setFormData] = useState({
+    proposalDetails: '',
+    fundingAgency: '',
+    amount: ''
+  });
 
   useEffect(() => {
     const fetchProposals = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('https://aditya-b.onrender.com/research/proposals', {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/research/proposals/${userId}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -35,69 +43,108 @@ const Proposals = () => {
     fetchProposals();
   }, []);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleAddClick = () => {
+    setFormData({
+      proposalDetails: '',
+      fundingAgency: '',
+      amount: ''
+    });
+    setShowAddForm(true);
+    setShowEditForm(false);
   };
 
-  const handleUpload = async () => {
-    if (!file) {
-      alert("Please select a file first.");
-      return;
-    }
+  const handleUpdateClick = (proposal, index) => {
+    setShowEditForm(true);
+    setShowAddForm(false);
+    setSelectedProposal({ ...proposal, index });
+    setFormData(proposal);
+  };
 
-    const formData = new FormData();
-    formData.append("file", file);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
+  const handleEdit = async (e) => {
+    e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("https://aditya-b.onrender.com/research/upload-proposal", {
-        method: "POST",
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/proposals/${userId}/${selectedProposal.index}`, {
+        method: 'PUT',
         headers: {
-          "Authorization": `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
-        body: formData
+        body: JSON.stringify(formData)
       });
 
       if (response.ok) {
-        alert("File uploaded successfully!");
-        setFile(null);
+        alert("Proposal updated successfully!");
+        setShowEditForm(false);
+        fetchProposals();
       } else {
-        console.error("Upload failed");
+        console.error("Error updating proposal");
       }
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error("Error:", error);
+    }
+  };
+
+  const handleAddFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/proposals/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        alert("Proposal added successfully!");
+        setShowAddForm(false);
+        fetchProposals();
+      } else {
+        console.error("Error adding proposal");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleDelete = async (index) => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/proposals/${userId}/${index}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        alert("Proposal deleted successfully!");
+        fetchProposals();
+      } else {
+        console.error("Error deleting proposal");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
   return (
     <div style={{ padding: '15px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', marginBottom: '10px' }}>
-
-        {/* File Upload Input */}
-        <input
-          type="file"
-          onChange={handleFileChange}
-          style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '5px' }}
-        />
         <button
-          onClick={handleUpload}
-          style={{
-            padding: '8px 12px',
-            fontSize: '14px',
-            color: '#fff',
-            backgroundColor: '#007bff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            width: '140px',
-          }}
-        >
-          Upload
-        </button>
-
-        {/* Add Proposal Button */}
-        <button
-          onClick={() => navigate('/addproposals')}
+          onClick={handleAddClick}
           style={{
             padding: '8px 12px',
             fontSize: '14px',
@@ -134,6 +181,7 @@ const Proposals = () => {
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Submitted/Funded Proposal details</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Funding Agency</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Amount</th>
+                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -144,15 +192,49 @@ const Proposals = () => {
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{proposal.proposalDetails || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{proposal.fundingAgency || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{proposal.amount || '-'}</td>
+                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button onClick={() => handleUpdateClick(proposal, index)} style={{ width: 'auto' }}>
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(index)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                          Delete
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" style={{ textAlign: 'center', padding: '1rem' }}>No proposals found</td>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '1rem' }}>No proposals found</td>
                 </tr>
               )}
             </tbody>
           </table>
+          {showEditForm && (
+            <div className="update-form">
+              <h2>Update Proposal</h2>
+              <form onSubmit={handleEdit}>
+                <input type="text" name="proposalDetails" value={formData.proposalDetails} onChange={handleInputChange} placeholder="Proposal Details" required />
+                <input type="text" name="fundingAgency" value={formData.fundingAgency} onChange={handleInputChange} placeholder="Funding Agency" required />
+                <input type="number" name="amount" value={formData.amount} onChange={handleInputChange} placeholder="Amount" required />
+                <button type="submit">Save Changes</button>
+                <button type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
+              </form>
+            </div>
+          )}
+          {showAddForm && (
+            <div className="add-form">
+              <h2>Add Proposal</h2>
+              <form onSubmit={handleAddFormSubmit}>
+                <input type="text" name="proposalDetails" value={formData.proposalDetails} onChange={handleInputChange} placeholder="Proposal Details" required />
+                <input type="text" name="fundingAgency" value={formData.fundingAgency} onChange={handleInputChange} placeholder="Funding Agency" required />
+                <input type="number" name="amount" value={formData.amount} onChange={handleInputChange} placeholder="Amount" required />
+                <button type="submit">Add Proposal</button>
+                <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
+              </form>
+            </div>
+          )}
         </div>
       )}
     </div>

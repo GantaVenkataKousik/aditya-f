@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DisplayWorkshops = () => {
   const navigate = useNavigate();
@@ -14,32 +16,32 @@ const DisplayWorkshops = () => {
     date: '',
     location: ''
   });
-
-  useEffect(() => {
-    const fetchWorkshops = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setWorkshops(data);
-        } else {
-          console.error("Error fetching workshops");
+  const fetchWorkshops = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setWorkshops(data);
+      } else {
+        console.error("Error fetching workshops");
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+
 
     fetchWorkshops();
   }, []);
@@ -72,7 +74,7 @@ const DisplayWorkshops = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}/${selectedWorkshop.index}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}/${selectedWorkshop.index}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -82,7 +84,7 @@ const DisplayWorkshops = () => {
       });
 
       if (response.ok) {
-        alert("Workshop updated successfully!");
+        toast.success("Workshop updated successfully!");
         setShowEditForm(false);
         fetchWorkshops();
       } else {
@@ -98,7 +100,7 @@ const DisplayWorkshops = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -108,7 +110,7 @@ const DisplayWorkshops = () => {
       });
 
       if (response.ok) {
-        alert("Workshop added successfully!");
+        toast.success("Workshop added successfully!");
         setShowAddForm(false);
         fetchWorkshops();
       } else {
@@ -123,7 +125,7 @@ const DisplayWorkshops = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}/${index}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -132,7 +134,7 @@ const DisplayWorkshops = () => {
       });
 
       if (response.ok) {
-        alert("Workshop deleted successfully!");
+        toast.success("Workshop deleted successfully!");
         fetchWorkshops();
       } else {
         console.error("Error deleting workshop");
@@ -144,6 +146,7 @@ const DisplayWorkshops = () => {
 
   return (
     <div style={{ padding: '15px' }}>
+      <ToastContainer />
       <div style={{ width: '90px', marginLeft: '1100px' }}>
         <button onClick={handleAddClick}> + Add</button>
       </div>

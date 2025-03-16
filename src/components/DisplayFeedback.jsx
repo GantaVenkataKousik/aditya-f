@@ -21,7 +21,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/feedback/fdata?userId=${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/fdata?userId=${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

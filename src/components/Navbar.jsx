@@ -19,6 +19,7 @@ const Navbar = () => {
       });
 
       if (response.ok) {
+        localStorage.removeItem('token'); // Remove token from localStorage
         navigate('/');
       } else {
         console.error('Logout failed');

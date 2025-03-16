@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import '../tailwind.css'; // Adjust the path if needed
 import Login from './Login';
@@ -59,12 +59,12 @@ import ProctoringForm from './ProctoringForm';
 import HodTable from './HodTable';
 import FacultyScoreTable from './FacultyScoreTable';
 import UserList from './UserList';
+
 function App() {
   const [faculty, setFaculty] = useState([]);
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
-
     setDepartments([
       { name: "CSE", description: "Focuses on AI", image: cseImage },
       { name: "ECE", description: "Focuses on Chip design", image: eceImage },
@@ -79,15 +79,18 @@ function App() {
       try {
         const facultyData = await axios.get('https://aditya-b.onrender.com/fetchData/faculty');
         setFaculty(facultyData.data);
-        console.log(faculty);
       } catch (error) {
         console.log('Error occurred:', error);
       }
     };
 
     fetchData();
-
   }, []);
+
+  const ProtectedRoute = ({ children }) => {
+    const token = localStorage.getItem('token');
+    return token ? children : <Navigate to="/" />;
+  };
 
   return (
     <Routes>
@@ -100,11 +103,19 @@ function App() {
       <Route path="/addarticle" element={<AddArticle />} />
       <Route
         path="/home"
-        element={<Home faculty={faculty} departments={departments} />}
+        element={
+          <ProtectedRoute>
+            <Home faculty={faculty} departments={departments} />
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/department/:branchName"
-        element={<Branch faculty={faculty} />}
+        element={
+          <ProtectedRoute>
+            <Branch faculty={faculty} />
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/about"

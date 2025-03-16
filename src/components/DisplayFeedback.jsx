@@ -21,19 +21,12 @@ const DisplayFeedback = ({ feedbackData }) => {
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/classes/fdata?userId=${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/feedback/fdata?userId=${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-
-            if (!response.ok) {
-                console.error(`Failed to fetch data: ${response.statusText}`);
-                const errorMessage = await response.text();
-                console.error('Error message:', errorMessage);
-                return;
-            }
 
             const data2 = await response.json();
             console.log("Fetched Data:", data2);

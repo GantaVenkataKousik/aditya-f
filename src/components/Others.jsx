@@ -52,9 +52,8 @@ const Others = ({ data: propsData }) => {
           'Content-Type': 'application/json',
         },
       });
-
-      if (response.success) {
-        let res = await response.json();
+      let res = await response.json();
+      if (res.success) {
         const data = res.others;
         setActivities(data.Activities || []);
         setResponsibilities(data.Responsibilities || []);

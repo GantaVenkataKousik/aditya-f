@@ -135,6 +135,7 @@ const DisplayCourses = ({ coursesData }) => {
                 const newCourse = await response.json();
                 setData([...data, newCourse]);
                 setShowAddForm(false); // Close the form after successful addition
+                fetchData();
                 toast.success('Course added successfully');
             } else {
                 toast.error('Failed to add course');

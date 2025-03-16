@@ -18,7 +18,7 @@ const DisplayCourses = ({ coursesData }) => {
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/classes/fdata?userId=${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

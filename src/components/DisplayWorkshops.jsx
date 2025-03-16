@@ -27,10 +27,9 @@ const DisplayWorkshops = () => {
           'Content-Type': 'application/json'
         }
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        setWorkshops(data);
+      const res = await response.json();
+      if (res.success) {
+        setWorkshops(res.Workshops);
       } else {
         console.error("Error fetching workshops");
       }
@@ -74,7 +73,7 @@ const DisplayWorkshops = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}/${selectedWorkshop.index}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -82,8 +81,8 @@ const DisplayWorkshops = () => {
         },
         body: JSON.stringify(formData)
       });
-
-      if (response.ok) {
+      const res = await response.json();
+      if (res.success) {
         toast.success("Workshop updated successfully!");
         setShowEditForm(false);
         fetchWorkshops();
@@ -94,7 +93,6 @@ const DisplayWorkshops = () => {
       console.error("Error:", error);
     }
   };
-
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -109,7 +107,8 @@ const DisplayWorkshops = () => {
         body: JSON.stringify(formData)
       });
 
-      if (response.ok) {
+      const res = await response.json();
+      if (res.success) {
         toast.success("Workshop added successfully!");
         setShowAddForm(false);
         fetchWorkshops();
@@ -125,7 +124,7 @@ const DisplayWorkshops = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}/${index}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -133,7 +132,8 @@ const DisplayWorkshops = () => {
         }
       });
 
-      if (response.ok) {
+      const res = await response.json();
+      if (res.success) {
         toast.success("Workshop deleted successfully!");
         fetchWorkshops();
       } else {

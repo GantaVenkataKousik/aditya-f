@@ -97,10 +97,9 @@ const DisplayCourses = ({ coursesData }) => {
                 },
                 body: JSON.stringify(formData),
             });
-
-            if (response.ok) {
-                const updatedCourse = await response.json();
-
+            const res = await response.json();
+            if (res.success) {
+                const updatedCourse = res.data;
                 // Update the course in the existing state
                 setData((prevData) =>
                     prevData.map((course) =>
@@ -162,7 +161,9 @@ const DisplayCourses = ({ coursesData }) => {
     return (
         <div>
             <ToastContainer />
-            <button onClick={handleAddClick}>Add Course</button>
+            <div className='add-course-button-container' style={{ display: 'flex', justifyContent: 'end ', alignItems: 'center', marginTop: '20px' }}>
+                <button onClick={handleAddClick} className='add-course-button w-200 h-10' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px', }}>Add Course</button>
+            </div>
             <table className='courses-table'>
                 <thead>
                     <tr>
@@ -276,7 +277,7 @@ const DisplayCourses = ({ coursesData }) => {
                         <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
                         <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
                         <input type='number' name='passCount' value={formData.passCount} onChange={handleInputChange} placeholder='Pass Count' required />
-                        <button type='submit'>Add Course</button>
+                        <button type='submit' className='add-course-button width-100'>Add Course</button>
                         <button type='button' onClick={() => setShowAddForm(false)}>Cancel</button>
                     </form>
                 </div>

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const DisplayWorkshops = () => {
-  const navigate = useNavigate();
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -16,6 +14,7 @@ const DisplayWorkshops = () => {
     date: '',
     location: ''
   });
+
   const fetchWorkshops = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -31,17 +30,17 @@ const DisplayWorkshops = () => {
       if (res.success) {
         setWorkshops(res.Workshops);
       } else {
-        console.error("Error fetching workshops");
+        toast.error("Error fetching workshops");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Error fetching workshops");
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-
-
     fetchWorkshops();
   }, []);
 
@@ -56,10 +55,10 @@ const DisplayWorkshops = () => {
     setShowEditForm(false);
   };
 
-  const handleUpdateClick = (workshop, index) => {
+  const handleUpdateClick = (workshop) => {
     setShowEditForm(true);
     setShowAddForm(false);
-    setSelectedWorkshop({ ...workshop, index });
+    setSelectedWorkshop(workshop);
     setFormData(workshop);
   };
 
@@ -73,7 +72,7 @@ const DisplayWorkshops = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}/${selectedWorkshop._id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -87,12 +86,14 @@ const DisplayWorkshops = () => {
         setShowEditForm(false);
         fetchWorkshops();
       } else {
-        console.error("Error updating workshop");
+        toast.error("Error updating workshop");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Error updating workshop");
     }
   };
+
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -113,18 +114,19 @@ const DisplayWorkshops = () => {
         setShowAddForm(false);
         fetchWorkshops();
       } else {
-        console.error("Error adding workshop");
+        toast.error("Error adding workshop");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Error adding workshop");
     }
   };
 
-  const handleDelete = async (index) => {
+  const handleDelete = async (workshopId) => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}/${workshopId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -137,10 +139,11 @@ const DisplayWorkshops = () => {
         toast.success("Workshop deleted successfully!");
         fetchWorkshops();
       } else {
-        console.error("Error deleting workshop");
+        toast.error("Error deleting workshop");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Error deleting workshop");
     }
   };
 
@@ -179,7 +182,7 @@ const DisplayWorkshops = () => {
             <tbody>
               {workshops.length > 0 ? (
                 workshops.map((workshop, index) => (
-                  <tr key={index} style={{ textAlign: 'center' }}>
+                  <tr key={workshop._id || index} style={{ textAlign: 'center' }}>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{index + 1}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.workshopTitle || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.organizer || '-'}</td>
@@ -187,10 +190,10 @@ const DisplayWorkshops = () => {
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.location || '-'}</td>
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                       <div style={{ display: 'flex', gap: '10px' }}>
-                        <button onClick={() => handleUpdateClick(workshop, index)} style={{ width: 'auto' }}>
+                        <button onClick={() => handleUpdateClick(workshop)} style={{ width: 'auto' }}>
                           Edit
                         </button>
-                        <button onClick={() => handleDelete(index)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                        <button onClick={() => handleDelete(workshop._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
                           Delete
                         </button>
                       </div>

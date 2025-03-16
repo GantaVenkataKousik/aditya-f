@@ -21,7 +21,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/fdata/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const DisplayFeedback = ({ feedbackData }) => {
         e.preventDefault();
         const userId = localStorage.getItem('userId');
         try {
-            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/add/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

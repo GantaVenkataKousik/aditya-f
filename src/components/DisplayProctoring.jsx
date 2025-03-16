@@ -15,6 +15,7 @@ const ProctoringTable = ({ proctoringData }) => {
         selfAssessmentMarks: '',
         teacher: ''
     });
+
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');

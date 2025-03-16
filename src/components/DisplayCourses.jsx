@@ -23,7 +23,7 @@ const DisplayCourses = ({ coursesData }) => {
             });
             const res = await response.json();
             if (res.success) {
-                setData(res.data[0]);
+                setData(res.data);
             }
         } catch (error) {
             console.error('Error fetching data:', error);

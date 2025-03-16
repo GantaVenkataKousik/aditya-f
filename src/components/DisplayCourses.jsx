@@ -106,8 +106,8 @@ const DisplayCourses = ({ coursesData }) => {
 
 
     // **Calculate average pass percentage and self-assessment marks**
-    const totalPassPercentage = data.reduce((acc, cls) => acc + cls.passPercentage, 0);
-    const averagePassPercentage = data.length > 0 ? (totalPassPercentage / data.length).toFixed(2) : 0;
+    const totalPassPercentage = data && data.length > 0 ? data.reduce((acc, cls) => acc + cls.passPercentage, 0) : 0;
+    const averagePassPercentage = data && data.length > 0 ? (totalPassPercentage / data.length).toFixed(2) : 0;
 
     let selfAssessmentMarks = 0;
     if (averagePassPercentage >= 95) {

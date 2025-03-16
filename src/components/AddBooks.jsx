@@ -17,7 +17,7 @@ const AddBooks = () => {
 
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/add-books?userId=${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/add-books/${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

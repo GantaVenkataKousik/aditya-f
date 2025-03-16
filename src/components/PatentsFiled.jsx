@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PatentsFiled = () => {
   const navigate = useNavigate();
@@ -14,32 +16,32 @@ const PatentsFiled = () => {
     FiledinCountry: '',
     PublishedDate: ''
   });
-
-  useEffect(() => {
-    const fetchPatentsFiled = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/research/pfiled/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setPatents(data);
-        } else {
-          console.error("Error fetching filed patents");
+  const fetchPatentsFiled = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/pfiled/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPatents(data);
+      } else {
+        console.error("Error fetching filed patents");
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+
 
     fetchPatentsFiled();
   }, []);
@@ -82,7 +84,7 @@ const PatentsFiled = () => {
       });
 
       if (response.ok) {
-        alert("Patent updated successfully!");
+        toast.success("Patent updated successfully!");
         setShowEditForm(false);
         fetchPatentsFiled();
       } else {
@@ -108,7 +110,7 @@ const PatentsFiled = () => {
       });
 
       if (response.ok) {
-        alert("Patent added successfully!");
+        toast.success("Patent added successfully!");
         setShowAddForm(false);
         fetchPatentsFiled();
       } else {
@@ -132,7 +134,7 @@ const PatentsFiled = () => {
       });
 
       if (response.ok) {
-        alert("Patent deleted successfully!");
+        toast.success("Patent deleted successfully!");
         fetchPatentsFiled();
       } else {
         console.error("Error deleting patent");
@@ -144,6 +146,7 @@ const PatentsFiled = () => {
 
   return (
     <div style={{ padding: '15px' }}>
+      <ToastContainer />
       <div style={{ width: '90px', marginLeft: '1100px' }}>
         <button onClick={handleAddClick}> + Add</button>
       </div>

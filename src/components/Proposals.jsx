@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Proposals = () => {
   const navigate = useNavigate();
   const [proposals, setProposals] = useState([]);
@@ -13,32 +14,32 @@ const Proposals = () => {
     fundingAgency: '',
     amount: ''
   });
-
-  useEffect(() => {
-    const fetchProposals = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/research/proposals/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setProposals(data);
-        } else {
-          console.error("Error fetching proposals");
+  const fetchProposals = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/proposals/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProposals(data);
+      } else {
+        console.error("Error fetching proposals");
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+
 
     fetchProposals();
   }, []);
@@ -80,7 +81,7 @@ const Proposals = () => {
       });
 
       if (response.ok) {
-        alert("Proposal updated successfully!");
+        toast.success("Proposal updated successfully!");
         setShowEditForm(false);
         fetchProposals();
       } else {
@@ -106,7 +107,7 @@ const Proposals = () => {
       });
 
       if (response.ok) {
-        alert("Proposal added successfully!");
+        toast.success("Proposal added successfully!");
         setShowAddForm(false);
         fetchProposals();
       } else {
@@ -130,7 +131,7 @@ const Proposals = () => {
       });
 
       if (response.ok) {
-        alert("Proposal deleted successfully!");
+        toast.success("Proposal deleted successfully!");
         fetchProposals();
       } else {
         console.error("Error deleting proposal");
@@ -142,6 +143,7 @@ const Proposals = () => {
 
   return (
     <div style={{ padding: '15px' }}>
+      <ToastContainer />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', marginBottom: '10px' }}>
         <button
           onClick={handleAddClick}

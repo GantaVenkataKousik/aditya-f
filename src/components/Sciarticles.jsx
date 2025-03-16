@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const SciArticles = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
@@ -14,32 +15,32 @@ const SciArticles = () => {
     ISSN: '',
     authorPosition: ''
   });
-
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/research/sciarticles/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setArticles(data);
-        } else {
-          console.error("Error fetching articles");
+  const fetchArticles = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/sciarticles/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setArticles(data);
+      } else {
+        console.error("Error fetching articles");
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+
 
     fetchArticles();
   }, []);
@@ -68,7 +69,7 @@ const SciArticles = () => {
       });
 
       if (response.ok) {
-        alert("File uploaded successfully!");
+        toast.success("File uploaded successfully!");
         setFile(null);
       } else {
         console.error("Upload failed");
@@ -115,7 +116,7 @@ const SciArticles = () => {
       });
 
       if (response.ok) {
-        alert("Article updated successfully!");
+        toast.success("Article updated successfully!");
         setShowEditForm(false);
         fetchArticles();
       } else {
@@ -141,7 +142,7 @@ const SciArticles = () => {
       });
 
       if (response.ok) {
-        alert("Article added successfully!");
+        toast.success("Article added successfully!");
         setShowAddForm(false);
         fetchArticles();
       } else {
@@ -165,7 +166,7 @@ const SciArticles = () => {
       });
 
       if (response.ok) {
-        alert("Article deleted successfully!");
+        toast.success("Article deleted successfully!");
         fetchArticles();
       } else {
         console.error("Error deleting article");
@@ -177,6 +178,7 @@ const SciArticles = () => {
 
   return (
     <div style={{ padding: '15px' }}>
+      <ToastContainer />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', marginBottom: '10px' }}>
 
         {/* File Upload Input */}

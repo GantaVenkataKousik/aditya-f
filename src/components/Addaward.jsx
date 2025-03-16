@@ -13,7 +13,7 @@ const AddAward = () => {
 
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/add-award?userId=${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/add-award/${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

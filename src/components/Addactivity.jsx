@@ -12,7 +12,7 @@ const AddActivity = () => {
 
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/add-activity?userId=${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/add-activity/${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

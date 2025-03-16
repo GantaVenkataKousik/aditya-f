@@ -39,7 +39,7 @@ const DisplayWorkshops = ({ data: propsData }) => {
   const fetchWorkshops = async () => {
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -92,78 +92,75 @@ const DisplayWorkshops = ({ data: propsData }) => {
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`https://aditya-b.onrender.com/workshop/${selectedWorkshop._id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await response.json();
-    if (data.success) {
-      toast.success('Workshop updated successfully');
-      setShowEditForm(false);
-      fetchWorkshops();
-    } else {
-      toast.error('Failed to update workshop');
+    try {
+      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${selectedWorkshop._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        toast.success("Workshop updated successfully!");
+        fetchWorkshops();
+        setShowEditForm(false);
+      } else {
+        toast.error("Failed to update workshop.");
+      }
+    } catch (error) {
+      console.error("Error updating workshop:", error);
+      toast.error("Server error.");
     }
   };
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
-    const userId = localStorage.getItem('userId');
     try {
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
-        const newWorkshop = await response.json();
-        setWorkshops([...workshops, newWorkshop]);
-        setShowAddForm(false); // Close the form after successful addition
+        toast.success("Workshop added successfully!");
         fetchWorkshops();
-        toast.success('Workshop added successfully');
+        setShowAddForm(false);
       } else {
-        toast.error('Failed to add workshop');
+        toast.error("Failed to add workshop.");
       }
     } catch (error) {
-      console.error('Error adding workshop:', error);
-      toast.error('Failed to add workshop');
+      console.error("Error adding workshop:", error);
+      toast.error("Server error.");
     }
   };
 
   const handleDelete = async (id) => {
-    const response = await fetch(`https://aditya-b.onrender.com/workshop/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    if (data.success) {
-      toast.success('Workshop deleted successfully');
-      fetchWorkshops();
-    } else {
-      toast.error('Failed to delete workshop');
+    try {
+      const response = await fetch(`https://aditya-b.onrender.com/research/workshop/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        toast.success("Workshop deleted successfully!");
+        fetchWorkshops();
+      } else {
+        toast.error("Failed to delete workshop.");
+      }
+    } catch (error) {
+      console.error("Error deleting workshop:", error);
+      toast.error("Server error.");
     }
   };
 
   return (
-    <div className="workshops-container">
-      <ToastContainer />
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="font-bold text-base">5. Workshops/FDPs/STTP/Refresher Courses Attended:</h2>
-        <div className="flex items-center gap-2">
-          <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-          {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
-          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleAddClick}>+ Add</button>
-        </div>
-      </div>
-
+    <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
+      <h2 className="text-xl font-semibold mb-4">Workshops</h2>
+      <button onClick={handleAddClick} className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print">+ Add</button>
       {loading ? (
         <p>Loading workshops...</p>
       ) : (

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Papers = () => {
   const navigate = useNavigate();
@@ -13,32 +15,32 @@ const Papers = () => {
     paperDetails: '',
     authorPosition: ''
   });
-
-  useEffect(() => {
-    const fetchPapers = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/research/papers/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setPapers(data);
-        } else {
-          console.error("Error fetching papers");
+  const fetchPapers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/papers/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPapers(data);
+      } else {
+        console.error("Error fetching papers");
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+
 
     fetchPapers();
   }, []);
@@ -79,7 +81,7 @@ const Papers = () => {
       });
 
       if (response.ok) {
-        alert("Paper updated successfully!");
+        toast.success("Paper updated successfully!");
         setShowEditForm(false);
         fetchPapers();
       } else {
@@ -105,7 +107,7 @@ const Papers = () => {
       });
 
       if (response.ok) {
-        alert("Paper added successfully!");
+        toast.success("Paper added successfully!");
         setShowAddForm(false);
         fetchPapers();
       } else {
@@ -129,7 +131,7 @@ const Papers = () => {
       });
 
       if (response.ok) {
-        alert("Paper deleted successfully!");
+        toast.success("Paper deleted successfully!");
         fetchPapers();
       } else {
         console.error("Error deleting paper");
@@ -141,6 +143,7 @@ const Papers = () => {
 
   return (
     <div style={{ padding: '15px' }}>
+      <ToastContainer />
       <div style={{ width: '90px', marginLeft: '1100px' }}>
         <button onClick={handleAddClick}> + Add</button>
       </div>

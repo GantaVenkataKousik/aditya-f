@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const WosArticles = () => {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ const WosArticles = () => {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        alert("Article updated successfully!");
+        toast.success("Article updated successfully!");
         fetchArticles();
         setShowEditForm(false);
       } else {
@@ -135,7 +136,7 @@ const WosArticles = () => {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        alert("Article added successfully!");
+        toast.success("Article added successfully!");
         fetchArticles();
         setShowAddForm(false);
       } else {
@@ -156,7 +157,7 @@ const WosArticles = () => {
         }
       });
       if (response.ok) {
-        alert("Article deleted successfully!");
+        toast.success("Article deleted successfully!");
         fetchArticles();
       } else {
         alert("Failed to delete article.");

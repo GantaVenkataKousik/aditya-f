@@ -13,7 +13,7 @@ const AddContribution = () => {
 
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/add-contribution?userId=${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/add-contribution/${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

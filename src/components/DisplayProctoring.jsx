@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './DisplayProctoring.css'; // Import the CSS file
 import { toast, ToastContainer } from 'react-toastify';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+
 const ProctoringTable = ({ proctoringData }) => {
     const [data, setData] = useState(proctoringData || []); // Initialize with props data if available
-    const [showForm, setShowForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const [showAddForm, setShowAddForm] = useState(false);
     const [selectedProctor, setSelectedProctor] = useState(null);
     const [formData, setFormData] = useState({
         totalStudents: '',
@@ -42,6 +44,7 @@ const ProctoringTable = ({ proctoringData }) => {
             console.error('Error fetching data:', error);
         }
     };
+
     useEffect(() => {
         if (!proctoringData) {
             // Fetch data from API only if no data is passed via props
@@ -56,16 +59,35 @@ const ProctoringTable = ({ proctoringData }) => {
         if (passPercentage >= 75) return 10;
         return 0;
     };
+
     const handleUpdateClick = (proctor) => {
-        setShowForm(true);
+        setShowEditForm(true);
+        setShowAddForm(false);
         setSelectedProctor(proctor);
         setFormData(proctor);
     };
+
+    const handleAddClick = () => {
+        setFormData({
+            totalStudents: '',
+            semesterBranchSec: '',
+            eligibleStudents: '',
+            passedStudents: '',
+            averagePercentage: '',
+            selfAssessmentMarks: '',
+            teacher: ''
+        });
+        setShowAddForm(true);
+        setShowEditForm(false);
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    const handleEdit = async () => {
+
+    const handleEdit = async (e) => {
+        e.preventDefault();
         const response = await fetch(`https://aditya-b.onrender.com/proctoring/${selectedProctor._id}`, {
             method: 'PUT',
             headers: {
@@ -76,11 +98,40 @@ const ProctoringTable = ({ proctoringData }) => {
         const data = await response.json();
         if (data.success) {
             toast.success("Proctoring data updated successfully");
+            setShowEditForm(false);
             fetchData();
         } else {
             toast.error("Failed to update proctoring data");
         }
     };
+
+    const handleAddFormSubmit = async (e) => {
+        e.preventDefault();
+        const userId = localStorage.getItem('userId');
+        try {
+            const response = await fetch(`https://aditya-b.onrender.com/proctoring/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                const newProctoring = await response.json();
+                setData([...data, newProctoring]);
+                setShowAddForm(false); // Close the form after successful addition
+                fetchData();
+                toast.success('Proctoring data added successfully');
+            } else {
+                toast.error('Failed to add proctoring data');
+            }
+        } catch (error) {
+            console.error('Error adding proctoring data:', error);
+            toast.error('Failed to add proctoring data');
+        }
+    };
+
     const handleDelete = async (id) => {
         const response = await fetch(`https://aditya-b.onrender.com/proctoring/${id}`, {
             method: 'DELETE',
@@ -97,10 +148,12 @@ const ProctoringTable = ({ proctoringData }) => {
         }
     };
 
-
     return (
         <div>
             <ToastContainer />
+            <div className='add-proctoring-button-container' style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', marginTop: '20px' }}>
+                <button onClick={handleAddClick} className='add-proctoring-button' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Proctoring</button>
+            </div>
             <table className="proctoring-table">
                 <thead>
                     <tr>
@@ -146,12 +199,12 @@ const ProctoringTable = ({ proctoringData }) => {
                         })
                     ) : (
                         <tr>
-                            <td colSpan="8" style={{ textAlign: 'center' }}>No data available</td>
+                            <td colSpan="9" style={{ textAlign: 'center' }}>No data available</td>
                         </tr>
                     )}
                 </tbody>
             </table>
-            {showForm && (
+            {showEditForm && (
                 <div className="update-form">
                     <h2>Update Proctoring Data</h2>
                     <form onSubmit={handleEdit}>
@@ -162,7 +215,22 @@ const ProctoringTable = ({ proctoringData }) => {
                         <input type="number" name="averagePercentage" value={formData.averagePercentage} onChange={handleInputChange} placeholder="Average %" required />
                         <input type="number" name="selfAssessmentMarks" value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder="Self-Assessment Marks" required />
                         <button className='no-print' type="submit">Save Changes</button>
-                        <button className='no-print' type="button" onClick={() => setShowForm(false)}>Cancel</button>
+                        <button className='no-print' type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
+                    </form>
+                </div>
+            )}
+            {showAddForm && (
+                <div className="add-form">
+                    <h2>Add Proctoring Data</h2>
+                    <form onSubmit={handleAddFormSubmit}>
+                        <input type="number" name="totalStudents" value={formData.totalStudents} onChange={handleInputChange} placeholder="Total Students" required />
+                        <input type="text" name="semesterBranchSec" value={formData.semesterBranchSec} onChange={handleInputChange} placeholder="Semester-Branch-Section" required />
+                        <input type="number" name="eligibleStudents" value={formData.eligibleStudents} onChange={handleInputChange} placeholder="No. of Students Eligible for End Exams (A)" required />
+                        <input type="number" name="passedStudents" value={formData.passedStudents} onChange={handleInputChange} placeholder="No. of Students Passed (B)" required />
+                        <input type="number" name="averagePercentage" value={formData.averagePercentage} onChange={handleInputChange} placeholder="Average %" required />
+                        <input type="number" name="selfAssessmentMarks" value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder="Self-Assessment Marks" required />
+                        <button className='no-print' type="submit">Add Proctoring</button>
+                        <button className='no-print' type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
                     </form>
                 </div>
             )}

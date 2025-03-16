@@ -28,13 +28,12 @@ const DisplayFeedback = ({ feedbackData }) => {
                 },
             });
 
-            const data2 = await response.json();
-            console.log("Fetched Data:", data2);
+            const res = await response.json();
 
-            if (Array.isArray(data2.data)) {
-                setData(data2.data);
+            if (res.success) {
+                setData(res.data);
             } else {
-                console.error("Unexpected API response format:", data2);
+                console.error("Unexpected API response format:", res);
                 setData([]);
             }
 

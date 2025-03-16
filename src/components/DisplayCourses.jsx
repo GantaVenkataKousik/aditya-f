@@ -24,10 +24,9 @@ const DisplayCourses = ({ coursesData }) => {
                             'Content-Type': 'application/json',
                         },
                     });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        setData(result.data);
+                    const res = await response.json();
+                    if (res.success) {
+                        setData(res.data);
                     }
                 } catch (error) {
                     console.error('Error fetching data:', error);

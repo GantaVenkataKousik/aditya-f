@@ -54,9 +54,8 @@ const Others = ({ data: propsData }) => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Fetched data:", data);
-
+        let data = await response.json();
+        data = data[0]
         // Set data to state
         setActivities(data.Activities || []);
         setResponsibilities(data.Responsibilities || []);

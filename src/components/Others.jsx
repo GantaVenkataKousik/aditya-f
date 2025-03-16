@@ -528,7 +528,7 @@ const Others = ({ data: propsData }) => {
         </h2>
         <div className="flex justify-end items-center mb-2 gap-2">
           <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button>
+          {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
           <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addactivity')}>
             + Add
           </button>
@@ -613,7 +613,7 @@ const Others = ({ data: propsData }) => {
         </h2>
         <div className="flex justify-end items-center mb-2 gap-2">
           <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button>
+          {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
           <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addresponsibility')}>
             + Add
           </button>
@@ -699,7 +699,7 @@ const Others = ({ data: propsData }) => {
         </h2>
         <div className="flex justify-end items-center mb-2 gap-2">
           <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button>
+          {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
           <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addcontribution')}>
             + Add
           </button>
@@ -782,7 +782,7 @@ const Others = ({ data: propsData }) => {
           <h2 className="font-bold text-base">9. Awards received by Faculty:</h2>
           <div className="flex items-center gap-2 no-print">
             <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-            <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}  >Upload</button>
+            {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}  >Upload</button> */}
             <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addaward')}>
               + Add
             </button>

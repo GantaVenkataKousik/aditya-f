@@ -525,7 +525,7 @@ const Others = ({ data: propsData }) => {
           6. Outreach Activities - (Resource Person/Session Chairs/Invited Talks/Guest Lecture / National / International Collaboration etc.) (1 activity outside AUS – 5 marks)
         </h2>
         <div className="flex justify-end items-center mb-2 gap-2">
-          <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
+          <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} onChange={handleUpload} />
           {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
           <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addactivity')}>
             + Add

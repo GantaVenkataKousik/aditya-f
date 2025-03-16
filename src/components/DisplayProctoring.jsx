@@ -17,13 +17,8 @@ const ProctoringTable = ({ proctoringData }) => {
     });
     const fetchData = async () => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error("No token found in localStorage");
-                return;
-            }
-
-            const response = await fetch('https://aditya-b.onrender.com/proc/proctoring-data', {
+            const userId = localStorage.getItem('userId');
+            const response = await fetch(`https://aditya-b.onrender.com/proc/proctoring-data?userId=${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,7 +65,7 @@ const ProctoringTable = ({ proctoringData }) => {
         setFormData({ ...formData, [name]: value });
     };
     const handleEdit = async () => {
-        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${selectedProctor._id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/proc/proctoring/${selectedProctor._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -86,7 +81,7 @@ const ProctoringTable = ({ proctoringData }) => {
         }
     };
     const handleDelete = async (id) => {
-        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/proc/proctoring/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

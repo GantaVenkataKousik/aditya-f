@@ -24,7 +24,7 @@ const DisplayClasses = () => {
           return;
         }
         const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/classes/raw?userId=${userId}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/classes/courses?userId=${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -51,7 +51,7 @@ const UpdateClass = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`https://aditya-b.onrender.com/classes/${classId}`,
+            const response = await axios.put(`https://aditya-b.onrender.com/classes${classId}`,
                 formData,
                 {
                     headers: {

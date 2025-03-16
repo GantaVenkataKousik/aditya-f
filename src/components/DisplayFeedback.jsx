@@ -20,17 +20,11 @@ const DisplayFeedback = ({ feedbackData }) => {
 
     const fetchData = async () => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error("No token found in localStorage");
-                return;
-            }
             const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/feedback/fdata?userId=${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/fdata?userId=${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -75,7 +69,7 @@ const DisplayFeedback = ({ feedbackData }) => {
 
     const handleEdit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`https://aditya-b.onrender.com/feedback/${selectedFeedback._id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${selectedFeedback._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -93,7 +87,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     };
 
     const handleDelete = async (id) => {
-        const response = await fetch(`https://aditya-b.onrender.com/feedback/${id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

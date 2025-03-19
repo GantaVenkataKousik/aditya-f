@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { canEditDelete } from '../utils/permissions';
+import { canEditDelete, isHODorDean } from '../utils/permissions';
 
 const DisplayWorkshops = () => {
   const [workshops, setWorkshops] = useState([]);
@@ -9,19 +9,25 @@ const DisplayWorkshops = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+  const [canModify, setCanModify] = useState(false);
   const [formData, setFormData] = useState({
     workshopTitle: '',
     organizer: '',
     date: '',
     location: ''
   });
-  const [canModify, setCanModify] = useState(false);
+  const [isHODDeanView, setIsHODDeanView] = useState(false);
 
   const fetchWorkshops = async () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+
+      const endpoint = isHODDeanView
+        ? `https://aditya-b.onrender.com/workshop/all`
+        : `https://aditya-b.onrender.com/workshop/${userId}`;
+
+      const response = await fetch(endpoint, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -43,7 +49,11 @@ const DisplayWorkshops = () => {
   };
 
   useEffect(() => {
-    setCanModify(canEditDelete());
+    const role = localStorage.getItem('role');
+    if (role === 'Admin' || role === 'Faculty') {
+      setCanModify(true);
+    }
+    setIsHODDeanView(isHODorDean());
     fetchWorkshops();
   }, []);
 

@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Others = ({ data: propsData }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!propsData);
-
+  const [modify, setModify] = useState(false);
   // Data states
   const [activities, setActivities] = useState(propsData?.Activities || []);
   const [responsibilities, setResponsibilities] = useState(propsData?.Responsibilities || []);
@@ -77,6 +77,10 @@ const Others = ({ data: propsData }) => {
   useEffect(() => {
     if (!propsData) {
       fetchAll();
+    }
+    const role = localStorage.getItem('role');
+    if (role === 'Admin' || role === 'Faculty') {
+      setModify(true);
     }
   }, [propsData]);
 
@@ -538,7 +542,9 @@ const Others = ({ data: propsData }) => {
                 S.NO
               </th>
               <th className="border p-2 text-center">Activity Details</th>
-              <th className="border p-2 text-center no-print">Actions</th>
+              {modify && (
+                <th className="border p-2 text-center no-print">Actions</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -547,44 +553,46 @@ const Others = ({ data: propsData }) => {
                 <tr key={index} className="border">
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{act.activityDetails}</td>
-                  <td className="p-2 border text-center no-print" style={{ display: 'flex', justifyContent: 'center' }}>
-                    <button
-                      className="no-print"
-                      onClick={(e) => { e.stopPropagation(); handleActivityUpdateClick(act, index); }}
-                      style={{
-                        fontSize: "16px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "rgb(59 130 246)",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto",
-                        padding: "4px 8px"
-                      }}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="no-print"
-                      onClick={(e) => { e.stopPropagation(); handleActivityDelete(index); }}
-                      style={{
-                        fontSize: "16px",
-                        padding: "4px 8px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "#e74c3c",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto"
-                      }}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+                  {modify && (
+                    <td className="p-2 border text-center no-print" style={{ display: 'flex', justifyContent: 'center' }}>
+                      <button
+                        className="no-print"
+                        onClick={(e) => { e.stopPropagation(); handleActivityUpdateClick(act, index); }}
+                        style={{
+                          fontSize: "16px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "rgb(59 130 246)",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto",
+                          padding: "4px 8px"
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="no-print"
+                        onClick={(e) => { e.stopPropagation(); handleActivityDelete(index); }}
+                        style={{
+                          fontSize: "16px",
+                          padding: "4px 8px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "#e74c3c",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto"
+                        }}
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (
@@ -624,7 +632,9 @@ const Others = ({ data: propsData }) => {
               </th>
               <th className="border p-2 text-center">Responsibility</th>
               <th className="border p-2 text-center">Assigned By</th>
-              <th className="border p-2 text-center">Actions</th>
+              {modify && (
+                <th className="border p-2 text-center no-print">Actions</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -634,43 +644,45 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{res.Responsibility}</td>
                   <td className="p-2 border text-center">{res.assignedBy}</td>
-                  <td style={{ display: 'flex', justifyContent: 'center' }}>
-                    <button
-                      className="no-print"
-                      onClick={(e) => { e.stopPropagation(); handleResponsibilityUpdateClick(res, index); }}
-                      style={{
-                        fontSize: "16px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "rgb(59 130 246)",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto"
-                      }}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="no-print"
-                      onClick={(e) => { e.stopPropagation(); handleResponsibilityDelete(index); }}
-                      style={{
-                        fontSize: "16px",
-                        padding: "4px 8px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "#e74c3c",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto"
-                      }}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+                  {modify && (
+                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                      <button
+                        className="no-print"
+                        onClick={(e) => { e.stopPropagation(); handleResponsibilityUpdateClick(res, index); }}
+                        style={{
+                          fontSize: "16px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "rgb(59 130 246)",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto"
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="no-print"
+                        onClick={(e) => { e.stopPropagation(); handleResponsibilityDelete(index); }}
+                        style={{
+                          fontSize: "16px",
+                          padding: "4px 8px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "#e74c3c",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto"
+                        }}
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (
@@ -710,7 +722,9 @@ const Others = ({ data: propsData }) => {
               </th>
               <th className="border p-2 text-center">Contribution Details</th>
               <th className="border p-2 text-center">Benefit to College/Department</th>
-              <th className="border p-2 text-center">Actions</th>
+              {modify && (
+                <th className="border p-2 text-center no-print">Actions</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -720,41 +734,43 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{cont.contributionDetails}</td>
                   <td className="p-2 border text-center">{cont.Benefit}</td>
-                  <td style={{ display: 'flex', justifyContent: 'center' }}>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleContributionUpdateClick(cont, index); }}
-                      style={{
-                        fontSize: "16px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "rgb(59 130 246)",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto"
-                      }}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleContributionDelete(index); }}
-                      style={{
-                        fontSize: "16px",
-                        padding: "4px 8px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "#e74c3c",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto"
-                      }}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+                  {modify && (
+                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleContributionUpdateClick(cont, index); }}
+                        style={{
+                          fontSize: "16px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "rgb(59 130 246)",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto"
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleContributionDelete(index); }}
+                        style={{
+                          fontSize: "16px",
+                          padding: "4px 8px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "#e74c3c",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto"
+                        }}
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (
@@ -796,7 +812,9 @@ const Others = ({ data: propsData }) => {
               <th className="border p-2 text-center">Awarded By</th>
               <th className="border p-2 text-center">Level</th>
               <th className="border p-2 text-center">Description</th>
-              <th className="border p-2 text-center">Actions</th>
+              {modify && (
+                <th className="border p-2 text-center no-print">Actions</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -808,43 +826,45 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{award.awardedBy}</td>
                   <td className="p-2 border text-center">{award.level}</td>
                   <td className="p-2 border text-center">{award.description}</td>
-                  <td style={{ display: 'flex', justifyContent: 'center' }} className='no-print'>
-                    <button
-                      className='no-print'
-                      onClick={(e) => { e.stopPropagation(); handleAwardUpdateClick(award, index); }}
-                      style={{
-                        fontSize: "16px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "rgb(59 130 246)",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto"
-                      }}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className='no-print'
-                      onClick={(e) => { e.stopPropagation(); handleAwardDelete(index); }}
-                      style={{
-                        fontSize: "16px",
-                        padding: "4px 8px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "#e74c3c",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto"
-                      }}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+                  {modify && (
+                    <td style={{ display: 'flex', justifyContent: 'center' }} className='no-print'>
+                      <button
+                        className='no-print'
+                        onClick={(e) => { e.stopPropagation(); handleAwardUpdateClick(award, index); }}
+                        style={{
+                          fontSize: "16px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "rgb(59 130 246)",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto"
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className='no-print'
+                        onClick={(e) => { e.stopPropagation(); handleAwardDelete(index); }}
+                        style={{
+                          fontSize: "16px",
+                          padding: "4px 8px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "#e74c3c",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto"
+                        }}
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (
@@ -859,7 +879,7 @@ const Others = ({ data: propsData }) => {
       </div>
 
       {/* Modal forms for editing */}
-      {showActivityUpdate && (
+      {modify && showActivityUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Update Activity</h2>
@@ -894,7 +914,7 @@ const Others = ({ data: propsData }) => {
         </div>
       )}
 
-      {showResponsibilityUpdate && (
+      {modify && showResponsibilityUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Update Responsibility</h2>
@@ -938,7 +958,7 @@ const Others = ({ data: propsData }) => {
         </div>
       )}
 
-      {showContributionUpdate && (
+      {modify && showContributionUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Update Contribution</h2>
@@ -982,7 +1002,7 @@ const Others = ({ data: propsData }) => {
         </div>
       )}
 
-      {showAwardUpdate && (
+      {modify && showAwardUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Update Award</h2>

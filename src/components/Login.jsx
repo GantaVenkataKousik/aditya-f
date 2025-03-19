@@ -22,11 +22,9 @@ const Signin = () => {
 
       const data = await response.json();
 
-      // Store token, userId, and role in local storage
       localStorage.setItem('token', data.token);
       localStorage.setItem('userId', data.userId);
-      localStorage.setItem('userRole', data.role);
-
+      localStorage.setItem('role', data.role);
       navigate("/home");
     } catch (error) {
       console.error('fetching failed', error.message);

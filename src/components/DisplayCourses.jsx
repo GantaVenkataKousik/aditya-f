@@ -8,6 +8,7 @@ const DisplayCourses = ({ coursesData }) => {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
+    const [canModify, setCanModify] = useState(false);
     const [formData, setFormData] = useState({
         courseName: '',
         semester: '',
@@ -35,6 +36,11 @@ const DisplayCourses = ({ coursesData }) => {
     };
 
     useEffect(() => {
+        const role = localStorage.getItem('role');
+        console.log(role);
+        if (role === 'Admin' || role === 'Faculty') {
+            setCanModify(true);
+        }
         fetchData();
     }, [coursesData]);
 
@@ -176,7 +182,9 @@ const DisplayCourses = ({ coursesData }) => {
                         <th>Pass %</th>
                         <th>Average %</th>
                         <th>Self-Assessment Marks</th>
-                        <th>Actions</th>
+                        {canModify && (
+                            <th>Actions</th>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
@@ -203,47 +211,49 @@ const DisplayCourses = ({ coursesData }) => {
                                     </>
                                 )}
 
-                                <td style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleEditClick(course); }}
-                                        style={{
-                                            fontSize: "16px",
-                                            margin: "2px",
-                                            border: "none",
-                                            borderRadius: "4px",
-                                            cursor: "pointer",
-                                            backgroundColor: "rgb(59 130 246)",
-                                            color: "white",
-                                            transition: "0.3s",
-                                            width: "auto"
-                                        }}
-                                        className='no-print'
-                                        onMouseOver={(e) => e.target.style.backgroundColor = "#2980b9"}
-                                        onMouseOut={(e) => e.target.style.backgroundColor = "#3498db"}
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleDelete(course._id); }}
-                                        style={{
-                                            fontSize: "16px",
-                                            padding: "4px 8px",
-                                            margin: "2px",
-                                            border: "none",
-                                            borderRadius: "4px",
-                                            cursor: "pointer",
-                                            backgroundColor: "#e74c3c",
-                                            color: "white",
-                                            transition: "0.3s",
-                                            width: "auto"
-                                        }}
-                                        className='no-print'
-                                        onMouseOver={(e) => e.target.style.backgroundColor = "#c0392b"}
-                                        onMouseOut={(e) => e.target.style.backgroundColor = "#e74c3c"}
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </td>
+                                {canModify && (
+                                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleEditClick(course); }}
+                                            style={{
+                                                fontSize: "16px",
+                                                margin: "2px",
+                                                border: "none",
+                                                borderRadius: "4px",
+                                                cursor: "pointer",
+                                                backgroundColor: "rgb(59 130 246)",
+                                                color: "white",
+                                                transition: "0.3s",
+                                                width: "auto"
+                                            }}
+                                            className='no-print'
+                                            onMouseOver={(e) => e.target.style.backgroundColor = "#2980b9"}
+                                            onMouseOut={(e) => e.target.style.backgroundColor = "#3498db"}
+                                        >
+                                            <FaEdit />
+                                        </button>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleDelete(course._id); }}
+                                            style={{
+                                                fontSize: "16px",
+                                                padding: "4px 8px",
+                                                margin: "2px",
+                                                border: "none",
+                                                borderRadius: "4px",
+                                                cursor: "pointer",
+                                                backgroundColor: "#e74c3c",
+                                                color: "white",
+                                                transition: "0.3s",
+                                                width: "auto"
+                                            }}
+                                            className='no-print'
+                                            onMouseOver={(e) => e.target.style.backgroundColor = "#c0392b"}
+                                            onMouseOut={(e) => e.target.style.backgroundColor = "#e74c3c"}
+                                        >
+                                            <FaTrash />
+                                        </button>
+                                    </td>
+                                )}
                             </tr>
                         ))
                     ) : (
@@ -256,7 +266,7 @@ const DisplayCourses = ({ coursesData }) => {
                 </tbody>
             </table>
 
-            {showEditForm && (
+            {canModify && showEditForm && (
                 <div className='update-form'>
                     <h2>Update Course</h2>
                     <form onSubmit={handleEditFormSubmit}>
@@ -270,7 +280,7 @@ const DisplayCourses = ({ coursesData }) => {
                 </div>
             )}
 
-            {showAddForm && (
+            {canModify && showAddForm && (
                 <div className='add-form'>
                     <h2>Add Course</h2>
                     <form onSubmit={handleAddFormSubmit}>

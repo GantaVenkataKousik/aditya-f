@@ -22,9 +22,10 @@ const Signin = () => {
 
       const data = await response.json();
 
-      // Set token and userId in local storage
+      // Store token, userId, and role in local storage
       localStorage.setItem('token', data.token);
-      localStorage.setItem('userId', data.userId);  // Store the userId
+      localStorage.setItem('userId', data.userId);
+      localStorage.setItem('userRole', data.role);
 
       navigate("/home");
     } catch (error) {

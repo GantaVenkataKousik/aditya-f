@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { canEditDelete } from '../utils/permissions';
 
 const DisplayWorkshops = () => {
   const [workshops, setWorkshops] = useState([]);
@@ -14,6 +15,7 @@ const DisplayWorkshops = () => {
     date: '',
     location: ''
   });
+  const [canModify, setCanModify] = useState(false);
 
   const fetchWorkshops = async () => {
     try {
@@ -41,6 +43,7 @@ const DisplayWorkshops = () => {
   };
 
   useEffect(() => {
+    setCanModify(canEditDelete());
     fetchWorkshops();
   }, []);
 
@@ -150,9 +153,11 @@ const DisplayWorkshops = () => {
   return (
     <div style={{ padding: '15px' }}>
       <ToastContainer />
-      <div style={{ width: '90px', marginLeft: '1100px' }}>
-        <button onClick={handleAddClick}> + Add</button>
-      </div>
+      {canModify && (
+        <div style={{ width: '90px', marginLeft: '1100px' }}>
+          <button onClick={handleAddClick}> + Add</button>
+        </div>
+      )}
       <h3 style={{ fontWeight: 'bold', fontSize: '1.125rem', marginBottom: '1rem' }}>
         Workshops:
       </h3>
@@ -176,7 +181,9 @@ const DisplayWorkshops = () => {
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Organizer</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Date</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Location</th>
-                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Actions</th>
+                {canModify && (
+                  <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Actions</th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -188,50 +195,56 @@ const DisplayWorkshops = () => {
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.organizer || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.date || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.location || '-'}</td>
-                    <td style={{ display: 'flex', justifyContent: 'center' }}>
-                      <div style={{ display: 'flex', gap: '10px' }}>
-                        <button onClick={() => handleUpdateClick(workshop)} style={{ width: 'auto' }}>
-                          Edit
-                        </button>
-                        <button onClick={() => handleDelete(workshop._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
-                          Delete
-                        </button>
-                      </div>
-                    </td>
+                    {canModify && (
+                      <td style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <button onClick={() => handleUpdateClick(workshop)} style={{ width: 'auto' }}>
+                            Edit
+                          </button>
+                          <button onClick={() => handleDelete(workshop._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '1rem' }}>No workshops found</td>
+                  <td colSpan={canModify ? "6" : "5"} style={{ textAlign: 'center', padding: '1rem' }}>No workshops found</td>
                 </tr>
               )}
             </tbody>
           </table>
-          {showEditForm && (
-            <div className="update-form">
-              <h2>Update Workshop</h2>
-              <form onSubmit={handleEdit}>
-                <input type="text" name="workshopTitle" value={formData.workshopTitle} onChange={handleInputChange} placeholder="Workshop Title" required />
-                <input type="text" name="organizer" value={formData.organizer} onChange={handleInputChange} placeholder="Organizer" required />
-                <input type="date" name="date" value={formData.date} onChange={handleInputChange} placeholder="Date" required />
-                <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" required />
-                <button type="submit">Save Changes</button>
-                <button type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
-              </form>
-            </div>
-          )}
-          {showAddForm && (
-            <div className="add-form">
-              <h2>Add Workshop</h2>
-              <form onSubmit={handleAddFormSubmit}>
-                <input type="text" name="workshopTitle" value={formData.workshopTitle} onChange={handleInputChange} placeholder="Workshop Title" required />
-                <input type="text" name="organizer" value={formData.organizer} onChange={handleInputChange} placeholder="Organizer" required />
-                <input type="date" name="date" value={formData.date} onChange={handleInputChange} placeholder="Date" required />
-                <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" required />
-                <button type="submit">Add Workshop</button>
-                <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
-              </form>
-            </div>
+          {canModify && (
+            <>
+              {showEditForm && (
+                <div className="update-form">
+                  <h2>Update Workshop</h2>
+                  <form onSubmit={handleEdit}>
+                    <input type="text" name="workshopTitle" value={formData.workshopTitle} onChange={handleInputChange} placeholder="Workshop Title" required />
+                    <input type="text" name="organizer" value={formData.organizer} onChange={handleInputChange} placeholder="Organizer" required />
+                    <input type="date" name="date" value={formData.date} onChange={handleInputChange} placeholder="Date" required />
+                    <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" required />
+                    <button type="submit">Save Changes</button>
+                    <button type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
+                  </form>
+                </div>
+              )}
+              {showAddForm && (
+                <div className="add-form">
+                  <h2>Add Workshop</h2>
+                  <form onSubmit={handleAddFormSubmit}>
+                    <input type="text" name="workshopTitle" value={formData.workshopTitle} onChange={handleInputChange} placeholder="Workshop Title" required />
+                    <input type="text" name="organizer" value={formData.organizer} onChange={handleInputChange} placeholder="Organizer" required />
+                    <input type="date" name="date" value={formData.date} onChange={handleInputChange} placeholder="Date" required />
+                    <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" required />
+                    <button type="submit">Add Workshop</button>
+                    <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
+                  </form>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

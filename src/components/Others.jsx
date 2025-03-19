@@ -822,10 +822,10 @@ const Others = ({ data: propsData }) => {
               awards.map((award, index) => (
                 <tr key={index} className="border no-print">
                   <td className="p-2 border text-center">{index + 1}</td>
-                  <td className="p-2 border text-center">{award.awardName}</td>
-                  <td className="p-2 border text-center">{award.awardedBy}</td>
-                  <td className="p-2 border text-center">{award.level}</td>
-                  <td className="p-2 border text-center">{award.description}</td>
+                  <td className="p-2 border text-center">{award.Award}</td>
+                  <td className="p-2 border text-center">{award.AwardedBy}</td>
+                  <td className="p-2 border text-center">{award.Level}</td>
+                  <td className="p-2 border text-center">{award.Description}</td>
                   {modify && (
                     <td style={{ display: 'flex', justifyContent: 'center' }} className='no-print'>
                       <button

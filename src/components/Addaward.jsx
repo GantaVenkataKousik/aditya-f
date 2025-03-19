@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 const AddAward = () => {
   const navigate = useNavigate();
   const [Award, setAward] = useState('');
-  const [IssuingOrg, setIssuingOrg] = useState('');
+  const [AwardedBy, setAwardedBy] = useState('');
+  const [Level, setLevel] = useState('');
+  const [Description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -18,7 +20,7 @@ const AddAward = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ award: Award, issuingOrg: IssuingOrg })
+        body: JSON.stringify({ awardName: Award, awardedBy: AwardedBy, level: Level, description: Description })
       });
 
       if (response.ok) {
@@ -48,12 +50,32 @@ const AddAward = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium">Issuing Organization</label>
+          <label className="block text-sm font-medium">Awarded By</label>
           <input
             type="text"
             className="w-full p-2 border rounded"
-            value={IssuingOrg}
-            onChange={(e) => setIssuingOrg(e.target.value)}
+            value={AwardedBy}
+            onChange={(e) => setAwardedBy(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Level</label>
+          <input
+            type="text"
+            className="w-full p-2 border rounded"
+            value={Level}
+            onChange={(e) => setLevel(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Description</label>
+          <input
+            type="text"
+            className="w-full p-2 border rounded"
+            value={Description}
+            onChange={(e) => setDescription(e.target.value)}
             required
           />
         </div>

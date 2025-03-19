@@ -94,7 +94,7 @@ const DisplayFeedback = ({ feedbackData }) => {
         e.preventDefault();
         const userId = localStorage.getItem('userId');
         try {
-            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/add/${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ const DisplayFeedback = ({ feedbackData }) => {
             if (response.ok) {
                 const newFeedback = await response.json();
                 setData([...data, newFeedback]);
-                setShowAddForm(false); // Close the form after successful addition
+                setShowAddForm(false);
                 fetchData();
                 toast.success('Feedback added successfully');
             } else {

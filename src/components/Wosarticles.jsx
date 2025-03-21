@@ -19,7 +19,9 @@ const WosArticles = () => {
   const fetchArticles = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://aditya-b.onrender.com/research/wosarticles', {
+      const userId = localStorage.getItem('userId');
+
+      const response = await fetch(`https://aditya-b.onrender.com/research/wosarticles/${userId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -31,17 +33,17 @@ const WosArticles = () => {
         const data = await response.json();
         setArticles(data);
       } else {
-        console.error("Error fetching WoS articles");
+        toast.error("Failed to fetch articles");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Error fetching articles");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-
     fetchArticles();
   }, []);
 
@@ -55,25 +57,6 @@ const WosArticles = () => {
       return;
     }
 
-    // const formData = new FormData();
-    // formData.append("file", file);
-
-    // try {
-    //   const token = localStorage.getItem("token");
-    //   const response = await fetch("https://aditya-b.onrender.com/research/upload-wos", {
-    //     method: "POST",
-    //     headers: {
-    //       "Authorization": `Bearer ${token}`
-    //     },
-    //     body: formData
-    //   });
-
-    //   if (response.ok) {
-    //     alert("File uploaded successfully!");
-    //     setFile(null);
-    //   } else {
-    //     console.error("Upload failed");
-    //   }
     toast.success("File uploaded successfully!");
 
   };
@@ -103,7 +86,8 @@ const WosArticles = () => {
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://aditya-b.onrender.com/research/wosarticles/${selectedArticle._id}`, {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/wosarticles/${userId}/${selectedArticle._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -127,30 +111,37 @@ const WosArticles = () => {
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://aditya-b.onrender.com/research/addwosarticles', {
+      const userId = localStorage.getItem('userId');
+
+      const response = await fetch(`https://aditya-b.onrender.com/research/wosarticles/${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+        }),
       });
-      if (response.ok) {
+
+      const data = await response.json();
+
+      if (data.success) {
         toast.success("Article added successfully!");
         fetchArticles();
         setShowAddForm(false);
       } else {
-        alert("Failed to add article.");
+        toast.error(data.message || "Failed to add article");
       }
     } catch (error) {
       console.error("Error adding article:", error);
-      alert("Server error.");
+      toast.error("Server error");
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://aditya-b.onrender.com/research/wosarticles/${id}`, {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/wosarticles/${userId}/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

@@ -17,17 +17,14 @@ const DisplayWorkshops = () => {
     location: ''
   });
   const [isHODDeanView, setIsHODDeanView] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchWorkshops = async () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
 
-      const endpoint = isHODDeanView
-        ? `https://aditya-b.onrender.com/workshop/all`
-        : `https://aditya-b.onrender.com/workshop/${userId}`;
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -53,7 +50,6 @@ const DisplayWorkshops = () => {
     if (role === 'Admin' || role === 'Faculty') {
       setCanModify(true);
     }
-    setIsHODDeanView(isHODorDean());
     fetchWorkshops();
   }, []);
 
@@ -82,6 +78,7 @@ const DisplayWorkshops = () => {
 
   const handleEdit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
@@ -104,11 +101,14 @@ const DisplayWorkshops = () => {
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error updating workshop");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
@@ -132,6 +132,8 @@ const DisplayWorkshops = () => {
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error adding workshop");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -187,6 +189,9 @@ const DisplayWorkshops = () => {
             <thead>
               <tr style={{ backgroundColor: '#d0e8f2', fontWeight: 'bold' }}>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>S.No</th>
+                {isHODDeanView && (
+                  <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Faculty Name</th>
+                )}
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Workshop Title</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Organizer</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Date</th>
@@ -201,6 +206,11 @@ const DisplayWorkshops = () => {
                 workshops.map((workshop, index) => (
                   <tr key={workshop._id || index} style={{ textAlign: 'center' }}>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{index + 1}</td>
+                    {isHODDeanView && (
+                      <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
+                        {workshop.User?.fullName || '-'}
+                      </td>
+                    )}
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.workshopTitle || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.organizer || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.date || '-'}</td>
@@ -236,7 +246,9 @@ const DisplayWorkshops = () => {
                     <input type="text" name="organizer" value={formData.organizer} onChange={handleInputChange} placeholder="Organizer" required />
                     <input type="date" name="date" value={formData.date} onChange={handleInputChange} placeholder="Date" required />
                     <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" required />
-                    <button type="submit">Save Changes</button>
+                    <button type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? 'Saving...' : 'Save Changes'}
+                    </button>
                     <button type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
                   </form>
                 </div>
@@ -249,7 +261,9 @@ const DisplayWorkshops = () => {
                     <input type="text" name="organizer" value={formData.organizer} onChange={handleInputChange} placeholder="Organizer" required />
                     <input type="date" name="date" value={formData.date} onChange={handleInputChange} placeholder="Date" required />
                     <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" required />
-                    <button type="submit">Add Workshop</button>
+                    <button type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? 'Adding...' : 'Add Workshop'}
+                    </button>
                     <button type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
                   </form>
                 </div>

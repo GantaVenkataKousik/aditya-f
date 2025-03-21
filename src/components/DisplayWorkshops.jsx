@@ -166,11 +166,9 @@ const DisplayWorkshops = () => {
   return (
     <div style={{ padding: '15px' }}>
       <ToastContainer />
-      {canModify && (
-        <div style={{ width: '90px', marginLeft: '1100px' }}>
-          <button onClick={handleAddClick}> + Add</button>
-        </div>
-      )}
+      <div style={{ width: '90px', marginLeft: '1100px' }}>
+        <button onClick={handleAddClick}> + Add</button>
+      </div>
       <h3 style={{ fontWeight: 'bold', fontSize: '1.125rem', marginBottom: '1rem' }}>
         5. Workshops:
       </h3>
@@ -216,18 +214,16 @@ const DisplayWorkshops = () => {
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.organizer || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.date || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.location || '-'}</td>
-                    {canModify && (
-                      <td style={{ display: 'flex', justifyContent: 'center' }}>
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                          <button onClick={() => handleUpdateClick(workshop)} style={{ width: 'auto' }}>
-                            Edit
-                          </button>
-                          <button onClick={() => handleDelete(workshop._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    )}
+                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button onClick={() => handleUpdateClick(workshop)} style={{ width: 'auto' }}>
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(workshop._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                          Delete
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))
               ) : (

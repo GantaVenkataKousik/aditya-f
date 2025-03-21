@@ -65,6 +65,21 @@ const ProctoringTable = ({ proctoringData }) => {
         return 0;
     };
 
+    // Function to calculate pass percentage for a single record
+    const calculatePassPercentage = (passed, eligible) => {
+        return ((passed / eligible) * 100).toFixed(2);
+    };
+
+    // Function to calculate average percentage from all records
+    const calculateAveragePercentage = (records) => {
+        if (!records || records.length === 0) return 0;
+        const sum = records.reduce((acc, record) => {
+            const passPercentage = calculatePassPercentage(record.passedStudents, record.eligibleStudents);
+            return acc + parseFloat(passPercentage);
+        }, 0);
+        return (sum / records.length).toFixed(2);
+    };
+
     const handleUpdateClick = (proctor) => {
         setShowEditForm(true);
         setShowAddForm(false);
@@ -86,9 +101,27 @@ const ProctoringTable = ({ proctoringData }) => {
         setShowEditForm(false);
     };
 
+    // Modified handleInputChange to auto-calculate average
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const newFormData = { ...formData, [name]: value };
+
+        // If either passedStudents or eligibleStudents is updated
+        if (name === 'passedStudents' || name === 'eligibleStudents') {
+            if (newFormData.passedStudents && newFormData.eligibleStudents) {
+                // Calculate new average including the current form data
+                const currentRecords = [...data];
+                const tempRecord = {
+                    passedStudents: parseInt(newFormData.passedStudents),
+                    eligibleStudents: parseInt(newFormData.eligibleStudents)
+                };
+
+                const newAverage = calculateAveragePercentage([...currentRecords, tempRecord]);
+                newFormData.averagePercentage = newAverage;
+            }
+        }
+
+        setFormData(newFormData);
     };
 
     const handleEdit = async (e) => {
@@ -110,22 +143,42 @@ const ProctoringTable = ({ proctoringData }) => {
         }
     };
 
+    // Modified handleAddFormSubmit
     const handleAddFormSubmit = async (e) => {
         e.preventDefault();
         const userId = localStorage.getItem('userId');
+
+        // Calculate the pass percentage for the new record
+        const passPercentage = calculatePassPercentage(
+            parseInt(formData.passedStudents),
+            parseInt(formData.eligibleStudents)
+        );
+
+        // Calculate new average including all records
+        const newAverage = calculateAveragePercentage([
+            ...data,
+            {
+                passedStudents: parseInt(formData.passedStudents),
+                eligibleStudents: parseInt(formData.eligibleStudents)
+            }
+        ]);
+
         try {
             const response = await fetch(`https://aditya-b.onrender.com/proctoring/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    ...formData,
+                    averagePercentage: newAverage,
+                }),
             });
 
             if (response.ok) {
                 const newProctoring = await response.json();
                 setData([...data, newProctoring]);
-                setShowAddForm(false); // Close the form after successful addition
+                setShowAddForm(false);
                 fetchData();
                 toast.success('Proctoring data added successfully');
             } else {
@@ -178,7 +231,7 @@ const ProctoringTable = ({ proctoringData }) => {
                 <tbody>
                     {Array.isArray(data) && data.length > 0 ? (
                         data.map((proctor, index) => {
-                            const passPercentage = ((proctor.passedStudents / proctor.eligibleStudents) * 100).toFixed(2);
+                            const passPercentage = calculatePassPercentage(proctor.passedStudents, proctor.eligibleStudents);
                             const selfAssessmentMarks = getSelfAssessmentMarks(passPercentage);
 
                             return (
@@ -232,12 +285,54 @@ const ProctoringTable = ({ proctoringData }) => {
                 <div className="add-form">
                     <h2>Add Proctoring Data</h2>
                     <form onSubmit={handleAddFormSubmit}>
-                        <input type="number" name="totalStudents" value={formData.totalStudents} onChange={handleInputChange} placeholder="Total Students" required />
-                        <input type="text" name="semesterBranchSec" value={formData.semesterBranchSec} onChange={handleInputChange} placeholder="Semester-Branch-Section" required />
-                        <input type="number" name="eligibleStudents" value={formData.eligibleStudents} onChange={handleInputChange} placeholder="No. of Students Eligible for End Exams (A)" required />
-                        <input type="number" name="passedStudents" value={formData.passedStudents} onChange={handleInputChange} placeholder="No. of Students Passed (B)" required />
-                        <input type="number" name="averagePercentage" value={formData.averagePercentage} onChange={handleInputChange} placeholder="Average %" required />
-                        <input type="number" name="selfAssessmentMarks" value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder="Self-Assessment Marks" required />
+                        <input
+                            type="number"
+                            name="totalStudents"
+                            value={formData.totalStudents}
+                            onChange={handleInputChange}
+                            placeholder="Total Students"
+                            required
+                        />
+                        <input
+                            type="text"
+                            name="semesterBranchSec"
+                            value={formData.semesterBranchSec}
+                            onChange={handleInputChange}
+                            placeholder="Semester-Branch-Section"
+                            required
+                        />
+                        <input
+                            type="number"
+                            name="eligibleStudents"
+                            value={formData.eligibleStudents}
+                            onChange={handleInputChange}
+                            placeholder="No. of Students Eligible for End Exams (A)"
+                            required
+                        />
+                        <input
+                            type="number"
+                            name="passedStudents"
+                            value={formData.passedStudents}
+                            onChange={handleInputChange}
+                            placeholder="No. of Students Passed (B)"
+                            required
+                        />
+                        <input
+                            type="number"
+                            name="averagePercentage"
+                            value={formData.averagePercentage || ''}
+                            readOnly
+                            placeholder="Average % (Auto-calculated)"
+                            style={{ backgroundColor: '#f0f0f0' }}
+                        />
+                        <input
+                            type="number"
+                            name="selfAssessmentMarks"
+                            value={formData.selfAssessmentMarks}
+                            onChange={handleInputChange}
+                            placeholder="Self-Assessment Marks"
+                            required
+                        />
                         <button className='no-print' type="submit">Add Proctoring</button>
                         <button className='no-print' type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
                     </form>

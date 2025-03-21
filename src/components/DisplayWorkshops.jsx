@@ -169,7 +169,7 @@ const DisplayWorkshops = () => {
         </div>
       )}
       <h3 style={{ fontWeight: 'bold', fontSize: '1.125rem', marginBottom: '1rem' }}>
-        Workshops:
+        5. Workshops:
       </h3>
 
       {loading ? (

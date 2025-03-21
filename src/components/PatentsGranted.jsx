@@ -16,6 +16,7 @@ const PatentsGranted = () => {
     CountryGranted: '',
     GrantedDate: ''
   });
+
   const fetchPatents = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -40,9 +41,8 @@ const PatentsGranted = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-
-
     fetchPatents();
   }, []);
 
@@ -61,7 +61,10 @@ const PatentsGranted = () => {
     setShowEditForm(true);
     setShowAddForm(false);
     setSelectedPatent({ ...patent, index });
-    setFormData(patent);
+    setFormData({
+      ...patent,
+      GrantedDate: formatDate(patent.GrantedDate)
+    });
   };
 
   const handleInputChange = (e) => {
@@ -72,63 +75,79 @@ const PatentsGranted = () => {
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
+
+      const submissionData = {
+        ...formData,
+        GrantedDate: new Date(formData.GrantedDate).toISOString()
+      };
+
       const response = await fetch(`https://aditya-b.onrender.com/research/pgranted/${userId}/${selectedPatent.index}`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(submissionData)
       });
 
       if (response.ok) {
         toast.success("Patent updated successfully!");
         setShowEditForm(false);
-        fetchPatents();
+        setPatents(prevPatents => {
+          const newPatents = [...prevPatents];
+          newPatents[selectedPatent.index] = submissionData;
+          return newPatents;
+        });
+        await fetchPatents();
       } else {
-        console.error("Error updating patent");
+        toast.error("Error updating patent");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Failed to update patent");
     }
   };
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+
+      const submissionData = {
+        ...formData,
+        GrantedDate: new Date(formData.GrantedDate).toISOString()
+      };
+
       const response = await fetch(`https://aditya-b.onrender.com/research/pgranted/${userId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(submissionData)
       });
 
       if (response.ok) {
         toast.success("Patent added successfully!");
         setShowAddForm(false);
-        fetchPatents();
+        setPatents(prevPatents => [...prevPatents, submissionData]);
+        await fetchPatents();
       } else {
-        console.error("Error adding patent");
+        toast.error("Error adding patent");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Failed to add patent");
     }
   };
 
   const handleDelete = async (index) => {
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const response = await fetch(`https://aditya-b.onrender.com/research/pgranted/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
@@ -143,6 +162,34 @@ const PatentsGranted = () => {
       console.error("Error:", error);
     }
   };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toISOString().split('T')[0];
+  };
+
+  const formatDateForDisplay = (dateString) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString('en-GB');
+  };
+
+  const renderPatentRow = (patent, index) => (
+    <tr key={index} style={{ textAlign: 'center' }}>
+      <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{index + 1}</td>
+      <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{patent.PTitle || '-'}</td>
+      <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{patent.PNumber || '-'}</td>
+      <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{patent.CountryGranted || '-'}</td>
+      <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
+        {formatDateForDisplay(patent.GrantedDate)}
+      </td>
+      <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
+        <button onClick={() => handleUpdateClick(patent, index)} style={{ marginRight: '5px' }}>Edit</button>
+        <button onClick={() => handleDelete(index)}>Delete</button>
+      </td>
+    </tr>
+  );
 
   return (
     <div style={{ padding: '15px' }}>
@@ -178,22 +225,12 @@ const PatentsGranted = () => {
             </thead>
             <tbody>
               {patents.length > 0 ? (
-                patents.map((patent, index) => (
-                  <tr key={index} style={{ textAlign: 'center' }}>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{index + 1}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{patent.PTitle || '-'}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{patent.PNumber || '-'}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{patent.CountryGranted || '-'}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{patent.GrantedDate || '-'}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
-                      <button onClick={() => handleUpdateClick(patent, index)} style={{ marginRight: '5px' }}>Edit</button>
-                      <button onClick={() => handleDelete(index)}>Delete</button>
-                    </td>
-                  </tr>
-                ))
+                patents.map((patent, index) => renderPatentRow(patent, index))
               ) : (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '1rem' }}>No patents granted found</td>
+                  <td colSpan="6" style={{ textAlign: 'center', padding: '1rem' }}>
+                    No patents granted found
+                  </td>
                 </tr>
               )}
             </tbody>

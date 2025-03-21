@@ -419,17 +419,8 @@ const Others = ({ data: propsData }) => {
     e.preventDefault();
     try {
       const userId = getUserId();
-      console.log("User ID for award update:", userId);
-      console.log("Current award index:", currentIndex);
-
-      if (!userId) {
-        toast.error('User ID not found. Please log in again.');
-        return;
-      }
-
       const token = localStorage.getItem('token');
 
-      // FIXED: Now using userId instead of document ID
       const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
@@ -438,13 +429,13 @@ const Others = ({ data: propsData }) => {
         },
         body: JSON.stringify({
           Award: awardName,
-          IssuingOrg: awardedBy
+          IssuingOrg: awardedBy,
+          Level: awards[currentIndex].Level,
+          Description: awards[currentIndex].Description
         })
       });
 
       const data = await response.json();
-      console.log("Award update response:", data);
-
       if (response.ok && data.success) {
         toast.success('Award updated successfully');
         setShowAwardUpdate(false);
@@ -455,7 +446,9 @@ const Others = ({ data: propsData }) => {
           updatedItems[currentIndex] = {
             ...updatedItems[currentIndex],
             Award: awardName,
-            IssuingOrg: awardedBy
+            IssuingOrg: awardedBy,
+            Level: awards[currentIndex].Level,
+            Description: awards[currentIndex].Description
           };
           return updatedItems;
         });
@@ -823,7 +816,7 @@ const Others = ({ data: propsData }) => {
                 <tr key={index} className="border no-print">
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{award.Award}</td>
-                  <td className="p-2 border text-center">{award.AwardedBy}</td>
+                  <td className="p-2 border text-center">{award.IssuingOrg}</td>
                   <td className="p-2 border text-center">{award.Level}</td>
                   <td className="p-2 border text-center">{award.Description}</td>
                   {modify && (
@@ -1011,15 +1004,17 @@ const Others = ({ data: propsData }) => {
                 <label className="block text-gray-700 mb-2">Award Name</label>
                 <input
                   type="text"
+                  className="w-full p-2 border rounded"
                   value={awardName}
                   onChange={(e) => setAwardName(e.target.value)}
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Awarded By</label>
+                <label className="block text-gray-700 mb-2">Issuing Organization</label>
                 <input
                   type="text"
+                  className="w-full p-2 border rounded"
                   value={awardedBy}
                   onChange={(e) => setAwardedBy(e.target.value)}
                   required

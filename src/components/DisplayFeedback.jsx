@@ -66,9 +66,29 @@ const DisplayFeedback = ({ feedbackData }) => {
         setShowEditForm(false);
     };
 
+    const calculateAveragePercentage = (records) => {
+        if (!records || records.length === 0) return 0;
+        const sum = records.reduce((acc, record) => {
+            return acc + parseFloat(record.feedbackPercentage || 0);
+        }, 0);
+        return (sum / records.length).toFixed(2);
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const newFormData = { ...formData, [name]: value };
+
+        if (name === 'feedbackPercentage') {
+            const currentRecords = [...data];
+            const tempRecord = {
+                feedbackPercentage: parseFloat(value) || 0
+            };
+
+            const newAverage = calculateAveragePercentage([...currentRecords, tempRecord]);
+            newFormData.averagePercentage = newAverage;
+        }
+
+        setFormData(newFormData);
     };
 
     const handleEdit = async (e) => {
@@ -93,13 +113,22 @@ const DisplayFeedback = ({ feedbackData }) => {
     const handleAddFormSubmit = async (e) => {
         e.preventDefault();
         const userId = localStorage.getItem('userId');
+
+        const newAverage = calculateAveragePercentage([
+            ...data,
+            { feedbackPercentage: parseFloat(formData.feedbackPercentage) || 0 }
+        ]);
+
         try {
             const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    ...formData,
+                    averagePercentage: newAverage,
+                }),
             });
 
             if (response.ok) {
@@ -194,7 +223,14 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
                         <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
                         <input type='number' name='feedbackPercentage' value={formData.feedbackPercentage} onChange={handleInputChange} placeholder='Feedback Percentage' required />
-                        <input type='number' name='averagePercentage' value={formData.averagePercentage} onChange={handleInputChange} placeholder='Average Percentage' required />
+                        <input
+                            type='number'
+                            name='averagePercentage'
+                            value={formData.averagePercentage || ''}
+                            readOnly
+                            placeholder='Average Percentage (Auto-calculated)'
+                            style={{ backgroundColor: '#f0f0f0' }}
+                        />
                         <input type='number' name='selfAssessmentMarks' value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder='Self-Assessment Marks' required />
                         <button type='submit' className='no-print'>Save Changes</button>
                         <button type='button' onClick={() => setShowEditForm(false)} className='no-print'>Cancel</button>
@@ -209,7 +245,14 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
                         <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
                         <input type='number' name='feedbackPercentage' value={formData.feedbackPercentage} onChange={handleInputChange} placeholder='Feedback Percentage' required />
-                        <input type='number' name='averagePercentage' value={formData.averagePercentage} onChange={handleInputChange} placeholder='Average Percentage' required />
+                        <input
+                            type='number'
+                            name='averagePercentage'
+                            value={formData.averagePercentage || ''}
+                            readOnly
+                            placeholder='Average Percentage (Auto-calculated)'
+                            style={{ backgroundColor: '#f0f0f0' }}
+                        />
                         <input type='number' name='selfAssessmentMarks' value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder='Self-Assessment Marks' required />
                         <button type='submit' className='no-print'>Add Feedback</button>
                         <button type='button' onClick={() => setShowAddForm(false)} className='no-print'>Cancel</button>

@@ -643,7 +643,7 @@ const Others = ({ data: propsData }) => {
                 <tr key={index} className="border">
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{res.Responsibility}</td>
-                  <td className="p-2 border text-center">{res.assignedBy}</td>
+                  <td className="p-2 border text-center">{res.AssignedBy}</td>
                   {modify && (
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                       <button

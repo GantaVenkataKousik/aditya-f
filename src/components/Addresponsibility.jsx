@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const AddResponsibility = () => {
   const navigate = useNavigate();
   const [Responsibility, setResponsibility] = useState('');
-  const [assignedBy, setAssignedBy] = useState('');
+  const [AssignedBy, setAssignedBy] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -21,7 +21,7 @@ const AddResponsibility = () => {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ Responsibility, assignedBy })
+        body: JSON.stringify({ Responsibility, AssignedBy })
       });
       const data = await response.json();
       if (data.success) {
@@ -57,7 +57,7 @@ const AddResponsibility = () => {
           <input
             type="text"
             className="w-full p-2 border rounded"
-            value={assignedBy}
+            value={AssignedBy}
             onChange={(e) => setAssignedBy(e.target.value)}
             required
           />

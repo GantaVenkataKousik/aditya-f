@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Books = () => {
   const navigate = useNavigate();
@@ -13,32 +15,31 @@ const Books = () => {
     ISBN: ''
   });
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/research/books/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setBooks(data);
-        } else {
-          console.error("Error fetching books");
+  const fetchBooks = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/books/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      });
 
+      if (response.ok) {
+        const data = await response.json();
+        setBooks(data || []); // Ensure we always set an array
+      } else {
+        toast.error("Error fetching books");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Failed to fetch books");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBooks();
   }, []);
 
@@ -63,83 +64,95 @@ const Books = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleEdit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/research/books/${userId}/${selectedBook.index}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (response.ok) {
-        alert("Book updated successfully!");
-        setShowEditForm(false);
-        fetchBooks();
-      } else {
-        console.error("Error updating book");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const response = await fetch(`https://aditya-b.onrender.com/research/books/${userId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
       });
 
+      const data = await response.json();
       if (response.ok) {
-        alert("Book added successfully!");
+        toast.success("Book added successfully!");
         setShowAddForm(false);
+        setBooks(prevBooks => [...prevBooks, formData]);
         fetchBooks();
       } else {
-        console.error("Error adding book");
+        toast.error(data.message || "Error adding book");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Failed to add book");
+    }
+  };
+
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/books/${userId}/${selectedBook.index}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Book updated successfully!");
+        setShowEditForm(false);
+        setBooks(prevBooks => {
+          const newBooks = [...prevBooks];
+          newBooks[selectedBook.index] = formData;
+          return newBooks;
+        });
+        fetchBooks();
+      } else {
+        toast.error(data.message || "Error updating book");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Failed to update book");
     }
   };
 
   const handleDelete = async (index) => {
+    if (!window.confirm('Are you sure you want to delete this book?')) {
+      return;
+    }
+
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const response = await fetch(`https://aditya-b.onrender.com/research/books/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
 
+      const data = await response.json();
       if (response.ok) {
-        alert("Book deleted successfully!");
+        toast.success("Book deleted successfully!");
+        setBooks(prevBooks => prevBooks.filter((_, i) => i !== index));
         fetchBooks();
       } else {
-        console.error("Error deleting book");
+        toast.error(data.message || "Error deleting book");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Failed to delete book");
     }
   };
 
   return (
     <div style={{ padding: '15px' }}>
+      <ToastContainer />
       <div style={{ width: '90px', marginLeft: '1100px' }}>
         <button onClick={handleAddClick}> + Add</button>
       </div>

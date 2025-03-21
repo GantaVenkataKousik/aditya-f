@@ -15,7 +15,7 @@ const AddResponsibility = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/others/add-responsibility/${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/add-responsibility/${userId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

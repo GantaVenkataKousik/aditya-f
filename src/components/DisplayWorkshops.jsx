@@ -16,18 +16,15 @@ const DisplayWorkshops = () => {
     date: '',
     location: ''
   });
-  const [isHODDeanView, setIsHODDeanView] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchWorkshops = async () => {
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
 
       const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });

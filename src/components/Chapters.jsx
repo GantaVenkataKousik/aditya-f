@@ -14,32 +14,32 @@ const Chapters = () => {
     ISBN: '',
     authorPosition: ''
   });
+  const fetchChapters = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/research/chapters/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setChapters(data);
+      } else {
+        console.error("Error fetching chapters");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchChapters = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/research/chapters/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setChapters(data);
-        } else {
-          console.error("Error fetching chapters");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchChapters();
   }, []);
@@ -70,12 +70,10 @@ const Chapters = () => {
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const response = await fetch(`https://aditya-b.onrender.com/research/chapters/${userId}/${selectedChapter.index}`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
@@ -96,12 +94,10 @@ const Chapters = () => {
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const response = await fetch(`https://aditya-b.onrender.com/research/chapters/${userId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
@@ -121,12 +117,10 @@ const Chapters = () => {
 
   const handleDelete = async (index) => {
     try {
-      const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const response = await fetch(`https://aditya-b.onrender.com/research/chapters/${userId}/${index}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });

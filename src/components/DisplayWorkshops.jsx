@@ -47,11 +47,12 @@ const DisplayWorkshops = () => {
 
   useEffect(() => {
     const role = localStorage.getItem('role');
+    console.log(role);
     if (role === 'Admin' || role === 'Faculty') {
       setCanModify(true);
     }
     fetchWorkshops();
-  }, []);
+  }, [workshops]);
 
   const handleAddClick = () => {
     setFormData({

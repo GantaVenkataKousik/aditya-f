@@ -108,12 +108,9 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
           [field]: editValue
         }));
         toast.success(`${field} updated successfully`);
-      } else {
-        toast.error(data.message || 'Failed to update field');
       }
     } catch (error) {
       console.error("Error updating field:", error);
-      toast.error("Failed to update field");
     } finally {
       setEditingField(null);
     }
@@ -167,12 +164,9 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
         // Refresh lecturer details
         const updatedData = await response.json();
         setLecturerDetails(updatedData);
-      } else {
-        toast.error('Failed to update profile');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      toast.error('Failed to update profile');
     }
   };
 

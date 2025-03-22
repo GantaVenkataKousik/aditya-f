@@ -8,6 +8,9 @@ const Others = ({ data: propsData }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!propsData);
   const [modify, setModify] = useState(false);
+  const [outreachMarks, setOutreachMarks] = useState(0);
+  const [specialMarks, setSpecialMarks] = useState(0);
+  const [additionalMarks, setAdditionalMarks] = useState(0);
   // Data states
   const [activities, setActivities] = useState(propsData?.Activities || []);
   const [responsibilities, setResponsibilities] = useState(propsData?.Responsibilities || []);
@@ -82,6 +85,10 @@ const Others = ({ data: propsData }) => {
     if (role === 'Admin' || role === 'Faculty') {
       setModify(true);
     }
+    const assesmentMarks = localStorage.getItem('assesmentMarks');
+    setOutreachMarks(assesmentMarks.OutreachSelfAssesMarks);
+    setSpecialMarks(assesmentMarks.SpecialSelfAssesMarks);
+    setAdditionalMarks(assesmentMarks.AddSelfAssesMarks);
   }, [propsData]);
 
   // ======== ACTIVITIES HANDLERS ========
@@ -599,7 +606,7 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold no-print">{activityMarks}</td>
+              <td className="p-2 border text-center font-bold no-print">{outreachMarks}</td>
             </tr>
           </tbody>
         </table>
@@ -689,7 +696,7 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold">{responsibilityMarks}</td>
+              <td className="p-2 border text-center font-bold">{additionalMarks}</td>
             </tr>
           </tbody>
         </table>
@@ -777,7 +784,7 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold">{contributionMarks}</td>
+              <td className="p-2 border text-center font-bold">{specialMarks}</td>
             </tr>
           </tbody>
         </table>

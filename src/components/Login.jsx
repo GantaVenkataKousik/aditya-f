@@ -25,6 +25,8 @@ const Signin = () => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userId', data.userId);
       localStorage.setItem('role', data.role);
+      localStorage.setItem('assesmentMarks', data.assesmentMarks);
+
       navigate("/home");
     } catch (error) {
       console.error('fetching failed', error.message);

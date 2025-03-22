@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { canEditDelete, isHODorDean } from '../utils/permissions';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const DisplayWorkshops = () => {
   const [workshops, setWorkshops] = useState([]);
@@ -210,10 +210,10 @@ const DisplayWorkshops = () => {
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                       <div style={{ display: 'flex', gap: '10px' }}>
                         <button onClick={() => handleUpdateClick(workshop)} style={{ width: 'auto' }}>
-                          Edit
+                          <FaEdit />
                         </button>
                         <button onClick={() => handleDelete(workshop._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
-                          Delete
+                          <FaTrash />
                         </button>
                       </div>
                     </td>

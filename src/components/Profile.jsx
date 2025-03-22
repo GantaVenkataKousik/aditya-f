@@ -153,7 +153,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
     e.preventDefault();
     try {
       const userId = localStorage.getItem("userId");
-      const response = await fetch(`https://aditya-b.onrender.com/add-user`, {
+      const response = await fetch(`https://aditya-b.onrender.com/addUser`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

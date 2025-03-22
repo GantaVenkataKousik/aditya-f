@@ -9,6 +9,7 @@ const Proposals = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState(null);
+  const [proposalMarks, setProposalMarks] = useState(0);
   const [formData, setFormData] = useState({
     proposalDetails: '',
     fundingAgency: '',
@@ -42,6 +43,8 @@ const Proposals = () => {
 
 
     fetchProposals();
+    const proposalMarks = localStorage.getItem('proposlmarks');
+    setProposalMarks(proposalMarks);
   }, []);
 
   const handleAddClick = () => {
@@ -211,6 +214,12 @@ const Proposals = () => {
                   <td colSpan="5" style={{ textAlign: 'center', padding: '1rem' }}>No proposals found</td>
                 </tr>
               )}
+              <tr>
+                <td className="p-2 border text-center font-bold" colSpan="2">
+                  Self-Assessment Marks (Max: 10)
+                </td>
+                <td className="p-2 border text-center font-bold">{proposalMarks}</td>
+              </tr>
             </tbody>
           </table>
           {showEditForm && (

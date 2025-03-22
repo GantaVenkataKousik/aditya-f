@@ -608,7 +608,7 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold no-print">{activityMarks}</td>
+              <td className="p-2 border text-center font-bold no-print">{outreachMarks}</td>
             </tr>
           </tbody>
         </table>
@@ -786,7 +786,7 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold">{contributionMarks}</td>
+              <td className="p-2 border text-center font-bold">{specialMarks}</td>
             </tr>
           </tbody>
         </table>

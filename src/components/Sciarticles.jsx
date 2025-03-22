@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+
 const SciArticles = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
@@ -15,6 +17,7 @@ const SciArticles = () => {
     ISSN: '',
     authorPosition: ''
   });
+  const [sciMarks, setSciMarks] = useState(0);
   const fetchArticles = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -43,6 +46,8 @@ const SciArticles = () => {
 
 
     fetchArticles();
+    const sciMarks = localStorage.getItem('scimarks');
+    setSciMarks(sciMarks);
   }, []);
 
   const handleFileChange = (e) => {
@@ -254,9 +259,15 @@ const SciArticles = () => {
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{article.articleDetails || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{article.ISSN || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{article.authorPosition || '-'}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
-                      <button onClick={() => handleUpdateClick(article, index)} style={{ marginRight: '5px' }}>Edit</button>
-                      <button onClick={() => handleDelete(index)}>Delete</button>
+                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button onClick={() => handleUpdateClick(article, index)} style={{ width: 'auto' }}>
+                          <FaEdit />
+                        </button>
+                        <button onClick={() => handleDelete(index)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                          <FaTrash />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -265,6 +276,12 @@ const SciArticles = () => {
                   <td colSpan="5" style={{ textAlign: 'center', padding: '1rem' }}>No articles found</td>
                 </tr>
               )}
+              <tr>
+                <td className="p-2 border text-center font-bold" colSpan="2">
+                  Self-Assessment Marks (Max: 10)
+                </td>
+                <td className="p-2 border text-center font-bold">{sciMarks}</td>
+              </tr>
             </tbody>
           </table>
           {showEditForm && (

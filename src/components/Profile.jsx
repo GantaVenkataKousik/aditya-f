@@ -121,10 +121,12 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
 
   const handleShowUpdateForm = () => {
     setFormData({
+      fullName: lecturerDetails.fullName || '',
       email: lecturerDetails.email || '',
       EmpID: lecturerDetails.EmpID || '',
+      designation: lecturerDetails.designation || '',
+      department: lecturerDetails.department || '',
       JoiningDate: lecturerDetails.JoiningDate || '',
-      Qualification: lecturerDetails.Qualification || '',
       UG: lecturerDetails.UG || '',
       UGYear: lecturerDetails.UGYear || '',
       PG: lecturerDetails.PG || '',
@@ -186,12 +188,14 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
           ×
         </button>
 
+        {/* General Information */}
+        <h3>1. General Information</h3>
         <div className="form-group">
-          <label>Email:</label>
+          <label>Full Name:</label>
           <input
-            type="email"
-            name="email"
-            value={formData.email}
+            type="text"
+            name="fullName"
+            value={formData.fullName || ''}
             onChange={handleFormChange}
           />
         </div>
@@ -201,16 +205,157 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
           <input
             type="text"
             name="EmpID"
-            value={formData.EmpID}
+            value={formData.EmpID || ''}
             onChange={handleFormChange}
           />
         </div>
 
-        {/* Add more form fields following the same pattern */}
+        <div className="form-group">
+          <label>Designation:</label>
+          <input
+            type="text"
+            name="designation"
+            value={formData.designation || ''}
+            onChange={handleFormChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Department:</label>
+          <input
+            type="text"
+            name="department"
+            value={formData.department || ''}
+            onChange={handleFormChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Date of Joining:</label>
+          <input
+            type="date"
+            name="JoiningDate"
+            value={formData.JoiningDate || ''}
+            onChange={handleFormChange}
+          />
+        </div>
+
+        {/* Academic Qualifications */}
+        <h3>2. Academic Qualifications</h3>
+
+        <div className="qualification-section">
+          <h4>Undergraduate</h4>
+          <div className="form-group">
+            <label>UG Institution:</label>
+            <input
+              type="text"
+              name="UG"
+              value={formData.UG || ''}
+              onChange={handleFormChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>UG Year:</label>
+            <input
+              type="text"
+              name="UGYear"
+              value={formData.UGYear || ''}
+              onChange={handleFormChange}
+            />
+          </div>
+        </div>
+
+        <div className="qualification-section">
+          <h4>Postgraduate</h4>
+          <div className="form-group">
+            <label>PG Institution:</label>
+            <input
+              type="text"
+              name="PG"
+              value={formData.PG || ''}
+              onChange={handleFormChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>PG Year:</label>
+            <input
+              type="text"
+              name="PGYear"
+              value={formData.PGYear || ''}
+              onChange={handleFormChange}
+            />
+          </div>
+        </div>
+
+        <div className="qualification-section">
+          <h4>PhD</h4>
+          <div className="form-group">
+            <label>PhD Details:</label>
+            <input
+              type="text"
+              name="Phd"
+              value={formData.Phd || ''}
+              onChange={handleFormChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>PhD Year:</label>
+            <input
+              type="text"
+              name="PhdYear"
+              value={formData.PhdYear || ''}
+              onChange={handleFormChange}
+            />
+          </div>
+        </div>
+
+        <div className="qualification-section">
+          <h4>Other Qualifications</h4>
+          <div className="form-group">
+            <label>Other Institution:</label>
+            <input
+              type="text"
+              name="OtherInst"
+              value={formData.OtherInst || ''}
+              onChange={handleFormChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Other Year:</label>
+            <input
+              type="text"
+              name="OtherYear"
+              value={formData.OtherYear || ''}
+              onChange={handleFormChange}
+            />
+          </div>
+        </div>
+
+        {/* Experience */}
+        <h3>3. Experience</h3>
+        <div className="form-group">
+          <label>Industrial Experience:</label>
+          <input
+            type="text"
+            name="Industry"
+            value={formData.Industry || ''}
+            onChange={handleFormChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Total Teaching Experience (years):</label>
+          <input
+            type="number"
+            name="TExp"
+            value={formData.TExp || ''}
+            onChange={handleFormChange}
+          />
+        </div>
 
         <div className="form-actions">
-          <button type="submit">Save Changes</button>
-          <button type="button" onClick={() => setShowUpdateForm(false)}>
+          <button type="submit" className="save-button">Save Changes</button>
+          <button type="button" className="cancel-button" onClick={() => setShowUpdateForm(false)}>
             Cancel
           </button>
         </div>

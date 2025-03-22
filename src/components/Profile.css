@@ -45,13 +45,16 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 12px;
-  border: 1px solid #ddd; /* Add border to the table */
+  border: 1px solid #ddd;
+  /* Add border to the table */
 }
 
-th, td {
+th,
+td {
   padding: 14px;
   text-align: left;
-  border: 1px solid #ddd; /* Ensures vertical and horizontal lines */
+  border: 1px solid #ddd;
+  /* Ensures vertical and horizontal lines */
 }
 
 th {
@@ -85,4 +88,78 @@ tr:nth-child(even) {
 .update-button:hover {
   background: #0056b3;
   transform: scale(1.05);
+}
+
+.update-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.update-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.form-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-actions button[type="submit"] {
+  background: #4CAF50;
+  color: white;
+  border: none;
+}
+
+.form-actions button[type="button"] {
+  background: #f44336;
+  color: white;
+  border: none;
 }

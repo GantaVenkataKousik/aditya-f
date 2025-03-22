@@ -14,6 +14,8 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
   const [error, setError] = useState(null);
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
+  const [formData, setFormData] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -116,6 +118,105 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
       setEditingField(null);
     }
   };
+
+  const handleShowUpdateForm = () => {
+    setFormData({
+      email: lecturerDetails.email || '',
+      EmpID: lecturerDetails.EmpID || '',
+      JoiningDate: lecturerDetails.JoiningDate || '',
+      Qualification: lecturerDetails.Qualification || '',
+      UG: lecturerDetails.UG || '',
+      UGYear: lecturerDetails.UGYear || '',
+      PG: lecturerDetails.PG || '',
+      PGYear: lecturerDetails.PGYear || '',
+      Phd: lecturerDetails.Phd || '',
+      PhdYear: lecturerDetails.PhdYear || '',
+      Industry: lecturerDetails.Industry || '',
+      OtherInst: lecturerDetails.OtherInstitution || '',
+      OtherYear: lecturerDetails.OtherYear || '',
+      TExp: lecturerDetails.TExp || '',
+    });
+    setShowUpdateForm(true);
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await fetch(`https://aditya-b.onrender.com/add-user`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast.success('Profile updated successfully');
+        setShowUpdateForm(false);
+        // Refresh lecturer details
+        const updatedData = await response.json();
+        setLecturerDetails(updatedData);
+      } else {
+        toast.error('Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
+    }
+  };
+
+  const UpdateForm = () => (
+    <div className="update-form-overlay">
+      <form className="update-form" onSubmit={handleFormSubmit}>
+        <h2>Update Profile</h2>
+        <button
+          type="button"
+          className="close-button"
+          onClick={() => setShowUpdateForm(false)}
+        >
+          ×
+        </button>
+
+        <div className="form-group">
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleFormChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Employee ID:</label>
+          <input
+            type="text"
+            name="EmpID"
+            value={formData.EmpID}
+            onChange={handleFormChange}
+          />
+        </div>
+
+        {/* Add more form fields following the same pattern */}
+
+        <div className="form-actions">
+          <button type="submit">Save Changes</button>
+          <button type="button" onClick={() => setShowUpdateForm(false)}>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 
   const renderEditableField = (label, field, value) => {
     return (
@@ -273,9 +374,13 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
           )}
         </section>
 
-        <button className="update-button no-print" onClick={() => navigate("/add-user")}>
+        <button
+          className="update-button no-print"
+          onClick={handleShowUpdateForm}
+        >
           Update Details
         </button>
+        {showUpdateForm && <UpdateForm />}
       </div>
     </div>
   );

@@ -85,10 +85,12 @@ const Others = ({ data: propsData }) => {
     if (role === 'Admin' || role === 'Faculty') {
       setModify(true);
     }
-    const assesmentMarks = localStorage.getItem('assesmentMarks');
-    setOutreachMarks(assesmentMarks.OutreachSelfAssesMarks);
-    setSpecialMarks(assesmentMarks.SpecialSelfAssesMarks);
-    setAdditionalMarks(assesmentMarks.AddSelfAssesMarks);
+    const outreachMarks = localStorage.getItem('outreachmarks');
+    const specialMarks = localStorage.getItem('specialmarks');
+    const additionalMarks = localStorage.getItem('additionalmarks');
+    setOutreachMarks(outreachMarks);
+    setSpecialMarks(specialMarks);
+    setAdditionalMarks(additionalMarks);
   }, [propsData]);
 
   // ======== ACTIVITIES HANDLERS ========
@@ -606,7 +608,7 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold no-print">{outreachMarks}</td>
+              <td className="p-2 border text-center font-bold no-print">{activityMarks}</td>
             </tr>
           </tbody>
         </table>
@@ -784,7 +786,7 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold">{specialMarks}</td>
+              <td className="p-2 border text-center font-bold">{contributionMarks}</td>
             </tr>
           </tbody>
         </table>

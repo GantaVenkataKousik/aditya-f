@@ -25,7 +25,17 @@ const Signin = () => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userId', data.userId);
       localStorage.setItem('role', data.role);
-      localStorage.setItem('assesmentMarks', data.assesmentMarks);
+      localStorage.setItem('outreachmarks', data.assesmentMarks.OutreachSelfAssesMarks);
+      localStorage.setItem('specialmarks', data.assesmentMarks.SpecialSelfAssesMarks);
+      localStorage.setItem('additionalmarks', data.assesmentMarks.AddSelfAssesMarks);
+      localStorage.setItem('researchmarks', data.assesmentMarks.ResearchSelfAssesMarks);
+      localStorage.setItem('workmarks', data.assesmentMarks.WorkSelfAssesMarks);
+      localStorage.setItem('proposlmarks', data.assesmentMarks.ProposalMarks);
+      localStorage.setItem('scimarks', data.assesmentMarks.SciMarks);
+      localStorage.setItem('wosmarks', data.assesmentMarks.WosMarks);
+      localStorage.setItem('couavgpermarks', data.assesmentMarks.CouAvgPerMarks);
+      localStorage.setItem('coufeedmarks', data.assesmentMarks.CoufeedMarks);
+      localStorage.setItem('proctormarks', data.assesmentMarks.ProctoringMarks);
 
       navigate("/home");
     } catch (error) {

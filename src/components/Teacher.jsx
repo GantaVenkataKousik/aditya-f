@@ -48,23 +48,21 @@ const Teacher = ({ faculty }) => {
         {teacherData && (
           <>
             <div>
-              <h1>Courses Average Pass Percentage:</h1>
+              <h2>1. Courses Average Pass Percentage:</h2>
               <DisplayCourses coursesData={teacherData?.classes} />
             </div>
             <div>
-              <h1>Course Feedback:</h1>
+              <h2>2. Course Feedback:</h2>
               <DisplayFeedback feedbackData={teacherData?.feedback} />
             </div>
             <div>
-              <h1>Proctoring:</h1>
+              <h2>3. Proctoring:</h2>
               <ProctoringTable proctoringData={teacherData?.proctoring} />
             </div>
             <div>
-              <h1>Research:</h1>
               <ResearchText data={teacherData?.research} />
             </div>
             <div>
-              <h1>Workshops:</h1>
               <DisplayWorkshops
                 data={{
                   workshops: teacherData.workshop,
@@ -73,11 +71,12 @@ const Teacher = ({ faculty }) => {
               />
             </div>
             <div>
-              <h1>Others:</h1>
+
               <DisplayOthers data={teacherData?.others} />
             </div>
           </>
         )}
+
       </div>
     </div>
   );

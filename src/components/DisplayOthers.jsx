@@ -292,10 +292,7 @@ const DisplayOthers = ({ data: propsData }) => {
 
             {/* Activities Section */}
             <section className="data-section">
-                <h2>Outreach Activities</h2>
-                <button onClick={() => setShowActivityForm(true)} className="add-button">
-                    Add Activity
-                </button>
+                <h2>6.Outreach Activities</h2>
                 <table className="data-table">
                     <thead>
                         <tr>
@@ -329,10 +326,7 @@ const DisplayOthers = ({ data: propsData }) => {
 
             {/* Responsibilities Section */}
             <section className="data-section">
-                <h2>Additional Responsibilities</h2>
-                <button onClick={() => setShowResponsibilityForm(true)} className="add-button">
-                    Add Responsibility
-                </button>
+                <h2>7.Additional Responsibilities</h2>
                 <table className="data-table">
                     <thead>
                         <tr>
@@ -368,10 +362,8 @@ const DisplayOthers = ({ data: propsData }) => {
 
             {/* Contributions Section */}
             <section className="data-section">
-                <h2>Special Contributions</h2>
-                <button onClick={() => setShowContributionForm(true)} className="add-button">
-                    Add Contribution
-                </button>
+                <h2>8.Special Contributions</h2>
+
                 <table className="data-table">
                     <thead>
                         <tr>
@@ -407,10 +399,8 @@ const DisplayOthers = ({ data: propsData }) => {
 
             {/* Awards Section */}
             <section className="data-section">
-                <h2>Awards Received</h2>
-                <button onClick={() => setShowAwardForm(true)} className="add-button">
-                    Add Award
-                </button>
+                <h2>9.Awards Received</h2>
+
                 <table className="data-table">
                     <thead>
                         <tr>

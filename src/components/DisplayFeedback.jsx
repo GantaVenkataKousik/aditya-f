@@ -9,7 +9,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedFeedback, setSelectedFeedback] = useState(null);
-
+    const [canModify, setCanModify] = useState(false);
     const [formData, setFormData] = useState({
         courseName: '',
         semester: '',
@@ -45,6 +45,10 @@ const DisplayFeedback = ({ feedbackData }) => {
 
     useEffect(() => {
         fetchData();
+        const role = localStorage.getItem('role');
+        if (role === 'admin' || role === 'Faculty') {
+            setCanModify(true);
+        }
     }, [feedbackData]);
 
     const handleUpdateClick = (feedback) => {
@@ -171,7 +175,9 @@ const DisplayFeedback = ({ feedbackData }) => {
         <div>
             <ToastContainer />
             <div className='add-feedback-button-container' style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', marginTop: '20px' }}>
-                <button onClick={handleAddClick} className='add-feedback-button' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Feedback</button>
+                {canModify && (
+                    <button onClick={handleAddClick} className='add-feedback-button' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Feedback</button>
+                )}
             </div>
             <table className="courses-table">
                 <thead>
@@ -255,7 +261,9 @@ const DisplayFeedback = ({ feedbackData }) => {
                             style={{ backgroundColor: '#f0f0f0' }}
                         />
                         <input type='number' name='selfAssessmentMarks' value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder='Self-Assessment Marks' required />
-                        <button type='submit' className='no-print'>Add Feedback</button>
+                        {canModify && (
+                            <button type='submit' className='no-print'>Add Feedback</button>
+                        )}
                         <button type='button' onClick={() => setShowAddForm(false)} className='no-print'>Cancel</button>
                     </form>
                 </div>

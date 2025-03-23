@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const ProctoringTable = ({ proctoringData }) => {
-    const [data, setData] = useState(proctoringData || []); // Initialize with props data if available
+    const [data, setData] = useState(proctoringData || []);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedProctor, setSelectedProctor] = useState(null);
@@ -48,7 +48,6 @@ const ProctoringTable = ({ proctoringData }) => {
 
     useEffect(() => {
         if (!proctoringData) {
-            // Fetch data from API only if no data is passed via props
             fetchData();
         }
         const role = localStorage.getItem('role');
@@ -210,7 +209,9 @@ const ProctoringTable = ({ proctoringData }) => {
         <div>
             <ToastContainer />
             <div className='add-proctoring-button-container' style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', marginTop: '20px' }}>
-                <button onClick={handleAddClick} className='add-proctoring-button' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Proctoring</button>
+                {canModify && (
+                    <button onClick={handleAddClick} className='add-proctoring-button' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Proctoring</button>
+                )}
             </div>
             <table className="proctoring-table">
                 <thead>

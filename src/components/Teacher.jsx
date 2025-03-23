@@ -6,7 +6,7 @@ import DisplayFeedback from './DisplayFeedback';
 import ProctoringTable from './DisplayProctoring';
 import ResearchText from './ResearchText';
 import DisplayWorkshops from './DisplayWorkshops';
-
+import DisplayOthers from './DisplayOthers';
 const Teacher = ({ faculty }) => {
   const { id } = useParams();
   const teacher = faculty.find((teacher) => teacher._id === id);
@@ -47,19 +47,37 @@ const Teacher = ({ faculty }) => {
         {error && <p style={styles.error}>{error}</p>}
         {teacherData && (
           <>
-            <DisplayCourses coursesData={teacherData?.classes} />
-            <DisplayFeedback feedbackData={teacherData?.feedback} />
-            <ProctoringTable proctoringData={teacherData?.proctoring} />
-            <ResearchText data={teacherData?.research} />
-            <DisplayWorkshops
-              data={{
-                workshops: teacherData.workshop,
-                totalMarks: 18,
-              }}
-            />
+            <div>
+              <h1>Courses Average Pass Percentage:</h1>
+              <DisplayCourses coursesData={teacherData?.classes} />
+            </div>
+            <div>
+              <h1>Course Feedback:</h1>
+              <DisplayFeedback feedbackData={teacherData?.feedback} />
+            </div>
+            <div>
+              <h1>Proctoring:</h1>
+              <ProctoringTable proctoringData={teacherData?.proctoring} />
+            </div>
+            <div>
+              <h1>Research:</h1>
+              <ResearchText data={teacherData?.research} />
+            </div>
+            <div>
+              <h1>Workshops:</h1>
+              <DisplayWorkshops
+                data={{
+                  workshops: teacherData.workshop,
+                  totalMarks: 18,
+                }}
+              />
+            </div>
+            <div>
+              <h1>Others:</h1>
+              <DisplayOthers data={teacherData?.others} />
+            </div>
           </>
         )}
-
       </div>
     </div>
   );

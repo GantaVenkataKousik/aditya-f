@@ -433,7 +433,7 @@ const Others = ({ data: propsData }) => {
   // ======== AWARDS HANDLERS ========
   const handleAwardUpdateClick = (award, index) => {
     setAwardName(award.Award || '');
-    setAwardedBy(award.awardedBy || '');
+    setAwardedBy(award.AwardedBy || '');
     setCurrentIndex(index);
     setCurrentItemId(award._id || null);
     setShowAwardUpdate(true);

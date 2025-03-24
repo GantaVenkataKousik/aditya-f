@@ -160,6 +160,23 @@ const DisplayWorkshops = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date)) return '-';
+
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return '-';
+    }
+  };
+
   return (
     <div style={{ padding: '15px' }}>
       <ToastContainer />
@@ -186,8 +203,7 @@ const DisplayWorkshops = () => {
           >
             <thead>
               <tr style={{ backgroundColor: '#d0e8f2', fontWeight: 'bold' }}>
-                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>S.No</th>
-                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Faculty Name</th>
+
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Workshop Title</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Organizer</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Date</th>
@@ -202,12 +218,8 @@ const DisplayWorkshops = () => {
                 workshops.map((workshop, index) => (
                   <tr key={workshop._id || index} style={{ textAlign: 'center' }}>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{index + 1}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
-                      {workshop.User?.fullName || '-'}
-                    </td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.workshopTitle || '-'}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.organizer || '-'}</td>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.date || '-'}</td>
+                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{formatDate(workshop.date)}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.location || '-'}</td>
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                       <div style={{ display: 'flex', gap: '10px' }}>

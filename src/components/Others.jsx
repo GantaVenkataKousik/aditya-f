@@ -77,6 +77,12 @@ const Others = ({ data: propsData }) => {
     }
   };
 
+  // Add these utility functions at the top of your component
+  const validateMarks = (marks) => {
+    const numMarks = Number(marks);
+    return Math.min(10, Math.max(0, numMarks)); // Clamps value between 0 and 10
+  };
+
   useEffect(() => {
     if (!propsData) {
       fetchAll();
@@ -85,9 +91,18 @@ const Others = ({ data: propsData }) => {
     if (role === 'Admin' || role === 'Faculty') {
       setModify(true);
     }
-    const outreachMarks = localStorage.getItem('outreachmarks');
-    const specialMarks = localStorage.getItem('specialmarks');
-    const additionalMarks = localStorage.getItem('additionalmarks');
+
+    // Get marks from localStorage and validate them
+    const outreachMarks = validateMarks(localStorage.getItem('outreachmarks'));
+    const specialMarks = validateMarks(localStorage.getItem('specialmarks'));
+    const additionalMarks = validateMarks(localStorage.getItem('additionalmarks'));
+
+    // Update localStorage with validated marks
+    localStorage.setItem('outreachmarks', outreachMarks);
+    localStorage.setItem('specialmarks', specialMarks);
+    localStorage.setItem('additionalmarks', additionalMarks);
+
+    // Set state with validated marks
     setOutreachMarks(outreachMarks);
     setSpecialMarks(specialMarks);
     setAdditionalMarks(additionalMarks);
@@ -521,6 +536,48 @@ const Others = ({ data: propsData }) => {
     toast.success('Image uploaded successfully');
   };
 
+  // Add a marks update handler
+  const handleMarksUpdate = async (type, value) => {
+    const validatedMarks = validateMarks(value);
+
+    try {
+      const userId = getUserId();
+      const response = await fetch(`https://aditya-b.onrender.com/update-marks/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          markType: type,
+          value: validatedMarks
+        })
+      });
+
+      if (response.ok) {
+        // Update localStorage and state
+        localStorage.setItem(`${type}marks`, validatedMarks);
+        switch (type) {
+          case 'outreach':
+            setOutreachMarks(validatedMarks);
+            break;
+          case 'special':
+            setSpecialMarks(validatedMarks);
+            break;
+          case 'additional':
+            setAdditionalMarks(validatedMarks);
+            break;
+        }
+        toast.success('Marks updated successfully');
+      } else {
+        toast.error('Failed to update marks');
+      }
+    } catch (error) {
+      console.error('Error updating marks:', error);
+      toast.error('Error updating marks');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -608,7 +665,20 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold no-print">{outreachMarks}</td>
+              <td className="p-2 border text-center">
+                {modify ? (
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={outreachMarks}
+                    onChange={(e) => handleMarksUpdate('outreach', e.target.value)}
+                    className="w-16 text-center"
+                  />
+                ) : (
+                  <span className="font-bold">{outreachMarks}</span>
+                )}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -698,7 +768,20 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold">{additionalMarks}</td>
+              <td className="p-2 border text-center">
+                {modify ? (
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={additionalMarks}
+                    onChange={(e) => handleMarksUpdate('additional', e.target.value)}
+                    className="w-16 text-center"
+                  />
+                ) : (
+                  <span className="font-bold">{additionalMarks}</span>
+                )}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -786,7 +869,20 @@ const Others = ({ data: propsData }) => {
               <td className="p-2 border text-center font-bold" colSpan="2">
                 Self-Assessment Marks (Max: 10)
               </td>
-              <td className="p-2 border text-center font-bold">{specialMarks}</td>
+              <td className="p-2 border text-center">
+                {modify ? (
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={specialMarks}
+                    onChange={(e) => handleMarksUpdate('special', e.target.value)}
+                    className="w-16 text-center"
+                  />
+                ) : (
+                  <span className="font-bold">{specialMarks}</span>
+                )}
+              </td>
             </tr>
           </tbody>
         </table>

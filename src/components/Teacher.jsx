@@ -19,6 +19,7 @@ const Teacher = ({ faculty }) => {
       try {
         const response = await fetch(`https://aditya-b.onrender.com/fetchdata/teachers/${id}`);
         const result = await response.json();
+        console.log(result);
         if (result.success) {
           setTeacherData(result.data);
           console.log(result.data);

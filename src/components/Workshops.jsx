@@ -9,17 +9,17 @@ const Workshops = () => {
 
   return (
     <div>
-      
-       <div >
-    <div className="header">
-      <h1 className="page-title"></h1>
-     
+
+      <div >
+        <div className="header">
+          <h1 className="page-title"></h1>
+
+        </div>
+        <hr className="divider" />
+        <DisplayWorkshops />
+      </div>
     </div>
-    <hr className="divider" />
-    <DisplayWorkshops />
-  </div>
-  </div>
-   
+
   );
 };
 

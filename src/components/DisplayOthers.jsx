@@ -29,7 +29,7 @@ const DisplayOthers = ({ data: propsData }) => {
     });
     const [awardForm, setAwardForm] = useState({
         Award: '',
-        IssuingOrg: '',
+        AwardedBy: '',
         Level: '',
         Description: ''
     });
@@ -248,10 +248,10 @@ const DisplayOthers = ({ data: propsData }) => {
                     <input
                         type="text"
                         name="IssuingOrg"
-                        value={awardForm.IssuingOrg}
+                        value={awardForm.AwardedBy}
                         onChange={(e) => setAwardForm({
                             ...awardForm,
-                            IssuingOrg: e.target.value
+                            AwardedBy: e.target.value
                         })}
                         placeholder="Issuing Organization"
                         required
@@ -406,7 +406,7 @@ const DisplayOthers = ({ data: propsData }) => {
                         <tr>
                             <th>S.No</th>
                             <th>Award Name</th>
-                            <th>Issuing Organization</th>
+                            <th>Awarded By</th>
                             <th>Level</th>
                             <th>Description</th>
                             <th>Actions</th>
@@ -417,7 +417,7 @@ const DisplayOthers = ({ data: propsData }) => {
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{award.Award}</td>
-                                <td>{award.IssuingOrg}</td>
+                                <td>{award.AwardedBy}</td>
                                 <td>{award.Level}</td>
                                 <td>{award.Description}</td>
                                 <td>

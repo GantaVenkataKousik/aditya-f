@@ -36,8 +36,10 @@ const Others = ({ data: propsData }) => {
   const [responsibilityAssignedBy, setResponsibilityAssignedBy] = useState('');
   const [contributionDetails, setContributionDetails] = useState('');
   const [contributionBenefit, setContributionBenefit] = useState('');
-  const [awardName, setAwardName] = useState('');
-  const [awardedBy, setAwardedBy] = useState('');
+  const [AwardName, setAwardName] = useState('');
+  const [AwardedBy, setAwardedBy] = useState('');
+  const [level, setLevel] = useState('');
+  const [description, setDescription] = useState('');
 
   // IMPORTANT: Get userId from localStorage as the document ID
   const getUserId = () => {
@@ -434,6 +436,8 @@ const Others = ({ data: propsData }) => {
   const handleAwardUpdateClick = (award, index) => {
     setAwardName(award.Award || '');
     setAwardedBy(award.AwardedBy || '');
+    setLevel(award.Level || '');
+    setDescription(award.Description || '');
     setCurrentIndex(index);
     setCurrentItemId(award._id || null);
     setShowAwardUpdate(true);
@@ -452,10 +456,10 @@ const Others = ({ data: propsData }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          Award: awardName,
-          awardedBy: awardedBy,
-          Level: awards[currentIndex].Level,
-          Description: awards[currentIndex].Description
+          Award: AwardName,
+          Aware: AwardedBy,
+          Level: level,
+          Description: description
         })
       });
 
@@ -469,10 +473,10 @@ const Others = ({ data: propsData }) => {
           const updatedItems = [...prevItems];
           updatedItems[currentIndex] = {
             ...updatedItems[currentIndex],
-            Award: awardName,
-            awardedBy: awardedBy,
-            Level: awards[currentIndex].Level,
-            Description: awards[currentIndex].Description
+            Award: AwardName,
+            AwardedBy: AwardedBy,
+            Level: level,
+            Description: description
           };
           return updatedItems;
         });
@@ -921,7 +925,7 @@ const Others = ({ data: propsData }) => {
                 <tr key={index} className="border no-print">
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{award.Award}</td>
-                  <td className="p-2 border text-center">{award.awardedBy}</td>
+                  <td className="p-2 border text-center">{award.AwardedBy}</td>
                   <td className="p-2 border text-center">{award.Level}</td>
                   <td className="p-2 border text-center">{award.Description}</td>
                   {modify && (
@@ -1110,7 +1114,7 @@ const Others = ({ data: propsData }) => {
                 <input
                   type="text"
                   className="w-full p-2 border rounded"
-                  value={awardName}
+                  value={AwardName}
                   onChange={(e) => setAwardName(e.target.value)}
                   required
                 />
@@ -1120,7 +1124,7 @@ const Others = ({ data: propsData }) => {
                 <input
                   type="text"
                   className="w-full p-2 border rounded"
-                  value={awardedBy}
+                  value={AwardedBy}
                   onChange={(e) => setAwardedBy(e.target.value)}
                   required
                 />

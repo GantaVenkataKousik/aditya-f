@@ -32,7 +32,7 @@ const DisplayWorkshops = () => {
       const res = await response.json();
       if (res.success) {
         setWorkshops(res.Workshops);
-        const marks = res.Workshops.length > 0 ? 10 : 0;
+        const marks = res.Workshops.length > 0 ? 20 : 0;
         setWorkshopMarks(marks);
         localStorage.setItem('workshopmarks', marks);
       } else {
@@ -290,7 +290,7 @@ const DisplayWorkshops = () => {
               )}
 
               <tr>
-                <td colSpan="4" style={{ textAlign: 'center', padding: '1rem' }}>
+                <td colSpan="4" style={{ textAlign: 'center', padding: '1rem', fontWeight: 'bold' }}>
                   Self-Assessment Marks (Max: 20)
                 </td>
                 <td style={{ padding: '0.5rem', border: '1px solid #000' }}>

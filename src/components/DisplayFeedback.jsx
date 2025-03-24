@@ -81,14 +81,40 @@ const DisplayFeedback = ({ feedbackData }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        const newFormData = { ...formData, [name]: value };
+        const newFormData = { ...formData };
 
-        if (name === 'feedbackPercentage') {
+        // Update the changed field
+        newFormData[name] = value;
+
+        // If numberOfStudents or passCount changes, calculate feedbackPercentage
+        if (name === 'numberOfStudents' || name === 'passCount') {
+            if (newFormData.numberOfStudents && newFormData.passCount) {
+                const numStudents = parseFloat(newFormData.numberOfStudents);
+                const numPassed = parseFloat(newFormData.passCount);
+
+                // Calculate feedback percentage
+                const calculatedPercentage = (numPassed / numStudents) * 100;
+                newFormData.feedbackPercentage = calculatedPercentage.toFixed(2);
+
+                // Calculate self assessment marks based on feedback percentage
+                if (calculatedPercentage >= 90) {
+                    newFormData.selfAssessmentMarks = 10;
+                } else if (calculatedPercentage >= 80) {
+                    newFormData.selfAssessmentMarks = 8;
+                } else if (calculatedPercentage >= 70) {
+                    newFormData.selfAssessmentMarks = 6;
+                } else {
+                    newFormData.selfAssessmentMarks = 4;
+                }
+            }
+        }
+
+        // Update average percentage
+        if (name === 'feedbackPercentage' || name === 'numberOfStudents' || name === 'passCount') {
             const currentRecords = [...data];
             const tempRecord = {
-                feedbackPercentage: parseFloat(value) || 0
+                feedbackPercentage: parseFloat(newFormData.feedbackPercentage) || 0
             };
-
             const newAverage = calculateAveragePercentage([...currentRecords, tempRecord]);
             newFormData.averagePercentage = newAverage;
         }
@@ -250,8 +276,30 @@ const DisplayFeedback = ({ feedbackData }) => {
                     <form onSubmit={handleAddFormSubmit}>
                         <input type='text' name='courseName' value={formData.courseName} onChange={handleInputChange} placeholder='Course Name' required />
                         <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
-                        <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
-                        <input type='number' name='feedbackPercentage' value={formData.feedbackPercentage} onChange={handleInputChange} placeholder='Feedback Percentage' required />
+                        <input
+                            type='number'
+                            name='numberOfStudents'
+                            value={formData.numberOfStudents}
+                            onChange={handleInputChange}
+                            placeholder='Number of Students'
+                            required
+                        />
+                        <input
+                            type='number'
+                            name='passCount'
+                            value={formData.passCount}
+                            onChange={handleInputChange}
+                            placeholder='Pass Count'
+                            required
+                        />
+                        <input
+                            type='number'
+                            name='feedbackPercentage'
+                            value={formData.feedbackPercentage}
+                            readOnly
+                            placeholder='Feedback Percentage (Auto-calculated)'
+                            style={{ backgroundColor: '#f0f0f0' }}
+                        />
                         <input
                             type='number'
                             name='averagePercentage'
@@ -260,7 +308,14 @@ const DisplayFeedback = ({ feedbackData }) => {
                             placeholder='Average Percentage (Auto-calculated)'
                             style={{ backgroundColor: '#f0f0f0' }}
                         />
-                        <input type='number' name='selfAssessmentMarks' value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder='Self-Assessment Marks' required />
+                        <input
+                            type='number'
+                            name='selfAssessmentMarks'
+                            value={formData.selfAssessmentMarks}
+                            readOnly
+                            placeholder='Self-Assessment Marks (Auto-calculated)'
+                            style={{ backgroundColor: '#f0f0f0' }}
+                        />
                         {canModify && (
                             <button type='submit' className='no-print'>Add Feedback</button>
                         )}

@@ -82,7 +82,11 @@ const Others = ({ data: propsData }) => {
   // Add these utility functions at the top of your component
   const validateMarks = (marks) => {
     const numMarks = Number(marks);
-    return Math.min(10, Math.max(0, numMarks)); // Clamps value between 0 and 10
+    return Math.min(10, Math.max(0, numMarks));
+  };
+  const validateMarks20 = (marks) => {
+    const numMarks = Number(marks);
+    return Math.min(20, Math.max(0, numMarks));
   };
 
   useEffect(() => {
@@ -97,7 +101,7 @@ const Others = ({ data: propsData }) => {
     // Get marks from localStorage and validate them
     const outreachMarks = validateMarks(localStorage.getItem('outreachmarks'));
     const specialMarks = validateMarks(localStorage.getItem('specialmarks'));
-    const additionalMarks = validateMarks(localStorage.getItem('additionalmarks'));
+    const additionalMarks = validateMarks20(localStorage.getItem('additionalmarks'));
 
     // Update localStorage with validated marks
     localStorage.setItem('outreachmarks', outreachMarks);

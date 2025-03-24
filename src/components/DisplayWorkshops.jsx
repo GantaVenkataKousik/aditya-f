@@ -32,6 +32,9 @@ const DisplayWorkshops = () => {
       const res = await response.json();
       if (res.success) {
         setWorkshops(res.Workshops);
+        const marks = res.Workshops.length > 0 ? 10 : 0;
+        setWorkshopMarks(marks);
+        localStorage.setItem('workshopmarks', marks);
       } else {
         toast.error("Error fetching workshops");
       }
@@ -134,6 +137,8 @@ const DisplayWorkshops = () => {
       if (res.success) {
         toast.success("Workshop added successfully!");
         setShowAddForm(false);
+        setWorkshopMarks(10);
+        localStorage.setItem('workshopmarks', 10);
         fetchWorkshops();
       } else {
         toast.error("Error adding workshop");
@@ -161,6 +166,10 @@ const DisplayWorkshops = () => {
       const res = await response.json();
       if (res.success) {
         toast.success("Workshop deleted successfully!");
+        const remainingWorkshops = workshops.filter(w => w._id !== workshopId);
+        const newMarks = remainingWorkshops.length > 0 ? 10 : 0;
+        setWorkshopMarks(newMarks);
+        localStorage.setItem('workshopmarks', newMarks);
         fetchWorkshops();
       } else {
         toast.error("Error deleting workshop");

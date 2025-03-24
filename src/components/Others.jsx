@@ -64,9 +64,20 @@ const Others = ({ data: propsData }) => {
         setResponsibilities(data.Responsibilities || []);
         setContribution(data.Contribution || []);
         setAwards(data.Awards || []);
-        setActivityMarks(data.ActivityMarks || 0);
-        setResponsibilityMarks(data.ResponsibilityMarks || 0);
-        setContributionMarks(data.ContributionMarks || 0);
+
+        // Calculate marks based on fetched data
+        const outreachMarks = data.Activities?.length > 0 ? 10 : 0;
+        const specialMarks = data.Contribution?.length > 0 ? 10 : 0;
+        const additionalMarks = data.Responsibilities?.length > 0 ? 20 : 0;
+
+        // Update localStorage and state
+        localStorage.setItem('outreachmarks', outreachMarks);
+        localStorage.setItem('specialmarks', specialMarks);
+        localStorage.setItem('additionalmarks', additionalMarks);
+
+        setOutreachMarks(outreachMarks);
+        setSpecialMarks(specialMarks);
+        setAdditionalMarks(additionalMarks);
       } else {
         console.error('Error fetching data:', await response.text());
         toast.error('Failed to load data');
@@ -98,21 +109,21 @@ const Others = ({ data: propsData }) => {
       setModify(true);
     }
 
-    // Get marks from localStorage and validate them
-    const outreachMarks = validateMarks(localStorage.getItem('outreachmarks'));
-    const specialMarks = validateMarks(localStorage.getItem('specialmarks'));
-    const additionalMarks = validateMarks20(localStorage.getItem('additionalmarks'));
+    // Calculate marks based on records
+    const outreachMarks = activities.length > 0 ? 10 : 0;
+    const specialMarks = contribution.length > 0 ? 10 : 0;
+    const additionalMarks = responsibilities.length > 0 ? 20 : 0;
 
-    // Update localStorage with validated marks
+    // Update localStorage with calculated marks
     localStorage.setItem('outreachmarks', outreachMarks);
     localStorage.setItem('specialmarks', specialMarks);
     localStorage.setItem('additionalmarks', additionalMarks);
 
-    // Set state with validated marks
+    // Set state with calculated marks
     setOutreachMarks(outreachMarks);
     setSpecialMarks(specialMarks);
     setAdditionalMarks(additionalMarks);
-  }, [propsData]);
+  }, [propsData, activities, responsibilities, contribution]);
 
   // ======== ACTIVITIES HANDLERS ========
   const handleActivityUpdateClick = (activity, index) => {
@@ -544,12 +555,18 @@ const Others = ({ data: propsData }) => {
     toast.success('Image uploaded successfully');
   };
 
-  // Add a marks update handler
+  // Remove or modify the handleMarksUpdate function since marks are now automatic
   const handleMarksUpdate = async (type, value) => {
-    const validatedMarks = validateMarks(value);
-
+    // This function is no longer needed as marks are calculated automatically
+    // You can remove it or keep it for API synchronization
     try {
       const userId = getUserId();
+      const calculatedValue = type === 'additional' ?
+        (responsibilities.length > 0 ? 20 : 0) :
+        (type === 'outreach' ?
+          (activities.length > 0 ? 10 : 0) :
+          (contribution.length > 0 ? 10 : 0));
+
       const response = await fetch(`https://aditya-b.onrender.com/update-marks/${userId}`, {
         method: 'PATCH',
         headers: {
@@ -558,31 +575,26 @@ const Others = ({ data: propsData }) => {
         },
         body: JSON.stringify({
           markType: type,
-          value: validatedMarks
+          value: calculatedValue
         })
       });
 
       if (response.ok) {
-        // Update localStorage and state
-        localStorage.setItem(`${type}marks`, validatedMarks);
+        localStorage.setItem(`${type}marks`, calculatedValue);
         switch (type) {
           case 'outreach':
-            setOutreachMarks(validatedMarks);
+            setOutreachMarks(calculatedValue);
             break;
           case 'special':
-            setSpecialMarks(validatedMarks);
+            setSpecialMarks(calculatedValue);
             break;
           case 'additional':
-            setAdditionalMarks(validatedMarks);
+            setAdditionalMarks(calculatedValue);
             break;
         }
-        toast.success('Marks updated successfully');
-      } else {
-        toast.error('Failed to update marks');
       }
     } catch (error) {
       console.error('Error updating marks:', error);
-      toast.error('Error updating marks');
     }
   };
 
@@ -674,19 +686,7 @@ const Others = ({ data: propsData }) => {
                 Self-Assessment Marks (Max: 10)
               </td>
               <td className="p-2 border text-center">
-                {modify ? (
-                  <input
-                    type="number"
-                    min="0"
-                    max="10"
-                    value={outreachMarks}
-                    onChange={(e) => handleMarksUpdate('outreach', e.target.value)}
-                    className="w-16 text-center"
-                    readOnly
-                  />
-                ) : (
-                  <span className="font-bold">{outreachMarks}</span>
-                )}
+                <span className="font-bold">{activities.length > 0 ? 10 : 0}</span>
               </td>
             </tr>
           </tbody>
@@ -778,19 +778,7 @@ const Others = ({ data: propsData }) => {
                 Self-Assessment Marks (Max: 20)
               </td>
               <td className="p-2 border text-center">
-                {modify ? (
-                  <input
-                    type="number"
-                    min="0"
-                    max="10"
-                    value={additionalMarks}
-                    onChange={(e) => handleMarksUpdate('additional', e.target.value)}
-                    readOnly
-                    className="w-16 text-center"
-                  />
-                ) : (
-                  <span className="font-bold">{additionalMarks}</span>
-                )}
+                <span className="font-bold">{responsibilities.length > 0 ? 20 : 0}</span>
               </td>
             </tr>
           </tbody>

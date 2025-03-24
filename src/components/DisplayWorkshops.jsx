@@ -257,7 +257,7 @@ const DisplayWorkshops = () => {
               {workshops.length > 0 ? (
                 workshops.map((workshop, index) => (
                   <tr key={workshop._id || index} style={{ textAlign: 'center' }}>
-                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{index + 1}</td>
+                    <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.workshopTitle || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.organizer || '-'}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{formatDate(workshop.date)}</td>
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.location || '-'}</td>

@@ -17,7 +17,7 @@ const DisplayWorkshops = () => {
     location: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [workshopMarks, setWorkshopMarks] = useState(0);
+  const [workshopMarks, setWorkshopMarks] = useState(10);
 
   const fetchWorkshops = async () => {
     try {
@@ -279,6 +279,26 @@ const DisplayWorkshops = () => {
                   <td colSpan={canModify ? "6" : "5"} style={{ textAlign: 'center', padding: '1rem' }}>No workshops found</td>
                 </tr>
               )}
+
+              <tr>
+                <td colSpan={canModify ? "6" : "5"} style={{ textAlign: 'center', padding: '1rem' }}>
+                  Self-Assessment Marks (Max: 10)
+                </td>
+                <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
+                  {canModify ? (
+                    <input
+                      type="number"
+                      min="0"
+                      max="10"
+                      value={workshopMarks}
+                      onChange={(e) => handleMarksUpdate(e.target.value)}
+                      className="w-16 text-center"
+                    />
+                  ) : (
+                    <span className="font-bold">{workshopMarks}</span>
+                  )}
+                </td>
+              </tr>
             </tbody>
           </table>
           {canModify && (

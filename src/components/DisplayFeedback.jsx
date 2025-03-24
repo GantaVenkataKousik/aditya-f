@@ -13,10 +13,11 @@ const DisplayFeedback = ({ feedbackData }) => {
     const [formData, setFormData] = useState({
         courseName: '',
         semester: '',
-        numberOfStudents: '',
-        feedbackPercentage: '',
-        averagePercentage: '',
-        selfAssessmentMarks: ''
+        numberOfStudents: 0,
+        passCount: 0,
+        feedbackPercentage: 0,
+        averagePercentage: 0,
+        selfAssessmentMarks: 0
     });
 
     const fetchData = async () => {
@@ -62,10 +63,11 @@ const DisplayFeedback = ({ feedbackData }) => {
         setFormData({
             courseName: '',
             semester: '',
-            numberOfStudents: '',
-            feedbackPercentage: '',
-            averagePercentage: '',
-            selfAssessmentMarks: ''
+            numberOfStudents: 0,
+            passCount: 0,
+            feedbackPercentage: 0,
+            averagePercentage: 0,
+            selfAssessmentMarks: 0
         });
         setShowAddForm(true);
         setShowEditForm(false);
@@ -83,20 +85,20 @@ const DisplayFeedback = ({ feedbackData }) => {
         const { name, value } = e.target;
         const newFormData = { ...formData };
 
-        // Update the changed field
-        newFormData[name] = value;
+        if (name === 'courseName' || name === 'semester') {
+            newFormData[name] = value;
+        } else {
+            newFormData[name] = value === '' ? 0 : Number(value);
+        }
 
-        // If numberOfStudents or passCount changes, calculate feedbackPercentage
         if (name === 'numberOfStudents' || name === 'passCount') {
-            if (newFormData.numberOfStudents && newFormData.passCount) {
-                const numStudents = parseFloat(newFormData.numberOfStudents);
-                const numPassed = parseFloat(newFormData.passCount);
+            const numStudents = Number(newFormData.numberOfStudents) || 0;
+            const numPassed = Number(newFormData.passCount) || 0;
 
-                // Calculate feedback percentage
+            if (numStudents > 0) {
                 const calculatedPercentage = (numPassed / numStudents) * 100;
-                newFormData.feedbackPercentage = calculatedPercentage.toFixed(2);
+                newFormData.feedbackPercentage = Number(calculatedPercentage.toFixed(2));
 
-                // Calculate self assessment marks based on feedback percentage
                 if (calculatedPercentage >= 90) {
                     newFormData.selfAssessmentMarks = 10;
                 } else if (calculatedPercentage >= 80) {
@@ -106,17 +108,14 @@ const DisplayFeedback = ({ feedbackData }) => {
                 } else {
                     newFormData.selfAssessmentMarks = 4;
                 }
-            }
-        }
 
-        // Update average percentage
-        if (name === 'feedbackPercentage' || name === 'numberOfStudents' || name === 'passCount') {
-            const currentRecords = [...data];
-            const tempRecord = {
-                feedbackPercentage: parseFloat(newFormData.feedbackPercentage) || 0
-            };
-            const newAverage = calculateAveragePercentage([...currentRecords, tempRecord]);
-            newFormData.averagePercentage = newAverage;
+                const currentRecords = [...data];
+                const newAverage = Number(calculateAveragePercentage([
+                    ...currentRecords,
+                    { feedbackPercentage: calculatedPercentage }
+                ]));
+                newFormData.averagePercentage = newAverage;
+            }
         }
 
         setFormData(newFormData);
@@ -145,10 +144,15 @@ const DisplayFeedback = ({ feedbackData }) => {
         e.preventDefault();
         const userId = localStorage.getItem('userId');
 
-        const newAverage = calculateAveragePercentage([
-            ...data,
-            { feedbackPercentage: parseFloat(formData.feedbackPercentage) || 0 }
-        ]);
+        const payload = {
+            courseName: formData.courseName,
+            semester: formData.semester,
+            numberOfStudents: Number(formData.numberOfStudents),
+            passCount: Number(formData.passCount),
+            feedbackPercentage: Number(formData.feedbackPercentage),
+            averagePercentage: Number(formData.averagePercentage),
+            selfAssessmentMarks: Number(formData.selfAssessmentMarks)
+        };
 
         try {
             const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${userId}`, {
@@ -156,18 +160,19 @@ const DisplayFeedback = ({ feedbackData }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    ...formData,
-                    averagePercentage: newAverage,
-                }),
+                body: JSON.stringify(payload)
             });
 
             if (response.ok) {
-                const newFeedback = await response.json();
-                setData([...data, newFeedback]);
-                setShowAddForm(false);
-                fetchData();
-                toast.success('Feedback added successfully');
+                const result = await response.json();
+                if (result.success) {
+                    setData([...data, result.feedback]);
+                    setShowAddForm(false);
+                    toast.success('Feedback added successfully');
+                    fetchData();
+                } else {
+                    toast.error(result.message || 'Failed to add feedback');
+                }
             } else {
                 toast.error('Failed to add feedback');
             }
@@ -274,28 +279,44 @@ const DisplayFeedback = ({ feedbackData }) => {
                 <div className='add-form'>
                     <h2>Add Feedback</h2>
                     <form onSubmit={handleAddFormSubmit}>
-                        <input type='text' name='courseName' value={formData.courseName} onChange={handleInputChange} placeholder='Course Name' required />
-                        <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
+                        <input
+                            type='text'
+                            name='courseName'
+                            value={formData.courseName}
+                            onChange={handleInputChange}
+                            placeholder='Course Name'
+                            required
+                        />
+                        <input
+                            type='text'
+                            name='semester'
+                            value={formData.semester}
+                            onChange={handleInputChange}
+                            placeholder='Semester'
+                            required
+                        />
                         <input
                             type='number'
                             name='numberOfStudents'
-                            value={formData.numberOfStudents}
+                            value={formData.numberOfStudents || ''}
                             onChange={handleInputChange}
                             placeholder='Number of Students'
+                            min="0"
                             required
                         />
                         <input
                             type='number'
                             name='passCount'
-                            value={formData.passCount}
+                            value={formData.passCount || ''}
                             onChange={handleInputChange}
                             placeholder='Pass Count'
+                            min="0"
                             required
                         />
                         <input
                             type='number'
                             name='feedbackPercentage'
-                            value={formData.feedbackPercentage}
+                            value={formData.feedbackPercentage || 0}
                             readOnly
                             placeholder='Feedback Percentage (Auto-calculated)'
                             style={{ backgroundColor: '#f0f0f0' }}
@@ -303,7 +324,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <input
                             type='number'
                             name='averagePercentage'
-                            value={formData.averagePercentage || ''}
+                            value={formData.averagePercentage || 0}
                             readOnly
                             placeholder='Average Percentage (Auto-calculated)'
                             style={{ backgroundColor: '#f0f0f0' }}
@@ -311,7 +332,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <input
                             type='number'
                             name='selfAssessmentMarks'
-                            value={formData.selfAssessmentMarks}
+                            value={formData.selfAssessmentMarks || 0}
                             readOnly
                             placeholder='Self-Assessment Marks (Auto-calculated)'
                             style={{ backgroundColor: '#f0f0f0' }}

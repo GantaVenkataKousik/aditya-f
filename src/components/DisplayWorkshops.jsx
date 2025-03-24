@@ -305,7 +305,7 @@ const DisplayWorkshops = () => {
                       readOnly
                     />
                   ) : (
-                    <span className="font-bold">{workshopMarks}</span>
+                    <span className="font-bold  ">{workshopMarks}</span>
                   )}
                 </td>
               </tr>

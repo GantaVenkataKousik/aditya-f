@@ -678,6 +678,7 @@ const Others = ({ data: propsData }) => {
                     value={outreachMarks}
                     onChange={(e) => handleMarksUpdate('outreach', e.target.value)}
                     className="w-16 text-center"
+                    readOnly
                   />
                 ) : (
                   <span className="font-bold">{outreachMarks}</span>
@@ -770,7 +771,7 @@ const Others = ({ data: propsData }) => {
             )}
             <tr>
               <td className="p-2 border text-center font-bold" colSpan="2">
-                Self-Assessment Marks (Max: 10)
+                Self-Assessment Marks (Max: 20)
               </td>
               <td className="p-2 border text-center">
                 {modify ? (
@@ -780,6 +781,7 @@ const Others = ({ data: propsData }) => {
                     max="10"
                     value={additionalMarks}
                     onChange={(e) => handleMarksUpdate('additional', e.target.value)}
+                    readOnly
                     className="w-16 text-center"
                   />
                 ) : (
@@ -882,6 +884,7 @@ const Others = ({ data: propsData }) => {
                     value={specialMarks}
                     onChange={(e) => handleMarksUpdate('special', e.target.value)}
                     className="w-16 text-center"
+                    readOnly
                   />
                 ) : (
                   <span className="font-bold">{specialMarks}</span>

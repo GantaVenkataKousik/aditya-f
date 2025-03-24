@@ -276,13 +276,13 @@ const DisplayWorkshops = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={canModify ? "6" : "5"} style={{ textAlign: 'center', padding: '1rem' }}>No workshops found</td>
+                  <td colSpan="4" style={{ textAlign: 'center', padding: '1rem' }}>No workshops found</td>
                 </tr>
               )}
 
               <tr>
                 <td colSpan={canModify ? "6" : "5"} style={{ textAlign: 'center', padding: '1rem' }}>
-                  Self-Assessment Marks (Max: 10)
+                  Self-Assessment Marks (Max: 20)
                 </td>
                 <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
                   {canModify ? (
@@ -293,6 +293,7 @@ const DisplayWorkshops = () => {
                       value={workshopMarks}
                       onChange={(e) => handleMarksUpdate(e.target.value)}
                       className="w-16 text-center"
+                      readOnly
                     />
                   ) : (
                     <span className="font-bold">{workshopMarks}</span>

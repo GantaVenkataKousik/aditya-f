@@ -281,7 +281,7 @@ const DisplayWorkshops = () => {
               )}
 
               <tr>
-                <td colSpan={canModify ? "6" : "5"} style={{ textAlign: 'center', padding: '1rem' }}>
+                <td colSpan="4" style={{ textAlign: 'center', padding: '1rem' }}>
                   Self-Assessment Marks (Max: 20)
                 </td>
                 <td style={{ padding: '0.5rem', border: '1px solid #000' }}>

@@ -17,6 +17,7 @@ const DisplayWorkshops = () => {
     location: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [workshopMarks, setWorkshopMarks] = useState(0);
 
   const fetchWorkshops = async () => {
     try {
@@ -42,14 +43,24 @@ const DisplayWorkshops = () => {
     }
   };
 
+  const validateMarks = (marks) => {
+    const numMarks = Number(marks);
+    return Math.min(10, Math.max(0, numMarks));
+  };
+
   useEffect(() => {
     const role = localStorage.getItem('role');
     console.log(role);
     if (role === 'Admin' || role === 'Faculty') {
       setCanModify(true);
     }
+
+    const marks = validateMarks(localStorage.getItem('workshopmarks') || 0);
+    localStorage.setItem('workshopmarks', marks);
+    setWorkshopMarks(marks);
+
     fetchWorkshops();
-  }, [workshops]);
+  }, []);
 
   const handleAddClick = () => {
     setFormData({
@@ -157,6 +168,35 @@ const DisplayWorkshops = () => {
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error deleting workshop");
+    }
+  };
+
+  const handleMarksUpdate = async (value) => {
+    const validatedMarks = validateMarks(value);
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/update-marks/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          markType: 'workshop',
+          value: validatedMarks
+        })
+      });
+
+      if (response.ok) {
+        localStorage.setItem('workshopmarks', validatedMarks);
+        setWorkshopMarks(validatedMarks);
+        toast.success('Marks updated successfully');
+      } else {
+        toast.error('Failed to update marks');
+      }
+    } catch (error) {
+      console.error('Error updating marks:', error);
+      toast.error('Error updating marks');
     }
   };
 

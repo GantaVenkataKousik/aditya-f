@@ -433,7 +433,7 @@ const Others = ({ data: propsData }) => {
   // ======== AWARDS HANDLERS ========
   const handleAwardUpdateClick = (award, index) => {
     setAwardName(award.Award || '');
-    setAwardedBy(award.IssuingOrg || '');
+    setAwardedBy(award.awardedBy || '');
     setCurrentIndex(index);
     setCurrentItemId(award._id || null);
     setShowAwardUpdate(true);
@@ -453,7 +453,7 @@ const Others = ({ data: propsData }) => {
         },
         body: JSON.stringify({
           Award: awardName,
-          IssuingOrg: awardedBy,
+          awardedBy: awardedBy,
           Level: awards[currentIndex].Level,
           Description: awards[currentIndex].Description
         })
@@ -470,7 +470,7 @@ const Others = ({ data: propsData }) => {
           updatedItems[currentIndex] = {
             ...updatedItems[currentIndex],
             Award: awardName,
-            IssuingOrg: awardedBy,
+            awardedBy: awardedBy,
             Level: awards[currentIndex].Level,
             Description: awards[currentIndex].Description
           };
@@ -921,7 +921,7 @@ const Others = ({ data: propsData }) => {
                 <tr key={index} className="border no-print">
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{award.Award}</td>
-                  <td className="p-2 border text-center">{award.IssuingOrg}</td>
+                  <td className="p-2 border text-center">{award.awardedBy}</td>
                   <td className="p-2 border text-center">{award.Level}</td>
                   <td className="p-2 border text-center">{award.Description}</td>
                   {modify && (

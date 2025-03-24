@@ -123,7 +123,7 @@ const Others = ({ data: propsData }) => {
     setOutreachMarks(outreachMarks);
     setSpecialMarks(specialMarks);
     setAdditionalMarks(additionalMarks);
-  }, [propsData]);
+  }, []);
 
   // ======== ACTIVITIES HANDLERS ========
   const handleActivityUpdateClick = (activity, index) => {

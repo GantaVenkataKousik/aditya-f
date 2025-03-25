@@ -11,7 +11,6 @@ const Others = ({ data: propsData }) => {
   const [outreachMarks, setOutreachMarks] = useState(0);
   const [specialMarks, setSpecialMarks] = useState(0);
   const [additionalMarks, setAdditionalMarks] = useState(0);
-  // Data states
   const [activities, setActivities] = useState(propsData?.Activities || []);
   const [responsibilities, setResponsibilities] = useState(propsData?.Responsibilities || []);
   const [contribution, setContribution] = useState(propsData?.Contribution || []);

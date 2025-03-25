@@ -232,9 +232,9 @@ const DisplayWorkshops = ({ workshopsData }) => {
     <div style={{ padding: '15px' }}>
       <ToastContainer />
       <div style={{ width: '90px', marginLeft: '1100px' }}>
-        {canModify && (
-          <button onClick={handleAddClick}> + Add</button>
-        )}
+
+        <button onClick={handleAddClick}> + Add</button>
+
       </div>
       <h3 style={{ fontWeight: 'bold', fontSize: '1.125rem', marginBottom: '1rem' }}>
         5. Workshops:

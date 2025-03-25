@@ -40,7 +40,11 @@ const DisplayCourses = ({ coursesData }) => {
         if (role === 'Admin' || role === 'Faculty') {
             setCanModify(true);
         }
-        fetchData();
+        if (coursesData) {
+            setData(coursesData);
+        } else {
+            fetchData();
+        }
     }, [coursesData]);
 
     const handleRowSelect = (course) => {

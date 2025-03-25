@@ -47,7 +47,9 @@ const ProctoringTable = ({ proctoringData }) => {
     };
 
     useEffect(() => {
-        if (!proctoringData) {
+        if (proctoringData) {
+            setData(proctoringData);
+        } else {
             fetchData();
         }
         const role = localStorage.getItem('role');

@@ -3,7 +3,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
-const DisplayWorkshops = () => {
+const DisplayWorkshops = ({ workshopsData }) => {
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -60,9 +60,11 @@ const DisplayWorkshops = () => {
 
     const marks = validateMarks(localStorage.getItem('workshopmarks') || 0);
     localStorage.setItem('workshopmarks', marks);
-    setWorkshopMarks(marks);
-
-    fetchWorkshops();
+    if (workshopsData) {
+      setWorkshops(workshopsData);
+    } else {
+      fetchWorkshops();
+    }
   }, []);
 
   const handleAddClick = () => {

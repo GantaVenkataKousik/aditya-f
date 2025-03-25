@@ -44,7 +44,11 @@ const DisplayFeedback = ({ feedbackData }) => {
     };
 
     useEffect(() => {
-        fetchData();
+        if (feedbackData) {
+            setData(feedbackData);
+        } else {
+            fetchData();
+        }
         const role = localStorage.getItem('role');
         if (role === 'admin' || role === 'Faculty') {
             setCanModify(true);

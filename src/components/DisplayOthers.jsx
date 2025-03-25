@@ -285,15 +285,36 @@ const DisplayOthers = ({ data }) => {
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{activity.activityDetails}</td>
-                                <td>
+                                <td style={{ display: 'flex', justifyContent: 'center' }} >
                                     <button onClick={() => {
                                         setSelectedItem(activity);
                                         setActivityForm(activity);
                                         setShowActivityForm(true);
+                                    }} style={{
+                                        fontSize: "16px",
+                                        margin: "2px",
+                                        border: "none",
+                                        borderRadius: "4px",
+                                        cursor: "pointer",
+                                        backgroundColor: "rgb(59 130 246)",
+                                        color: "white",
+                                        transition: "0.3s",
+                                        width: "auto"
                                     }}>
                                         <FaEdit />
                                     </button>
-                                    <button onClick={() => handleDelete('activities', index)}>
+                                    <button onClick={() => handleDelete('activities', index)} style={{
+                                        fontSize: "16px",
+                                        padding: "4px 8px",
+                                        margin: "2px",
+                                        border: "none",
+                                        borderRadius: "4px",
+                                        cursor: "pointer",
+                                        backgroundColor: "#e74c3c",
+                                        color: "white",
+                                        transition: "0.3s",
+                                        width: "auto"
+                                    }}>
                                         <FaTrash />
                                     </button>
                                 </td>
@@ -321,15 +342,36 @@ const DisplayOthers = ({ data }) => {
                                 <td>{index + 1}</td>
                                 <td>{resp.Responsibility}</td>
                                 <td>{resp.AssignedBy}</td>
-                                <td>
+                                <td style={{ display: 'flex', justifyContent: 'center' }}   >
                                     <button onClick={() => {
                                         setSelectedItem(resp);
                                         setResponsibilityForm(resp);
                                         setShowResponsibilityForm(true);
+                                    }} style={{
+                                        fontSize: "16px",
+                                        margin: "2px",
+                                        border: "none",
+                                        borderRadius: "4px",
+                                        cursor: "pointer",
+                                        backgroundColor: "rgb(59 130 246)",
+                                        color: "white",
+                                        transition: "0.3s",
+                                        width: "auto"
                                     }}>
                                         <FaEdit />
                                     </button>
-                                    <button onClick={() => handleDelete('responsibilities', index)}>
+                                    <button onClick={() => handleDelete('responsibilities', index)} style={{
+                                        fontSize: "16px",
+                                        padding: "4px 8px",
+                                        margin: "2px",
+                                        border: "none",
+                                        borderRadius: "4px",
+                                        cursor: "pointer",
+                                        backgroundColor: "#e74c3c",
+                                        color: "white",
+                                        transition: "0.3s",
+                                        width: "auto"
+                                    }}>
                                         <FaTrash />
                                     </button>
                                 </td>
@@ -358,15 +400,36 @@ const DisplayOthers = ({ data }) => {
                                 <td>{index + 1}</td>
                                 <td>{cont.contributionDetails}</td>
                                 <td>{cont.Benefit}</td>
-                                <td>
+                                <td style={{ display: 'flex', justifyContent: 'center' }}>
                                     <button onClick={() => {
                                         setSelectedItem(cont);
                                         setContributionForm(cont);
                                         setShowContributionForm(true);
+                                    }} style={{
+                                        fontSize: "16px",
+                                        margin: "2px",
+                                        border: "none",
+                                        borderRadius: "4px",
+                                        cursor: "pointer",
+                                        backgroundColor: "rgb(59 130 246)",
+                                        color: "white",
+                                        transition: "0.3s",
+                                        width: "auto"
                                     }}>
                                         <FaEdit />
                                     </button>
-                                    <button onClick={() => handleDelete('contribution', index)}>
+                                    <button onClick={() => handleDelete('contribution', index)} style={{
+                                        fontSize: "16px",
+                                        padding: "4px 8px",
+                                        margin: "2px",
+                                        border: "none",
+                                        borderRadius: "4px",
+                                        cursor: "pointer",
+                                        backgroundColor: "#e74c3c",
+                                        color: "white",
+                                        transition: "0.3s",
+                                        width: "auto"
+                                    }}>
                                         <FaTrash />
                                     </button>
                                 </td>
@@ -399,15 +462,36 @@ const DisplayOthers = ({ data }) => {
                                 <td>{award.AwardedBy}</td>
                                 <td>{award.Level}</td>
                                 <td>{award.Description}</td>
-                                <td>
+                                <td style={{ display: 'flex', justifyContent: 'center' }}>
                                     <button onClick={() => {
                                         setSelectedItem(award);
                                         setAwardForm(award);
                                         setShowAwardForm(true);
+                                    }} style={{
+                                        fontSize: "16px",
+                                        margin: "2px",
+                                        border: "none",
+                                        borderRadius: "4px",
+                                        cursor: "pointer",
+                                        backgroundColor: "rgb(59 130 246)",
+                                        color: "white",
+                                        transition: "0.3s",
+                                        width: "auto"
                                     }}>
                                         <FaEdit />
                                     </button>
-                                    <button onClick={() => handleDelete('awards', index)}>
+                                    <button onClick={() => handleDelete('awards', index)} style={{
+                                        fontSize: "16px",
+                                        padding: "4px 8px",
+                                        margin: "2px",
+                                        border: "none",
+                                        borderRadius: "4px",
+                                        cursor: "pointer",
+                                        backgroundColor: "#e74c3c",
+                                        color: "white",
+                                        transition: "0.3s",
+                                        width: "auto"
+                                    }}>
                                         <FaTrash />
                                     </button>
                                 </td>

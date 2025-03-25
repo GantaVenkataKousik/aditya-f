@@ -4,7 +4,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 
 const DisplayCourses = ({ coursesData }) => {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(coursesData || []);
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
@@ -16,22 +16,15 @@ const DisplayCourses = ({ coursesData }) => {
         passCount: ''
     });
 
-    useEffect(() => {
-        const role = localStorage.getItem('role');
-        if (role === 'Admin' || role === 'Faculty') {
-            setCanModify(true);
-        }
-        // Set data from props if available
-        if (coursesData) {
-            setData(coursesData);
-        }
-    }, [coursesData]);
-
-    // Only call fetchData after operations
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${userId}`);
+            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
             const res = await response.json();
             if (res.success) {
                 setData(res.data);
@@ -41,6 +34,14 @@ const DisplayCourses = ({ coursesData }) => {
             toast.error('Failed to fetch data');
         }
     };
+
+    useEffect(() => {
+        const role = localStorage.getItem('role');
+        if (role === 'Admin' || role === 'Faculty') {
+            setCanModify(true);
+        }
+        fetchData();
+    }, [coursesData]);
 
     const handleRowSelect = (course) => {
         setSelectedCourse(course);

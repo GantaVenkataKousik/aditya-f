@@ -3,9 +3,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
-const DisplayWorkshops = ({ data: workshopsData }) => {
+const DisplayWorkshops = () => {
   const [workshops, setWorkshops] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
@@ -19,33 +19,24 @@ const DisplayWorkshops = ({ data: workshopsData }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [workshopMarks, setWorkshopMarks] = useState(10);
 
-  useEffect(() => {
-    const role = localStorage.getItem('role');
-    if (role === 'Admin' || role === 'Faculty') {
-      setCanModify(true);
-    }
-
-    // Set workshops from props if available
-    if (workshopsData) {
-      setWorkshops(workshopsData);
-      const marks = workshopsData.length > 0 ? 20 : 0;
-      setWorkshopMarks(marks);
-      localStorage.setItem('workshopmarks', marks);
-    }
-  }, [workshopsData]);
-
-  // Only call fetchWorkshops after operations
   const fetchWorkshops = async () => {
-    setLoading(true);
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`);
+
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       const res = await response.json();
       if (res.success) {
         setWorkshops(res.Workshops);
         const marks = res.Workshops.length > 0 ? 20 : 0;
         setWorkshopMarks(marks);
         localStorage.setItem('workshopmarks', marks);
+      } else {
+        toast.error("Error fetching workshops");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -59,6 +50,20 @@ const DisplayWorkshops = ({ data: workshopsData }) => {
     const numMarks = Number(marks);
     return Math.min(10, Math.max(0, numMarks));
   };
+
+  useEffect(() => {
+    const role = localStorage.getItem('role');
+    console.log(role);
+    if (role === 'Admin' || role === 'Faculty') {
+      setCanModify(true);
+    }
+
+    const marks = validateMarks(localStorage.getItem('workshopmarks') || 0);
+    localStorage.setItem('workshopmarks', marks);
+    setWorkshopMarks(marks);
+
+    fetchWorkshops();
+  }, []);
 
   const handleAddClick = () => {
     setFormData({

@@ -4,8 +4,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './DisplayCourses.css';
 
-const DisplayOthers = ({ data: propsData }) => {
-    // States for data
+const DisplayOthers = ({ data }) => {
+    // Update initial states with prop data
     const [activities, setActivities] = useState([]);
     const [responsibilities, setResponsibilities] = useState([]);
     const [contributions, setContributions] = useState([]);
@@ -37,35 +37,14 @@ const DisplayOthers = ({ data: propsData }) => {
     // Selected item for editing
     const [selectedItem, setSelectedItem] = useState(null);
 
-    const fetchData = async () => {
-        try {
-            const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/others-data?userId=${userId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            const res = await response.json();
-            if (res.success) {
-                const data = res.others;
-                setActivities(data.Activities || []);
-                setResponsibilities(data.Responsibilities || []);
-                setContributions(data.Contribution || []);
-                setAwards(data.Awards || []);
-            } else {
-                toast.error('Failed to load data');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            toast.error('Network error while fetching data');
-        }
-    };
-
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (data) {
+            setActivities(data.Activities || []);
+            setResponsibilities(data.Responsibilities || []);
+            setContributions(data.Contribution || []);
+            setAwards(data.Awards || []);
+        }
+    }, [data]);
 
     // Generic form handlers
     const handleEdit = async (type, id, data) => {

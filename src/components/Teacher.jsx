@@ -19,10 +19,8 @@ const Teacher = ({ faculty }) => {
       try {
         const response = await fetch(`https://aditya-b.onrender.com/fetchData/teachers/${id}`);
         const result = await response.json();
-        console.log(result);
         if (result.success) {
           setTeacherData(result.data);
-          console.log(result.data);
         } else {
           setError('Failed to fetch teacher data.');
         }
@@ -65,15 +63,11 @@ const Teacher = ({ faculty }) => {
             </div>
             <div>
               <DisplayWorkshops
-                data={{
-                  workshops: teacherData.workshop,
-                  totalMarks: 18,
-                }}
+                data={teacherData.workshop}
               />
             </div>
             <div>
-
-              <DisplayOthers data={teacherData?.others} />
+              <DisplayOthers data={teacherData.others[0]} />
             </div>
           </>
         )}

@@ -236,7 +236,9 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <th>Feedback %</th>
                         <th>Average %</th>
                         <th>Self-Assessment Marks</th>
-                        <th>Actions</th>
+                        {canModify && (
+                            <th>Actions</th>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
@@ -250,16 +252,18 @@ const DisplayFeedback = ({ feedbackData }) => {
                                 <td>{feedback.feedbackPercentage}</td>
                                 <td>{feedback.averagePercentage}</td>
                                 <td>{feedback.selfAssessmentMarks}</td>
-                                <td style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                        <button onClick={() => handleUpdateClick(feedback)} style={{ width: 'auto' }}>
-                                            <FaEdit />
-                                        </button>
-                                        <button onClick={() => handleDelete(feedback._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
-                                            <FaTrash />
-                                        </button>
-                                    </div>
-                                </td>
+                                {canModify && (
+                                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', gap: '10px' }}>
+                                            <button onClick={() => handleUpdateClick(feedback)} style={{ width: 'auto' }}>
+                                                <FaEdit />
+                                            </button>
+                                            <button onClick={() => handleDelete(feedback._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                                                <FaTrash />
+                                            </button>
+                                        </div>
+                                    </td>
+                                )}
                             </tr>
                         ))
                     ) : (

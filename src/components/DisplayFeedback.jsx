@@ -5,7 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const DisplayFeedback = ({ feedbackData }) => {
-    const [data, setData] = useState(feedbackData || []);
+    const [data, setData] = useState([]);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedFeedback, setSelectedFeedback] = useState(null);
@@ -19,37 +19,30 @@ const DisplayFeedback = ({ feedbackData }) => {
         selfAssessmentMarks: 0
     });
 
-    const fetchData = async () => {
-        try {
-            const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/fdata/${userId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            const res = await response.json();
-
-            if (res.success) {
-                setData(res.data);
-            } else {
-                console.error("Unexpected API response format:", res);
-                setData([]);
-            }
-
-        } catch (error) {
-            console.error('Error occurred while fetching data:', error);
-        }
-    };
-
     useEffect(() => {
-        fetchData();
         const role = localStorage.getItem('role');
         if (role === 'admin' || role === 'Faculty') {
             setCanModify(true);
         }
+        // Set data from props if available
+        if (feedbackData) {
+            setData(feedbackData);
+        }
     }, [feedbackData]);
+
+    // Only call fetchData after operations
+    const fetchData = async () => {
+        try {
+            const userId = localStorage.getItem('userId');
+            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/fdata/${userId}`);
+            const res = await response.json();
+            if (res.success) {
+                setData(res.data);
+            }
+        } catch (error) {
+            console.error('Error occurred while fetching data:', error);
+        }
+    };
 
     const handleUpdateClick = (feedback) => {
         setShowEditForm(true);

@@ -21,12 +21,9 @@ const Teacher = ({ faculty }) => {
         const result = await response.json();
         if (result.success) {
           setTeacherData(result.data);
-        } else {
-          setError('Failed to fetch teacher data.');
         }
       } catch (err) {
         console.error('Error fetching teacher data:', err);
-        setError('An error occurred while fetching teacher data.');
       } finally {
         setLoading(false);
       }

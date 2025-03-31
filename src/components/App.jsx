@@ -113,69 +113,67 @@ function App() {
   };
 
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      <Routes>
-        <Route path="/" element={<Welcome />} />
-        <Route path="/signin" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/add-user" element={<UpdateUser />} />
-        <Route path="/signup/signup" element={<SignupSuccess />} />
-        <Route path="/articles" element={<Articles />} />
-        <Route path="/addarticle" element={<AddArticle />} />
-        <Route path="/home" element={
+    <Routes>
+      <Route path="/" element={<Welcome />} />
+      <Route path="/signin" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/add-user" element={<UpdateUser />} />
+      <Route path="/signup/signup" element={<SignupSuccess />} />
+      <Route path="/articles" element={<Articles />} />
+      <Route path="/addarticle" element={<AddArticle />} />
+      <Route path="/home" element={
+        <ProtectedRoute>
+          <Home faculty={faculty} departments={departments} />
+        </ProtectedRoute>
+      } />
+      <Route
+        path="/department/:branchName"
+        element={
           <ProtectedRoute>
-            <Home faculty={faculty} departments={departments} />
+            <Branch faculty={faculty} />
           </ProtectedRoute>
-        } />
-        <Route
-          path="/department/:branchName"
-          element={
-            <ProtectedRoute>
-              <Branch faculty={faculty} />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/about" element={<About />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/class" element={<UpdateClass />} />
-        <Route path="/feedback" element={<UpdateCla />} />
-        <Route path="/classes" element={<ClassInfo />} />
-        <Route path="/teacher/:id" element={<Teacher faculty={faculty} />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/hodtable" element={<HodTable />} />
-        <Route path="/addResearch" element={<AddResearch />} />
-        <Route path="/addworkshop" element={<Addworkshop />} />
-        <Route path="/facultyaprisaltable" element={<FacultyScoreTable />} />
-        <Route path="/research" element={<Researchinfo />} />
-        <Route path="/workshops" element={<Workshops />} />
-        <Route path="/partb" element={<DisplayAll />} />
-        <Route path="/sciarticles" element={<Sciarticles />} />
-        <Route path="/wosarticles" element={<Wosarticles />} />
-        <Route path="/proposals" element={<Proposals />} />
-        <Route path="/papers" element={<Papers />} />
-        <Route path="/books" element={<Books />} />
-        <Route path="/chapters" element={<Chapters />} />
-        <Route path="/patentsGranted" element={<PatentsGranted />} />
-        <Route path="/patentsFiled" element={<PatentsFiled />} />
+        }
+      />
+      <Route path="/about" element={<About />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/class" element={<UpdateClass />} />
+      <Route path="/feedback" element={<UpdateCla />} />
+      <Route path="/classes" element={<ClassInfo />} />
+      <Route path="/teacher/:id" element={<Teacher faculty={faculty} />} />
+      <Route path="/logout" element={<Logout />} />
+      <Route path="/hodtable" element={<HodTable />} />
+      <Route path="/addResearch" element={<AddResearch />} />
+      <Route path="/addworkshop" element={<Addworkshop />} />
+      <Route path="/facultyaprisaltable" element={<FacultyScoreTable />} />
+      <Route path="/research" element={<Researchinfo />} />
+      <Route path="/workshops" element={<Workshops />} />
+      <Route path="/partb" element={<DisplayAll />} />
+      <Route path="/sciarticles" element={<Sciarticles />} />
+      <Route path="/wosarticles" element={<Wosarticles />} />
+      <Route path="/proposals" element={<Proposals />} />
+      <Route path="/papers" element={<Papers />} />
+      <Route path="/books" element={<Books />} />
+      <Route path="/chapters" element={<Chapters />} />
+      <Route path="/patentsGranted" element={<PatentsGranted />} />
+      <Route path="/patentsFiled" element={<PatentsFiled />} />
 
-        <Route path="/sci-articles" element={<AddSciArticles />} />
-        <Route path="/wos-articles" element={<AddWosArticles />} />
-        <Route path="/addproposals" element={<AddProposals />} />
-        <Route path="/addpapers" element={<AddPapers />} />
-        <Route path="/addbooks" element={<AddBooks />} />
-        <Route path="/addchapters" element={<AddChapters />} />
-        <Route path="/addpgranted" element={<AddPGranted />} />
-        <Route path="/addpfiled" element={<AddPFiled />} />
-        <Route path="/ScoreTable" element={<FacultyScoreTable />} />
-        <Route path="/others" element={<Others />} />
-        <Route path="/addactivity" element={<AddActivity />} />
-        <Route path="/addresponsibility" element={<AddResponsibility />} />
-        <Route path="/addcontribution" element={<AddContribution />} />
-        <Route path="/addaward" element={<AddAward />} />
-        <Route path="/ccc" element={<Carousal />} />
-        <Route path="/admin" element={<UserList />} />
-      </Routes>
-    </Suspense>
+      <Route path="/sci-articles" element={<AddSciArticles />} />
+      <Route path="/wos-articles" element={<AddWosArticles />} />
+      <Route path="/addproposals" element={<AddProposals />} />
+      <Route path="/addpapers" element={<AddPapers />} />
+      <Route path="/addbooks" element={<AddBooks />} />
+      <Route path="/addchapters" element={<AddChapters />} />
+      <Route path="/addpgranted" element={<AddPGranted />} />
+      <Route path="/addpfiled" element={<AddPFiled />} />
+      <Route path="/ScoreTable" element={<FacultyScoreTable />} />
+      <Route path="/others" element={<Others />} />
+      <Route path="/addactivity" element={<AddActivity />} />
+      <Route path="/addresponsibility" element={<AddResponsibility />} />
+      <Route path="/addcontribution" element={<AddContribution />} />
+      <Route path="/addaward" element={<AddAward />} />
+      <Route path="/ccc" element={<Carousal />} />
+      <Route path="/admin" element={<UserList />} />
+    </Routes>
   );
 }
 

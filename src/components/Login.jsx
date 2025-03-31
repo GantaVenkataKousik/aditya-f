@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -21,124 +23,132 @@ const Signin = () => {
       }
 
       const data = await response.json();
-
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userId', data.userId);
-      localStorage.setItem('role', data.role);
-      localStorage.setItem('outreachmarks', data.assesmentMarks.OutreachSelfAssesMarks);
-      localStorage.setItem('specialmarks', data.assesmentMarks.SpecialSelfAssesMarks);
-      localStorage.setItem('additionalmarks', data.assesmentMarks.AddSelfAssesMarks);
-      localStorage.setItem('researchmarks', data.assesmentMarks.ResearchSelfAssesMarks);
-      localStorage.setItem('workmarks', data.assesmentMarks.WorkSelfAssesMarks);
-      localStorage.setItem('proposlmarks', data.assesmentMarks.ProposalMarks);
-      localStorage.setItem('scimarks', data.assesmentMarks.SciMarks);
-      localStorage.setItem('wosmarks', data.assesmentMarks.WosMarks);
-      localStorage.setItem('couavgpermarks', data.assesmentMarks.CouAvgPerMarks);
-      localStorage.setItem('coufeedmarks', data.assesmentMarks.CoufeedMarks);
-      localStorage.setItem('proctormarks', data.assesmentMarks.ProctoringMarks);
-
-      navigate("/home");
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('outreachmarks', data.assesmentMarks.OutreachSelfAssesMarks);
+        localStorage.setItem('specialmarks', data.assesmentMarks.SpecialSelfAssesMarks);
+        localStorage.setItem('additionalmarks', data.assesmentMarks.AddSelfAssesMarks);
+        localStorage.setItem('researchmarks', data.assesmentMarks.ResearchSelfAssesMarks);
+        localStorage.setItem('workmarks', data.assesmentMarks.WorkSelfAssesMarks);
+        localStorage.setItem('proposlmarks', data.assesmentMarks.ProposalMarks);
+        localStorage.setItem('scimarks', data.assesmentMarks.SciMarks);
+        localStorage.setItem('wosmarks', data.assesmentMarks.WosMarks);
+        localStorage.setItem('couavgpermarks', data.assesmentMarks.CouAvgPerMarks);
+        localStorage.setItem('coufeedmarks', data.assesmentMarks.CoufeedMarks);
+        localStorage.setItem('proctormarks', data.assesmentMarks.ProctoringMarks);
+        toast.success('Login successful');
+        navigate("/home");
+      }
+      else {
+        toast.error(data.message);
+      }
     } catch (error) {
       console.error('fetching failed', error.message);
+      toast.error(error.message);
     }
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          border: '1px solid #ccc',
-          borderRadius: '10px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          padding: '20px',
-          backgroundColor: '#f9f9f9',
-          width: '50%',
-        }}
-      >
-        <h2
+    <>
+      <ToastContainer />
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div
           style={{
-            marginBottom: '20px',
-            color: '#333',
-            fontFamily: 'Arial, sans-serif',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            border: '1px solid #ccc',
+            borderRadius: '10px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            padding: '20px',
+            backgroundColor: '#f9f9f9',
+            width: '50%',
           }}
         >
-          Sign In
-        </h2>
-        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-          <div style={{ marginBottom: '15px', padding: '10px' }}>
-            <label
-              htmlFor="email"
-              style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}
-            >
-              Email Address:
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              style={{
-                width: '100%',
-                padding: '10px',
-                border: '1px solid #ccc',
-                borderRadius: '5px',
-                fontSize: '14px',
-              }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '15px', padding: '10px' }}>
-            <label
-              htmlFor="password"
-              style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}
-            >
-              Password:
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              style={{
-                width: '100%',
-                padding: '10px',
-                border: '1px solid #ccc',
-                borderRadius: '5px',
-                fontSize: '14px',
-              }}
-            />
-          </div>
-
-          <button
-            type="submit"
+          <h2
             style={{
-              width: '100%',
-              padding: '10px',
-              backgroundColor: '#ff7f27',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              transition: 'background-color 0.3s ease',
+              marginBottom: '20px',
+              color: '#333',
+              fontFamily: 'Arial, sans-serif',
             }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#ff7f27')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = '#f94d00')}
           >
             Sign In
-          </button>
-        </form>
+          </h2>
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <div style={{ marginBottom: '15px', padding: '10px' }}>
+              <label
+                htmlFor="email"
+                style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}
+              >
+                Email Address:
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #ccc',
+                  borderRadius: '5px',
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '15px', padding: '10px' }}>
+              <label
+                htmlFor="password"
+                style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}
+              >
+                Password:
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #ccc',
+                  borderRadius: '5px',
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '10px',
+                backgroundColor: '#ff7f27',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = '#ff7f27')}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = '#f94d00')}
+            >
+              Sign In
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
 
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Signup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -46,11 +47,15 @@ const Signup = () => {
         if (!response.ok) throw new Error('Signup failed');
 
         const data = await response.json();
-        localStorage.setItem('authToken', data.token);
-        alert('Signup successful!');
-        navigate('/signup/signup');
+        if (data.success) {
+          localStorage.setItem('authToken', data.token);
+          toast.success('Signup successful!');
+          navigate('/signup/signup');
+        } else {
+          toast.error(data.message);
+        }
       } catch (error) {
-        alert('An error occurred. Please try again.');
+        toast.error(error.message);
       }
     } else {
       setErrors(newErrors);

@@ -48,17 +48,16 @@ const UserList = () => {
 
     return (
         <>
-
-            <div className="p-6 bg-gray-100 min-h-screen">
+            <div className="p-6 bg-gray-100 min-h-screen font-poppins">
                 <h2 className="text-2xl font-bold mb-4 text-center">Admin Panel</h2>
                 <div className="space-y-6">
                     {Object.keys(users).map((group, index) => {
-                        const isHOD = group.toLowerCase().includes("hod"); // Check if it's an HOD section
-                        const bgColor = isHOD ? "bg-blue-100 border-blue-400" : "bg-gray-100 border-gray-400"; // Different colors for better distinction
+                        const isHOD = group.toLowerCase().includes("hod");
+                        const bgColor = isHOD ? "bg-orange-50 border-orange-300" : "bg-gray-100 border-gray-400";
 
                         return (
                             <div key={index} className={`border-l-4 ${bgColor} shadow-lg p-4 rounded-lg`}>
-                                <h3 className={`text-lg font-semibold ${isHOD ? "text-blue-700" : "text-gray-700"} pb-2`}>
+                                <h3 className={`text-lg font-semibold ${isHOD ? "text-[#e67528]" : "text-gray-700"} pb-2`}>
                                     {group}
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
@@ -70,7 +69,7 @@ const UserList = () => {
                                             <p className="text-sm text-gray-500">Joining: {user.JoiningDate || "N/A"}</p>
                                             <p className="text-sm text-gray-500">Qualification: {user.Qualification || "N/A"}</p>
                                             <button
-                                                className="mt-2 bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-1 rounded"
+                                                className="mt-2 bg-[#e67528] hover:bg-[#d56a24] text-white text-sm px-4 py-1 rounded"
                                                 onClick={() => handleEdit(user)}
                                             >
                                                 Edit
@@ -107,7 +106,7 @@ const UserList = () => {
                                 <input type="number" name="TExp" value={formData.TExp || ""} onChange={handleChange} className="border p-2 rounded" placeholder="Total Experience" />
                             </div>
                             <div className="flex justify-end space-x-2 mt-4">
-                                <button onClick={handleUpdate} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Update</button>
+                                <button onClick={handleUpdate} className="bg-[#e67528] text-white px-4 py-2 rounded hover:bg-[#d56a24]">Update</button>
                                 <button onClick={() => setEditingUser(null)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel</button>
                             </div>
                         </div>

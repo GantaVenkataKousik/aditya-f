@@ -41,7 +41,7 @@ const Carousal = (props) => {
           </li>}
 
           {role === 'Admin' && <li>
-            <a href="/admin" style={styles.navLink}>Admin Pannel</a>
+            <a href="/admin" style={styles.navLink}>Admin Panel</a>
           </li>}
           <li>
             <a href="/about" style={styles.navLink}>About</a>

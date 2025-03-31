@@ -37,12 +37,15 @@ const Teacher = ({ faculty }) => {
   return (
     <div style={styles.pageContainer}>
       <Navbar />
-
+      <h2 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px' }}>PART B</h2>
       <div style={styles.contentContainer}>
         {loading && <p>Loading teacher data...</p>}
         {error && <p style={styles.error}>{error}</p>}
+
         {teacherData && (
           <>
+
+
             <div>
               <h2>1. Courses Average Pass Percentage:</h2>
               <DisplayCourses coursesData={teacherData?.classes} />

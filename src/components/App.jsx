@@ -64,14 +64,18 @@ const HodTable = lazy(() => import('./HodTable'));
 const FacultyScoreTable = lazy(() => import('./FacultyScoreTable'));
 const UserList = lazy(() => import('./UserList'));
 
-// Loading component
+// Better loading component with proper structure
 const LoadingFallback = () => (
-  <div className="flex items-center justify-center h-screen">
-    <div className="text-center">
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh'
+  }}>
+    <div>
+      <div style={{ textAlign: 'center' }}>
+        <div>Loading...</div>
       </div>
-      <p className="mt-2">Loading...</p>
     </div>
   </div>
 );
@@ -118,14 +122,11 @@ function App() {
         <Route path="/signup/signup" element={<SignupSuccess />} />
         <Route path="/articles" element={<Articles />} />
         <Route path="/addarticle" element={<AddArticle />} />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Home faculty={faculty} departments={departments} />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/home" element={
+          <ProtectedRoute>
+            <Home faculty={faculty} departments={departments} />
+          </ProtectedRoute>
+        } />
         <Route
           path="/department/:branchName"
           element={
@@ -171,7 +172,11 @@ function App() {
         <Route path="/addresponsibility" element={<AddResponsibility />} />
         <Route path="/addcontribution" element={<AddContribution />} />
         <Route path="/addaward" element={<AddAward />} />
-        <Route path="/ccc" element={<Carousal />} />
+        <Route path="/ccc" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <Carousal />
+          </Suspense>
+        } />
         <Route path="/admin" element={<UserList />} />
       </Routes>
     </Suspense>

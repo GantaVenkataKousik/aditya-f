@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // Ensure you import Carousel CSS
 import one from "../images/one.jpg";
@@ -9,7 +9,17 @@ import five from "../images/five.jpg";
 
 const Carousal = (props) => {
   const images = [one, two, three, four, five];
-    
+  const [canShow, setCanShow] = useState(false);
+  const [role, setRole] = useState('');
+  useEffect(() => {
+    const role = localStorage.getItem('role');
+    setRole(role);
+    if (role === 'HOD' || role === 'Dean' || role === 'Admin') {
+      setCanShow(false);
+    }
+  }, []);
+
+
   return (
     <div style={styles.container}>
       {/* Sidebar */}
@@ -21,22 +31,24 @@ const Carousal = (props) => {
           <li>
             <a href="/partb" style={styles.navLink}>Part-B</a>
           </li>
-          <li>
-            <a href="/facultyaprisaltable" style={styles.navLink}>Faculty Self Appraisal</a>
-          </li>
-          {props.role === 'HOD' &&   <li>
+          {canShow && (
+            <li>
+              <a href="/facultyaprisaltable" style={styles.navLink}>Faculty Self Appraisal</a>
+            </li>
+          )}
+          {role === 'HOD' && <li>
             <a href="/hodtable" style={styles.navLink}>HOD Table</a>
-          </li> }
+          </li>}
 
-          {props.role === 'Admin' &&   <li>
+          {role === 'Admin' && <li>
             <a href="/admin" style={styles.navLink}>Admin Pannel</a>
-          </li> }
+          </li>}
           <li>
             <a href="/about" style={styles.navLink}>About</a>
           </li>
         </ul>
       </div>
-      
+
       {/* Carousel */}
       <div style={styles.carouselContainer}>
         <Carousel
@@ -58,7 +70,7 @@ const Carousal = (props) => {
           ))}
         </Carousel>
       </div>
-     
+
     </div>
   );
 };

@@ -10,8 +10,8 @@ const FacultyScoreTable = ({ appraisalData }) => {
   const [editedScore, setEditedScore] = useState('');
   const [currentParameter, setCurrentParameter] = useState('');
   const [dataSource, setDataSource] = useState('loading');
-  const [showNavbar, setShowNavbar] = useState(false);
-
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [canModify, setCanModify] = useState(false);
   const fetchData = async () => {
     try {
       setDataSource('loading');
@@ -53,10 +53,12 @@ const FacultyScoreTable = ({ appraisalData }) => {
   };
 
   useEffect(() => {
-    console.log("appraisalData present:", !!appraisalData);
-    const shouldShowNavbar = !appraisalData;
-    console.log("Should show navbar:", shouldShowNavbar);
-    setShowNavbar(shouldShowNavbar);
+    const role = localStorage.getItem('role');
+    console.log("role:", role);
+    if (role === 'HOD' || role === 'Dean' || role === 'Admin') {
+      setShowNavbar(false);
+      setCanModify(true);
+    }
 
     if (appraisalData) {
       setData(appraisalData);
@@ -215,6 +217,7 @@ const FacultyScoreTable = ({ appraisalData }) => {
   return (
     <>
       <ToastContainer />
+      {showNavbar && <Navbar />}
       <div className="container mx-auto p-6">
         <h2 className="text-xl font-bold mb-4">Faculty Self Appraisal - Performance Parameters</h2>
         <table className="table-auto border-collapse border border-gray-400 w-full">
@@ -226,7 +229,9 @@ const FacultyScoreTable = ({ appraisalData }) => {
               <th className="border border-gray-400 px-4 py-2">Min Score for Doctorate</th>
               <th className="border border-gray-400 px-4 py-2">Min Score for Non-Doctorate</th>
               <th className="border border-gray-400 px-4 py-2">Obtained Score</th>
-              <th className="border border-gray-400 px-4 py-2 no-print">Actions</th>
+              {canModify && (
+                <th className="border border-gray-400 px-4 py-2 no-print">Actions</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -239,44 +244,46 @@ const FacultyScoreTable = ({ appraisalData }) => {
                   <td className="border border-gray-400 px-4 py-2">{row.min_score_doctorate}</td>
                   <td className="border border-gray-400 px-4 py-2">{row.min_score_non_doctorate}</td>
                   <td className="border border-gray-400 px-4 py-2">{row.obtained_score}</td>
-                  <td className="border border-gray-400 px-4 py-2 no-print" style={{ display: 'flex', justifyContent: 'center' }}>
-                    <button
-                      className="no-print"
-                      onClick={() => handleEditClick(row, index)}
-                      style={{
-                        fontSize: "16px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "rgb(59 130 246)",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto",
-                        padding: "4px 8px"
-                      }}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="no-print"
-                      onClick={() => handleScoreReset(index)}
-                      style={{
-                        fontSize: "16px",
-                        padding: "4px 8px",
-                        margin: "2px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        backgroundColor: "#e74c3c",
-                        color: "white",
-                        transition: "0.3s",
-                        width: "auto"
-                      }}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+                  {canModify && (
+                    <td className="border border-gray-400 px-4 py-2 no-print" style={{ display: 'flex', justifyContent: 'center' }}>
+                      <button
+                        className="no-print"
+                        onClick={() => handleEditClick(row, index)}
+                        style={{
+                          fontSize: "16px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "rgb(59 130 246)",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto",
+                          padding: "4px 8px"
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="no-print"
+                        onClick={() => handleScoreReset(index)}
+                        style={{
+                          fontSize: "16px",
+                          padding: "4px 8px",
+                          margin: "2px",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          backgroundColor: "#e74c3c",
+                          color: "white",
+                          transition: "0.3s",
+                          width: "auto"
+                        }}
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (

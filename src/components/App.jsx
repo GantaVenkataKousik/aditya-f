@@ -172,11 +172,7 @@ function App() {
         <Route path="/addresponsibility" element={<AddResponsibility />} />
         <Route path="/addcontribution" element={<AddContribution />} />
         <Route path="/addaward" element={<AddAward />} />
-        <Route path="/ccc" element={
-          <Suspense fallback={<LoadingFallback />}>
-            <Carousal />
-          </Suspense>
-        } />
+        <Route path="/ccc" element={<Carousal />} />
         <Route path="/admin" element={<UserList />} />
       </Routes>
     </Suspense>

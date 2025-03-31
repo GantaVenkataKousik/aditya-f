@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -205,6 +205,38 @@ const Signin = () => {
               Sign In
             </button>
           </form>
+
+          <div style={{
+            marginTop: '25px',
+            textAlign: 'center',
+            width: '100%'
+          }}>
+            <p style={{
+              color: '#555',
+              fontSize: '14px'
+            }}>
+              Don't have an account?{' '}
+              <Link
+                to="/signup"
+                style={{
+                  color: '#ff7f27',
+                  textDecoration: 'none',
+                  fontWeight: '600',
+                  transition: 'color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.color = '#f94d00';
+                  e.target.style.textDecoration = 'underline';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.color = '#ff7f27';
+                  e.target.style.textDecoration = 'none';
+                }}
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </>

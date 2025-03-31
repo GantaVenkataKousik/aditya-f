@@ -53,37 +53,71 @@ const Signin = () => {
   return (
     <>
       <ToastContainer />
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        padding: '20px'
+      }}>
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            border: '1px solid #ccc',
-            borderRadius: '10px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            padding: '20px',
-            backgroundColor: '#f9f9f9',
-            width: '50%',
+            border: '1px solid #eaeaea',
+            borderRadius: '12px',
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
+            padding: '30px',
+            backgroundColor: '#ffffff',
+            width: '100%',
+            maxWidth: '450px',
+            transition: 'all 0.3s ease'
           }}
         >
+          <div style={{
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            backgroundColor: '#ff7f27',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: '20px'
+          }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="40px" height="40px">
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+          </div>
+
           <h2
             style={{
-              marginBottom: '20px',
+              marginBottom: '30px',
               color: '#333',
               fontFamily: 'Arial, sans-serif',
+              fontWeight: '600',
+              fontSize: '24px'
             }}
           >
             Sign In
           </h2>
+
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-            <div style={{ marginBottom: '15px', padding: '10px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <label
                 htmlFor="email"
-                style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}
+                style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#555'
+                }}
               >
-                Email Address:
+                Email Address
               </label>
               <input
                 type="email"
@@ -94,20 +128,31 @@ const Signin = () => {
                 required
                 style={{
                   width: '100%',
-                  padding: '10px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px',
+                  padding: '12px 15px',
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
                   fontSize: '14px',
+                  transition: 'border 0.3s ease',
+                  outline: 'none',
+                  boxSizing: 'border-box'
                 }}
+                onFocus={(e) => e.target.style.border = '1px solid #ff7f27'}
+                onBlur={(e) => e.target.style.border = '1px solid #ddd'}
               />
             </div>
 
-            <div style={{ marginBottom: '15px', padding: '10px' }}>
+            <div style={{ marginBottom: '25px' }}>
               <label
                 htmlFor="password"
-                style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}
+                style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#555'
+                }}
               >
-                Password:
+                Password
               </label>
               <input
                 type="password"
@@ -118,11 +163,16 @@ const Signin = () => {
                 required
                 style={{
                   width: '100%',
-                  padding: '10px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px',
+                  padding: '12px 15px',
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
                   fontSize: '14px',
+                  transition: 'border 0.3s ease',
+                  outline: 'none',
+                  boxSizing: 'border-box'
                 }}
+                onFocus={(e) => e.target.style.border = '1px solid #ff7f27'}
+                onBlur={(e) => e.target.style.border = '1px solid #ddd'}
               />
             </div>
 
@@ -130,18 +180,27 @@ const Signin = () => {
               type="submit"
               style={{
                 width: '100%',
-                padding: '10px',
+                padding: '12px',
                 backgroundColor: '#ff7f27',
                 color: 'white',
                 border: 'none',
-                borderRadius: '5px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '16px',
                 fontWeight: 'bold',
-                transition: 'background-color 0.3s ease',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 6px rgba(255, 127, 39, 0.2)'
               }}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = '#ff7f27')}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = '#f94d00')}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f94d00';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 8px rgba(255, 127, 39, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = '#ff7f27';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 6px rgba(255, 127, 39, 0.2)';
+              }}
             >
               Sign In
             </button>
@@ -149,7 +208,6 @@ const Signin = () => {
         </div>
       </div>
     </>
-
   );
 };
 

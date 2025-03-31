@@ -17,35 +17,35 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
+  const fetchLecturerDetails = async () => {
+    if (lecturerDetails) return;
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await fetch(`https://aditya-b.onrender.com/fetchData?userId=${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  useEffect(() => {
-    const fetchLecturerDetails = async () => {
-      if (initialDetails) return;
-      try {
-        const userId = localStorage.getItem("userId");
-        const response = await fetch(`https://aditya-b.onrender.com/fetchData?userId=${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setLecturerDetails(data);
-        } else {
-          setError("Failed to fetch lecturer details.");
-        }
-      } catch (err) {
-        console.error("Error fetching lecturer details:", err);
-        setError("An error occurred while fetching lecturer details.");
-      } finally {
-        setLoading(false);
+      if (response.ok) {
+        const data = await response.json();
+        setLecturerDetails(data);
+      } else {
+        setError("Failed to fetch lecturer details.");
       }
-    };
-
-    fetchLecturerDetails();
-  }, [initialDetails]);
+    } catch (err) {
+      console.error("Error fetching lecturer details:", err);
+      setError("An error occurred while fetching lecturer details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (!lecturerDetails) {
+      fetchLecturerDetails();
+    }
+  }, [lecturerDetails]);
 
   const downloadProfilePDF = () => {
     const input = document.getElementById('profileContent');
@@ -391,7 +391,18 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
             {value}
             <button
               onClick={() => handleEditClick(field, value)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+              style={{
+                fontSize: "16px",
+                margin: "2px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                backgroundColor: "rgb(59 130 246)",
+                color: "white",
+                transition: "0.3s",
+                width: "auto",
+                padding: "4px 8px"
+              }}
               className="no-print"
             >
               <FaEdit />
@@ -407,7 +418,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
 
   return (
     <div className="profile-container">
-      <Navbar />
+      {!initialDetails && <Navbar />}
       <ToastContainer />
       <div className="profile-content" id="profileContent">
         <h1 style={{ fontFamily: "YourFontFamily", fontSize: "24px", fontWeight: "bold", padding: "25px" }}>

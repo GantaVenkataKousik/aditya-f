@@ -173,7 +173,7 @@ const DisplayCourses = ({ coursesData }) => {
             <ToastContainer />
             <div className='add-course-button-container' style={{ display: 'flex', justifyContent: 'end ', alignItems: 'center', marginTop: '20px' }}>
 
-                <button onClick={handleAddClick} className='add-course-button w-200 h-10' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px', }}>Add Course</button>
+                <button onClick={handleAddClick} className='add-course-button w-200 h-10 no-print' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px', }}>Add Course</button>
 
             </div>
             <table className='courses-table'>

@@ -812,7 +812,7 @@ const Others = ({ data: propsData }) => {
           <tbody>
             {contribution.length > 0 ? (
               contribution.map((cont, index) => (
-                <tr key={index} className="border no-print">
+                <tr key={index} className="border ">
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{cont.contributionDetails}</td>
                   <td className="p-2 border text-center">{cont.Benefit}</td>
@@ -820,6 +820,7 @@ const Others = ({ data: propsData }) => {
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleContributionUpdateClick(cont, index); }}
+                        className="no-print"
                         style={{
                           fontSize: "16px",
                           margin: "2px",
@@ -836,6 +837,7 @@ const Others = ({ data: propsData }) => {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleContributionDelete(index); }}
+                        className="no-print"
                         style={{
                           fontSize: "16px",
                           padding: "4px 8px",
@@ -890,7 +892,7 @@ const Others = ({ data: propsData }) => {
       <div className="mb-6 relative">
         <div className="flex justify-between items-center mb-2">
           <h2 className="font-bold text-base">9. Awards received by Faculty:</h2>
-          <div className="flex items-center gap-2 no-print">
+          <div className="flex items-center gap-2 ">
             <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
             {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}  >Upload</button> */}
             <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addaward')}>
@@ -916,7 +918,7 @@ const Others = ({ data: propsData }) => {
           <tbody>
             {awards.length > 0 ? (
               awards.map((award, index) => (
-                <tr key={index} className="border no-print">
+                <tr key={index} className="border">
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{award.Award}</td>
                   <td className="p-2 border text-center">{award.AwardedBy}</td>

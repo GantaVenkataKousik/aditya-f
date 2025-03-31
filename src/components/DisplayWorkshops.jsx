@@ -233,7 +233,7 @@ const DisplayWorkshops = ({ workshopsData }) => {
       <ToastContainer />
       <div style={{ width: '90px', marginLeft: '1100px' }}>
 
-        <button onClick={handleAddClick}> + Add</button>
+        <button onClick={handleAddClick} className='no-print'> + Add</button>
 
       </div>
       <h3 style={{ fontWeight: 'bold', fontSize: '1.125rem', marginBottom: '1rem' }}>
@@ -275,10 +275,10 @@ const DisplayWorkshops = ({ workshopsData }) => {
                     <td style={{ padding: '0.5rem', border: '1px solid #000' }}>{workshop.location || '-'}</td>
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                       <div style={{ display: 'flex', gap: '10px' }}>
-                        <button onClick={() => handleUpdateClick(workshop)} style={{ width: 'auto' }}>
+                        <button onClick={() => handleUpdateClick(workshop)} style={{ width: 'auto' }} className='no-print'>
                           <FaEdit />
                         </button>
-                        <button onClick={() => handleDelete(workshop._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                        <button onClick={() => handleDelete(workshop._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }} className='no-print'>
                           <FaTrash />
                         </button>
                       </div>

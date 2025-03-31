@@ -224,7 +224,7 @@ const DisplayFeedback = ({ feedbackData }) => {
         <div>
             <ToastContainer />
             <div className='add-feedback-button-container' style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', marginTop: '20px' }}>
-                <button onClick={handleAddClick} className='add-feedback-button' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Feedback</button>
+                <button onClick={handleAddClick} className='add-feedback-button no-print' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Feedback</button>
             </div>
             <table className="courses-table">
                 <thead>
@@ -255,10 +255,10 @@ const DisplayFeedback = ({ feedbackData }) => {
                                 {canModify && (
                                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                                         <div style={{ display: 'flex', gap: '10px' }}>
-                                            <button onClick={() => handleUpdateClick(feedback)} style={{ width: 'auto' }}>
+                                            <button onClick={() => handleUpdateClick(feedback)} style={{ width: 'auto' }} className='no-print'>
                                                 <FaEdit />
                                             </button>
-                                            <button onClick={() => handleDelete(feedback._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}>
+                                            <button onClick={() => handleDelete(feedback._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }} className='no-print'>
                                                 <FaTrash />
                                             </button>
                                         </div>

@@ -14,13 +14,26 @@ export default defineConfig({
     assetsInlineLimit: 4096, // 4kb
     rollupOptions: {
       output: {
-        // Hard-code specific chunking strategy
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-router': ['react-router-dom'],
-          'vendor-ui': ['react-icons', 'react-toastify'],
-          'vendor-utils': ['axios'],
-          'vendor-carousel': ['react-responsive-carousel']
+        manualChunks(id) {
+          // Group larger dependencies into separate chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('react-dom')) {
+              return 'vendor-react-dom';
+            }
+            if (id.includes('react-router')) {
+              return 'vendor-router';
+            }
+            if (id.includes('axios') || id.includes('react-toastify')) {
+              return 'vendor-utils';
+            }
+            if (id.includes('react-icons') || id.includes('recharts') || id.includes('react-apexcharts')) {
+              return 'vendor-charts';
+            }
+            if (id.includes('react-responsive-carousel')) {
+              return 'vendor-carousel';
+            }
+            return 'vendor'; // all other node_modules
+          }
         }
       }
     }

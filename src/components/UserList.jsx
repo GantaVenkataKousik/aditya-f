@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Navbar from './Navbar';
 import Footer from "./Footer";
+import LoginStatisticsChart from "./LoginStatisticsChart";
+
 const UserList = () => {
     const [users, setUsers] = useState({});
     const [editingUser, setEditingUser] = useState(null);
@@ -50,6 +52,10 @@ const UserList = () => {
         <>
             <div className="p-6 bg-gray-100 min-h-screen font-poppins">
                 <h2 className="text-2xl font-bold mb-4 text-center">Admin Panel</h2>
+
+                {/* Add Login Statistics Chart at the top */}
+                <LoginStatisticsChart />
+
                 <div className="space-y-6">
                     {Object.keys(users).map((group, index) => {
                         const isHOD = group.toLowerCase().includes("hod");

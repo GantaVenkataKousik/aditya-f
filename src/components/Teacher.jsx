@@ -6,7 +6,7 @@ import DisplayFeedback from './DisplayFeedback';
 import ProctoringTable from './DisplayProctoring';
 import ResearchText from './ResearchText';
 import DisplayWorkshops from './DisplayWorkshops';
-import DisplayOthers from './DisplayOthers';
+import Others from './Others';
 const Teacher = ({ faculty }) => {
   const { id } = useParams();
   const teacher = faculty.find((teacher) => teacher._id === id);
@@ -64,7 +64,7 @@ const Teacher = ({ faculty }) => {
               />
             </div>
             <div>
-              <DisplayOthers data={teacherData.others[0]} />
+              <Others data={teacherData.others[0]} />
             </div>
           </>
         )}

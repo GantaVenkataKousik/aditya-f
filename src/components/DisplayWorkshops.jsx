@@ -9,7 +9,6 @@ const DisplayWorkshops = ({ workshopsData }) => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
-  const [canModify, setCanModify] = useState(false);
   const [formData, setFormData] = useState({
     workshopTitle: '',
     organizer: '',
@@ -52,12 +51,6 @@ const DisplayWorkshops = ({ workshopsData }) => {
   };
 
   useEffect(() => {
-    const role = localStorage.getItem('role');
-    console.log(role);
-    if (role === 'Admin' || role === 'Faculty') {
-      setCanModify(true);
-    }
-
     const marks = validateMarks(localStorage.getItem('workshopmarks') || 0);
     localStorage.setItem('workshopmarks', marks);
     if (workshopsData) {
@@ -259,9 +252,9 @@ const DisplayWorkshops = ({ workshopsData }) => {
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Organizer</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Date</th>
                 <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Location</th>
-                {canModify && (
-                  <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Actions</th>
-                )}
+
+                <th style={{ padding: '0.5rem', border: '1px solid #000' }}>Actions</th>
+
               </tr>
             </thead>
             <tbody>
@@ -296,24 +289,22 @@ const DisplayWorkshops = ({ workshopsData }) => {
                   Self-Assessment Marks (Max: 20)
                 </td>
                 <td style={{ padding: '0.5rem', border: '1px solid #000' }}>
-                  {canModify ? (
-                    <input
-                      type="number"
-                      min="0"
-                      max="10"
-                      value={workshopMarks}
-                      onChange={(e) => handleMarksUpdate(e.target.value)}
-                      className="w-16 text-center"
-                      readOnly
-                    />
-                  ) : (
-                    <span className="font-bold  ">{workshopMarks}</span>
-                  )}
+
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={workshopMarks}
+                    onChange={(e) => handleMarksUpdate(e.target.value)}
+                    className="w-16 text-center"
+                    readOnly
+                  />
+
                 </td>
               </tr>
             </tbody>
           </table>
-          {canModify && (
+          {(
             <>
               {showEditForm && (
                 <div className="update-form">

@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 const Others = ({ data: propsData }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!propsData);
-  const [modify, setModify] = useState(false);
   const [outreachMarks, setOutreachMarks] = useState(0);
   const [specialMarks, setSpecialMarks] = useState(0);
   const [additionalMarks, setAdditionalMarks] = useState(0);
@@ -103,11 +102,6 @@ const Others = ({ data: propsData }) => {
     if (!propsData) {
       fetchAll();
     }
-    const role = localStorage.getItem('role');
-    if (role === 'Admin' || role === 'Faculty') {
-      setModify(true);
-    }
-
     // Calculate marks based on records
     const outreachMarks = activities.length > 0 ? 10 : 0;
     const specialMarks = contribution.length > 0 ? 10 : 0;
@@ -620,7 +614,7 @@ const Others = ({ data: propsData }) => {
                 S.NO
               </th>
               <th className="border p-2 text-center">Activity Details</th>
-              {modify && (
+              {(
                 <th className="border p-2 text-center no-print">Actions</th>
               )}
             </tr>
@@ -631,7 +625,7 @@ const Others = ({ data: propsData }) => {
                 <tr key={index} className="border">
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{act.activityDetails}</td>
-                  {modify && (
+                  {(
                     <td className="p-2 border text-center no-print" style={{ display: 'flex', justifyContent: 'center' }}>
                       <button
                         className="no-print"
@@ -712,7 +706,7 @@ const Others = ({ data: propsData }) => {
               </th>
               <th className="border p-2 text-center">Responsibility</th>
               <th className="border p-2 text-center">Assigned By</th>
-              {modify && (
+              {(
                 <th className="border p-2 text-center no-print">Actions</th>
               )}
             </tr>
@@ -724,7 +718,7 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{res.Responsibility}</td>
                   <td className="p-2 border text-center">{res.AssignedBy}</td>
-                  {modify && (
+                  {(
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                       <button
                         className="no-print"
@@ -804,7 +798,7 @@ const Others = ({ data: propsData }) => {
               </th>
               <th className="border p-2 text-center">Contribution Details</th>
               <th className="border p-2 text-center">Benefit to College/Department</th>
-              {modify && (
+              {(
                 <th className="border p-2 text-center no-print">Actions</th>
               )}
             </tr>
@@ -816,7 +810,7 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{cont.contributionDetails}</td>
                   <td className="p-2 border text-center">{cont.Benefit}</td>
-                  {modify && (
+                  {(
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleContributionUpdateClick(cont, index); }}
@@ -869,19 +863,17 @@ const Others = ({ data: propsData }) => {
                 Self-Assessment Marks (Max: 10)
               </td>
               <td className="p-2 border text-center">
-                {modify ? (
-                  <input
-                    type="number"
-                    min="0"
-                    max="10"
-                    value={specialMarks}
-                    onChange={(e) => handleMarksUpdate('special', e.target.value)}
-                    className="w-16 text-center"
-                    readOnly
-                  />
-                ) : (
-                  <span className="font-bold">{specialMarks}</span>
-                )}
+
+                <input
+                  type="number"
+                  min="0"
+                  max="10"
+                  value={specialMarks}
+                  onChange={(e) => handleMarksUpdate('special', e.target.value)}
+                  className="w-16 text-center"
+                  readOnly
+                />
+
               </td>
             </tr>
           </tbody>
@@ -910,7 +902,7 @@ const Others = ({ data: propsData }) => {
               <th className="border p-2 text-center">Awarded By</th>
               <th className="border p-2 text-center">Level</th>
               <th className="border p-2 text-center">Description</th>
-              {modify && (
+              {(
                 <th className="border p-2 text-center no-print">Actions</th>
               )}
             </tr>
@@ -924,7 +916,7 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{award.AwardedBy}</td>
                   <td className="p-2 border text-center">{award.Level}</td>
                   <td className="p-2 border text-center">{award.Description}</td>
-                  {modify && (
+                  {(
                     <td style={{ display: 'flex', justifyContent: 'center' }} className='no-print'>
                       <button
                         className='no-print'
@@ -977,7 +969,7 @@ const Others = ({ data: propsData }) => {
       </div>
 
       {/* Modal forms for editing */}
-      {modify && showActivityUpdate && (
+      {showActivityUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Update Activity</h2>
@@ -1012,7 +1004,7 @@ const Others = ({ data: propsData }) => {
         </div>
       )}
 
-      {modify && showResponsibilityUpdate && (
+      {showResponsibilityUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Update Responsibility</h2>
@@ -1056,7 +1048,7 @@ const Others = ({ data: propsData }) => {
         </div>
       )}
 
-      {modify && showContributionUpdate && (
+      {showContributionUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Update Contribution</h2>
@@ -1100,7 +1092,7 @@ const Others = ({ data: propsData }) => {
         </div>
       )}
 
-      {modify && showAwardUpdate && (
+      {showAwardUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Update Award</h2>

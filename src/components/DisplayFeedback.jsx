@@ -9,7 +9,6 @@ const DisplayFeedback = ({ feedbackData }) => {
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedFeedback, setSelectedFeedback] = useState(null);
-    const [canModify, setCanModify] = useState(false);
     const [formData, setFormData] = useState({
         courseName: '',
         semester: '',
@@ -48,10 +47,6 @@ const DisplayFeedback = ({ feedbackData }) => {
             setData(feedbackData);
         } else {
             fetchData();
-        }
-        const role = localStorage.getItem('role');
-        if (role === 'admin' || role === 'Faculty') {
-            setCanModify(true);
         }
     }, [feedbackData]);
 
@@ -236,7 +231,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <th>Feedback %</th>
                         <th>Average %</th>
                         <th>Self-Assessment Marks</th>
-                        {canModify && (
+                        {(
                             <th>Actions</th>
                         )}
                     </tr>
@@ -252,7 +247,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                                 <td>{feedback.feedbackPercentage}</td>
                                 <td>{feedback.averagePercentage}</td>
                                 <td>{feedback.selfAssessmentMarks}</td>
-                                {canModify && (
+                                {(
                                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                                         <div style={{ display: 'flex', gap: '10px' }}>
                                             <button onClick={() => handleUpdateClick(feedback)} style={{ width: 'auto' }} className='no-print'>
@@ -339,9 +334,9 @@ const DisplayFeedback = ({ feedbackData }) => {
                             <p>Average Percentage: {formData.averagePercentage}%</p>
                             <p>Self-Assessment Marks: {formData.selfAssessmentMarks}</p>
                         </div>
-                        {canModify && (
-                            <button type='submit' className='no-print'>Add Feedback</button>
-                        )}
+
+                        <button type='submit' className='no-print'>Add Feedback</button>
+
                         <button type='button' onClick={() => setShowAddForm(false)} className='no-print'>Cancel</button>
                     </form>
                 </div>

@@ -8,7 +8,6 @@ const DisplayCourses = ({ coursesData }) => {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
-    const [canModify, setCanModify] = useState(false);
     const [formData, setFormData] = useState({
         courseName: '',
         semester: '',
@@ -36,10 +35,6 @@ const DisplayCourses = ({ coursesData }) => {
     };
 
     useEffect(() => {
-        const role = localStorage.getItem('role');
-        if (role === 'Admin' || role === 'Faculty') {
-            setCanModify(true);
-        }
         if (coursesData) {
             setData(coursesData);
         } else {
@@ -187,9 +182,7 @@ const DisplayCourses = ({ coursesData }) => {
                         <th>Pass %</th>
                         <th>Average %</th>
                         <th>Self-Assessment Marks</th>
-                        {canModify && (
-                            <th>Actions</th>
-                        )}
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -216,7 +209,7 @@ const DisplayCourses = ({ coursesData }) => {
                                     </>
                                 )}
 
-                                {canModify && (
+                                {(
                                     <td style={{ display: 'flex', justifyContent: 'center' }}>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleEditClick(course); }}
@@ -271,7 +264,7 @@ const DisplayCourses = ({ coursesData }) => {
                 </tbody>
             </table>
 
-            {canModify && showEditForm && (
+            {showEditForm && (
                 <div className='update-form'>
                     <h2>Update Course</h2>
                     <form onSubmit={handleEditFormSubmit}>
@@ -285,7 +278,7 @@ const DisplayCourses = ({ coursesData }) => {
                 </div>
             )}
 
-            {canModify && showAddForm && (
+            {showAddForm && (
                 <div className='add-form'>
                     <h2>Add Course</h2>
                     <form onSubmit={handleAddFormSubmit}>
@@ -293,9 +286,9 @@ const DisplayCourses = ({ coursesData }) => {
                         <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
                         <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
                         <input type='number' name='passCount' value={formData.passCount} onChange={handleInputChange} placeholder='Pass Count' required />
-                        {canModify && (
-                            <button type='submit' className='add-course-button width-100'>Add Course</button>
-                        )}
+
+                        <button type='submit' className='add-course-button width-100'>Add Course</button>
+
                         <button type='button' onClick={() => setShowAddForm(false)}>Cancel</button>
                     </form>
                 </div>

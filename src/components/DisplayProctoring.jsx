@@ -8,7 +8,7 @@ const ProctoringTable = ({ proctoringData }) => {
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedProctor, setSelectedProctor] = useState(null);
-    const [canModify, setCanModify] = useState(false);
+
     const [formData, setFormData] = useState({
         totalStudents: '',
         semesterBranchSec: '',
@@ -52,10 +52,7 @@ const ProctoringTable = ({ proctoringData }) => {
         } else {
             fetchData();
         }
-        const role = localStorage.getItem('role');
-        if (role === 'Admin' || role === 'Faculty') {
-            setCanModify(true);
-        }
+
     }, [proctoringData]);
 
     // Function to calculate self-assessment marks
@@ -225,9 +222,9 @@ const ProctoringTable = ({ proctoringData }) => {
                         <th>Pass Percentage (B/A * 100)</th>
                         <th>Average %</th>
                         <th>Self-Assessment Marks</th>
-                        {canModify && (
-                            <th>Actions</th>
-                        )}
+
+                        <th>Actions</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -252,7 +249,7 @@ const ProctoringTable = ({ proctoringData }) => {
                                             <td rowSpan={data.length}>{data[data.length - 1]?.selfAssessmentMarks || selfAssessmentMarks}</td>
                                         </>
                                     )}
-                                    {canModify && (
+                                    {(
                                         <td style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
                                             <button className='no-print' onClick={() => handleUpdateClick(proctor)} style={{ width: 'auto' }}> <FaEdit /> </button>
                                             <button className='no-print' onClick={() => handleDelete(proctor._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}> <FaTrash /> </button>
@@ -268,7 +265,7 @@ const ProctoringTable = ({ proctoringData }) => {
                     )}
                 </tbody>
             </table>
-            {canModify && showEditForm && (
+            {showEditForm && (
                 <div className="update-form">
                     <h2>Update Proctoring Data</h2>
                     <form onSubmit={handleEdit}>
@@ -283,7 +280,7 @@ const ProctoringTable = ({ proctoringData }) => {
                     </form>
                 </div>
             )}
-            {canModify && showAddForm && (
+            {showAddForm && (
                 <div className="add-form">
                     <h2>Add Proctoring Data</h2>
                     <form onSubmit={handleAddFormSubmit}>

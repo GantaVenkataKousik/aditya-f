@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "NODE_OPTIONS=--max-old-space-size=384 vite build",
+    "build": "NODE_OPTIONS=--max-old-space-size=512 vite build --emptyOutDir",
+    "build:ci": "vite build --mode production",
     "lint": "eslint .",
     "preview": "vite preview"
   },

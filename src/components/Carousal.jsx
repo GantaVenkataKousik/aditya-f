@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import one from "../images/one.jpg";
@@ -6,6 +6,8 @@ import two from "../images/two.jpg";
 import three from "../images/three.jpeg";
 import four from "../images/four.jpg";
 import five from "../images/five.jpg";
+
+const About = lazy(() => import('./components/About'));
 
 const Carousal = (props) => {
   const [canShow, setCanShow] = useState(false);

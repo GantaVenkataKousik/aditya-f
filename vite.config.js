@@ -5,23 +5,25 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // More aggressive memory optimization
+    // Ultra-optimized for memory usage
     chunkSizeWarningLimit: 1000,
-    minify: 'esbuild', // Uses less memory than terser
-    sourcemap: false, // Disable sourcemaps to save memory
+    sourcemap: false,
+    minify: 'esbuild',
+    target: 'esnext', // Modern browsers only for smaller build
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096, // 4kb
     rollupOptions: {
       output: {
+        // Hard-code specific chunking strategy
         manualChunks: {
-          // Explicitly chunk large dependencies
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['react-icons', 'react-toastify'],
-          charts: ['react-apexcharts', 'recharts'],
-          carousel: ['react-responsive-carousel']
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-router': ['react-router-dom'],
+          'vendor-ui': ['react-icons', 'react-toastify'],
+          'vendor-utils': ['axios'],
+          'vendor-carousel': ['react-responsive-carousel']
         }
       }
-    },
-    // Build in smaller chunks
-    assetsInlineLimit: 4096, // 4kb
+    }
   },
   server: {
     // Limit memory usage during development

@@ -45,7 +45,7 @@ const LoginStatisticsChart = () => {
             const formattedDate = dateToUse.toISOString().split('T')[0];
 
             // Build query URL with filters
-            let url = `http://localhost:5001/login/login-statistics?date=${formattedDate}`;
+            let url = `https://aditya-b.onrender.com/login/login-statistics?date=${formattedDate}`;
             if (selectedDesignation) {
                 url += `&designation=${selectedDesignation}`;
             }

@@ -17,11 +17,9 @@ const Signin = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
       const data = await response.json();
       if (data.success) {
         localStorage.setItem('token', data.token);

@@ -84,38 +84,35 @@ const Carousal = (props) => {
         </div>
 
         <ul style={styles.navList}>
-          {role === 'Faculty' && (
-            <li>
-              <a
-                href="/profile"
-                style={{
-                  ...styles.navLink,
-                  ...(hoveredLink === 'profile' ? styles.navLinkHover : {})
-                }}
-                onMouseEnter={() => setHoveredLink('profile')}
-                onMouseLeave={() => setHoveredLink(null)}
-              >
-                <span style={styles.navIcon}>📋</span>
-                <span style={styles.navText}>Part-A</span>
-              </a>
-            </li>
-          )}
-          {role === 'Faculty' && (
-            <li>
-              <a
-                href="/partb"
-                style={{
-                  ...styles.navLink,
-                  ...(hoveredLink === 'partb' ? styles.navLinkHover : {})
-                }}
-                onMouseEnter={() => setHoveredLink('partb')}
-                onMouseLeave={() => setHoveredLink(null)}
-              >
-                <span style={styles.navIcon}>📊</span>
-                <span style={styles.navText}>Part-B</span>
-              </a>
-            </li>
-          )}
+          <li>
+            <a
+              href="/profile"
+              style={{
+                ...styles.navLink,
+                ...(hoveredLink === 'profile' ? styles.navLinkHover : {})
+              }}
+              onMouseEnter={() => setHoveredLink('profile')}
+              onMouseLeave={() => setHoveredLink(null)}
+            >
+              <span style={styles.navIcon}>📋</span>
+              <span style={styles.navText}>Part-A</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="/partb"
+              style={{
+                ...styles.navLink,
+                ...(hoveredLink === 'partb' ? styles.navLinkHover : {})
+              }}
+              onMouseEnter={() => setHoveredLink('partb')}
+              onMouseLeave={() => setHoveredLink(null)}
+            >
+              <span style={styles.navIcon}>📊</span>
+              <span style={styles.navText}>Part-B</span>
+            </a>
+          </li>
+
           {role === 'Faculty' && (
             <li>
               <a

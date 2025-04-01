@@ -136,7 +136,7 @@ const Welcome = () => {
           transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
           transition: 'opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s',
         }}>
-          Shape Your Future With Us
+          Welcome to the Faculty Appraisal System
         </h1>
 
         <p style={{
@@ -149,8 +149,7 @@ const Welcome = () => {
           transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
           transition: 'opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s',
         }}>
-          Discover excellence in education with our innovative programs, world-class faculty, and vibrant campus life.
-          Begin your journey to success today.
+          Log in to Manage Your Professional Growth
         </p>
 
         <div style={{
@@ -296,17 +295,19 @@ const Welcome = () => {
               <div
                 style={{
                   position: 'absolute',
-                  top: '60px',
+                  bottom: 'calc(100% + 5px)',
                   left: '0',
                   right: '0',
                   padding: '10px',
                   border: 'none',
                   borderRadius: '12px',
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
+                  boxShadow: '0 -10px 25px rgba(0, 0, 0, 0.15)',
                   backgroundColor: 'white',
                   zIndex: 100,
                   textAlign: 'left',
-                  animation: 'fadeIn 0.3s ease',
+                  animation: 'fadeInFromBottom 0.3s ease',
+                  maxHeight: '300px',
+                  overflowY: 'auto',
                 }}
               >
                 <ul style={{
@@ -404,6 +405,11 @@ const Welcome = () => {
           }
           
           @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          @keyframes fadeInFromBottom {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
           }

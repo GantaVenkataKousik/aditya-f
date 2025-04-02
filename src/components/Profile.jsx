@@ -18,14 +18,20 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
   const fetchLecturerDetails = async () => {
-    if (lecturerDetails) return;
     try {
+      setLoading(true);
       const userId = localStorage.getItem("userId");
+      if (!userId) {
+        setError("User ID not found. Please login again.");
+        return;
+      }
+
       const response = await fetch(`https://aditya-b.onrender.com/fetchData?userId=${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
       });
 
       if (response.ok) {
@@ -42,10 +48,8 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
     }
   };
   useEffect(() => {
-    if (!lecturerDetails) {
-      fetchLecturerDetails();
-    }
-  }, [lecturerDetails]);
+    fetchLecturerDetails();
+  }, []);
 
   const downloadProfilePDF = () => {
     const input = document.getElementById('profileContent');

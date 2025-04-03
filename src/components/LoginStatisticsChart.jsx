@@ -10,6 +10,8 @@ const LoginStatisticsChart = () => {
     const [loginData, setLoginData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [viewMode, setViewMode] = useState('designation'); // 'designation' or 'hourly'
+    const [showUserData, setShowUserData] = useState(false);
+    const [loggedInUsers, setLoggedInUsers] = useState({});
 
     // Define designation colors to match the summary boxes
     const designationColors = {
@@ -110,6 +112,20 @@ const LoginStatisticsChart = () => {
                     });
 
                     data.hourlyData = emptyHourlyData;
+                }
+
+                if (data.usersData) {
+                    // Group users by designation
+                    const groupedUsers = data.usersData.reduce((acc, user) => {
+                        const designation = user.designation || 'Unknown';
+                        if (!acc[designation]) {
+                            acc[designation] = [];
+                        }
+                        acc[designation].push(user);
+                        return acc;
+                    }, {});
+
+                    setLoggedInUsers(groupedUsers);
                 }
 
                 setLoginData(data);
@@ -343,6 +359,10 @@ const LoginStatisticsChart = () => {
 
     const chartConfig = getChartConfig();
 
+    const toggleUserData = () => {
+        setShowUserData(!showUserData);
+    };
+
     return (
         <div className="bg-white p-6 rounded-lg shadow-md mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
             <h2 className="text-xl font-bold mb-4">Login Statistics</h2>
@@ -400,6 +420,13 @@ const LoginStatisticsChart = () => {
                         Reset Filters
                     </button>
                 </div>
+
+                <button
+                    onClick={toggleUserData}
+                    className="bg-[#e67528] hover:bg-[#d56a24] text-white px-4 py-2 rounded"
+                >
+                    {showUserData ? 'Hide' : 'Show'} Logged-in Users
+                </button>
             </div>
 
             {/* Summary Statistics */}
@@ -465,6 +492,85 @@ const LoginStatisticsChart = () => {
             ) : (
                 <div className="text-center p-8 text-gray-500">
                     No login data available for the selected filters
+                </div>
+            )}
+
+            {/* User Data Section */}
+            {showUserData && (
+                <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-3">Logged-in Users for {selectedDate.toISOString().split('T')[0]}</h3>
+                    <div className="space-y-6">
+                        {Object.keys(loggedInUsers).length > 0 ? (
+                            Object.keys(loggedInUsers).map((designation) => (
+                                <div
+                                    key={designation}
+                                    className="shadow-lg p-4 rounded-lg"
+                                    style={{
+                                        backgroundColor: designation === 'HOD' ? '#fff8f3' :
+                                            designation === 'Dean' ? '#f0f7ff' :
+                                                designation === 'Faculty' ? '#f0fdf6' :
+                                                    designation === 'Admin' ? '#f5f3ff' :
+                                                        '#f9fafb',
+                                        borderLeft: `4px solid ${designationColors[designation] || '#d1d5db'}`
+                                    }}
+                                >
+                                    <h3 className="text-lg font-semibold pb-2"
+                                        style={{ color: designationColors[designation] || '#374151' }}>
+                                        {designation}
+                                    </h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                                        {loggedInUsers[designation].map((user) => (
+                                            <div key={user._id}
+                                                className="bg-white p-4 rounded-lg shadow-md relative overflow-hidden"
+                                                style={{
+                                                    borderLeft: `4px solid ${designationColors[designation] || '#d1d5db'}`,
+                                                }}
+                                            >
+                                                {/* Login count as a badge in the top right */}
+                                                <div className="absolute top-3 right-3 flex flex-col items-center">
+                                                    <span className="text-3xl font-bold" style={{ color: designationColors[designation] }}>
+                                                        {user.loginCount || 0}
+                                                    </span>
+                                                    <span className="text-xs text-gray-500">Logins</span>
+                                                </div>
+
+                                                {/* User information */}
+                                                <p className="text-lg font-semibold pr-16">{user.fullName}</p>
+                                                <p className="text-sm text-gray-500">{user.email}</p>
+                                                <p className="text-sm text-gray-500">Emp ID: {user.EmpID}</p>
+                                                <p className="text-sm text-gray-500">Joining: {user.JoiningDate}</p>
+                                                <p className="text-sm text-gray-500">Qualification: {user.Qualification}</p>
+
+                                                <button
+                                                    className="mt-4 text-white text-sm px-4 py-1 rounded"
+                                                    style={{
+                                                        backgroundColor: designationColors[designation],
+                                                        transition: 'background-color 0.2s ease'
+                                                    }}
+                                                    onMouseOver={(e) => {
+                                                        e.target.style.backgroundColor = designation === 'HOD' ? '#d56a24' :
+                                                            designation === 'Dean' ? '#3575e3' :
+                                                                designation === 'Faculty' ? '#0ea875' :
+                                                                    designation === 'Admin' ? '#7c4ef1' :
+                                                                        '#9ca3af';
+                                                    }}
+                                                    onMouseOut={(e) => {
+                                                        e.target.style.backgroundColor = designationColors[designation];
+                                                    }}
+                                                >
+                                                    Edit
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-center p-4 bg-gray-50 rounded-lg">
+                                No users logged in on this date.
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

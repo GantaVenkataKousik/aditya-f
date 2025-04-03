@@ -56,6 +56,8 @@ const UserList = () => {
                 {/* Add Login Statistics Chart at the top */}
                 <LoginStatisticsChart />
 
+
+                <h2 className="text-2xl font-bold mb-4 text-center">User List</h2>
                 <div className="space-y-6">
                     {Object.keys(users).map((group, index) => {
                         const isHOD = group.toLowerCase().includes("hod");

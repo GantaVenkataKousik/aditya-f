@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from "./Footer";
 import LoginStatisticsChart from "./LoginStatisticsChart";
-import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaEye, FaTrash, FaHome } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -110,9 +110,41 @@ const UserList = () => {
         <>
             <div className="p-6 bg-gray-100 min-h-screen font-poppins">
                 <ToastContainer />
-                <h2 className="text-2xl font-bold mb-4 text-center">Admin Panel</h2>
 
-                {/* Add Login Statistics Chart at the top */}
+                {/* Home button similar to Navbar */}
+                <div className="flex items-center mb-4">
+                    <div
+                        className='home-button'
+                        onClick={() => navigate('/home')}
+                        style={{
+                            width: '50px',
+                            height: '50px',
+                            borderRadius: '50%',
+                            backgroundColor: '#1a4b88',
+                            color: 'white',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '22px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#ff7f27';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#1a4b88';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                    >
+                        <FaHome />
+                    </div>
+                    <h2 className="text-2xl font-bold ml-4 flex-1 text-center">Admin Panel</h2>
+                </div>
+
+                {/* Add Login Statistics Chart */}
                 <LoginStatisticsChart />
 
                 <h2 className="text-2xl font-bold mb-4 text-center">User List</h2>

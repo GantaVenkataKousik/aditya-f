@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from './Navbar';
 import Footer from "./Footer";
 import LoginStatisticsChart from "./LoginStatisticsChart";
+import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
 
 const UserList = () => {
     const [users, setUsers] = useState({});
@@ -76,12 +77,35 @@ const UserList = () => {
                                             <p className="text-sm text-gray-500">Emp ID: {user.EmpID || "N/A"}</p>
                                             <p className="text-sm text-gray-500">Joining: {user.JoiningDate || "N/A"}</p>
                                             <p className="text-sm text-gray-500">Qualification: {user.Qualification || "N/A"}</p>
-                                            <button
-                                                className="mt-2 bg-[#e67528] hover:bg-[#d56a24] text-white text-sm px-4 py-1 rounded"
-                                                onClick={() => handleEdit(user)}
-                                            >
-                                                Edit
-                                            </button>
+
+                                            <div className="mt-4 flex gap-2">
+                                                <button
+                                                    className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm px-2 py-1.5 rounded transition-colors duration-200 flex items-center justify-center gap-1"
+                                                    onClick={() => {
+                                                        alert(`View details for ${user.fullName}`);
+                                                    }}
+                                                >
+                                                    <FaEye /> View
+                                                </button>
+
+                                                <button
+                                                    className="flex-1 bg-[#e67528] hover:bg-[#d56a24] text-white text-sm px-2 py-1.5 rounded transition-colors duration-200 flex items-center justify-center gap-1"
+                                                    onClick={() => handleEdit(user)}
+                                                >
+                                                    <FaEdit /> Edit
+                                                </button>
+
+                                                <button
+                                                    className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1.5 rounded transition-colors duration-200 flex items-center justify-center gap-1"
+                                                    onClick={() => {
+                                                        if (window.confirm(`Are you sure you want to delete ${user.fullName}?`)) {
+                                                            console.log("Delete user:", user._id);
+                                                        }
+                                                    }}
+                                                >
+                                                    <FaTrash /> Delete
+                                                </button>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

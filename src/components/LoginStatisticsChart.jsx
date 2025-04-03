@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
 
 const LoginStatisticsChart = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -541,25 +542,6 @@ const LoginStatisticsChart = () => {
                                                 <p className="text-sm text-gray-500">Joining: {user.JoiningDate}</p>
                                                 <p className="text-sm text-gray-500">Qualification: {user.Qualification}</p>
 
-                                                <button
-                                                    className="mt-4 text-white text-sm px-4 py-1 rounded"
-                                                    style={{
-                                                        backgroundColor: designationColors[designation],
-                                                        transition: 'background-color 0.2s ease'
-                                                    }}
-                                                    onMouseOver={(e) => {
-                                                        e.target.style.backgroundColor = designation === 'HOD' ? '#d56a24' :
-                                                            designation === 'Dean' ? '#3575e3' :
-                                                                designation === 'Faculty' ? '#0ea875' :
-                                                                    designation === 'Admin' ? '#7c4ef1' :
-                                                                        '#9ca3af';
-                                                    }}
-                                                    onMouseOut={(e) => {
-                                                        e.target.style.backgroundColor = designationColors[designation];
-                                                    }}
-                                                >
-                                                    Edit
-                                                </button>
                                             </div>
                                         ))}
                                     </div>

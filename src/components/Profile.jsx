@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import "./Profile.css";
 import { FaDownload, FaEdit, FaCheck, FaTimes } from 'react-icons/fa';
@@ -9,6 +9,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = ({ lecturerDetails: initialDetails }) => {
+  const { id } = useParams();
   const [lecturerDetails, setLecturerDetails] = useState(initialDetails || {});
   const [loading, setLoading] = useState(!initialDetails);
   const [error, setError] = useState(null);
@@ -20,12 +21,14 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
   const fetchLecturerDetails = async () => {
     try {
       setLoading(true);
-      const userId = localStorage.getItem("userId");
+      let userId = localStorage.getItem("userId");
       if (!userId) {
         setError("User ID not found. Please login again.");
         return;
       }
-
+      if (id) {
+        userId = id;
+      }
       const response = await fetch(`https://aditya-b.onrender.com/fetchData?userId=${userId}`, {
         method: "GET",
         headers: {

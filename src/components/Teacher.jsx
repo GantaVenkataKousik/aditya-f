@@ -11,6 +11,7 @@ import Profile from './Profile';
 import FacultyScoreTable from './FacultyScoreTable';
 const Teacher = ({ faculty }) => {
   const { id } = useParams();
+  console.log(id);
   const teacher = faculty.find((teacher) => teacher._id === id);
   const [teacherData, setTeacherData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,7 +64,7 @@ const Teacher = ({ faculty }) => {
       <Navbar />
 
       <div style={styles.contentContainer}>
-        {lecturerDetails && <Profile lecturerDetails={lecturerDetails} />}
+        {lecturerDetails && <Profile lecturerDetails={lecturerDetails} id={id} />}
       </div>
       <h2 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px' }}>PART B</h2>
       <div style={styles.contentContainer}>

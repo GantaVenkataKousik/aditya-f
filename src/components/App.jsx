@@ -139,7 +139,7 @@ function App() {
       <Route path="/class" element={<UpdateClass />} />
       <Route path="/feedback" element={<UpdateCla />} />
       <Route path="/classes" element={<ClassInfo />} />
-      <Route path="/teacher/:id" element={<Teacher faculty={faculty} />} />
+      <Route path="/details/:id" element={<Teacher faculty={faculty} />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="/hodtable" element={<HodTable />} />
       <Route path="/addResearch" element={<AddResearch />} />

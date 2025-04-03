@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from "./Footer";
 import LoginStatisticsChart from "./LoginStatisticsChart";
 import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UserList = () => {
     const [users, setUsers] = useState({});
     const [editingUser, setEditingUser] = useState(null);
     const [formData, setFormData] = useState({});
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     useEffect(() => {
         fetchUsers();
@@ -28,6 +36,51 @@ const UserList = () => {
         setFormData(user);
     };
 
+    const handleDelete = async (userId, userName) => {
+        if (window.confirm(`Are you sure you want to delete ${userName}?`)) {
+            try {
+                const response = await fetch(`https://aditya-b.onrender.com/delete-user/${userId}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                if (response.ok) {
+                    // Re-fetch users to update UI
+                    fetchUsers();
+                    toast.success(`${userName} deleted successfully`, {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+                } else {
+                    toast.error("Failed to delete user", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+                }
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                toast.error("Error occurred while deleting user", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+            }
+        }
+    };
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -43,20 +96,24 @@ const UserList = () => {
             if (response.ok) {
                 fetchUsers();
                 setEditingUser(null);
+                toast.success("User updated successfully");
+            } else {
+                toast.error("Failed to update user");
             }
         } catch (error) {
             console.error("Error updating user:", error);
+            toast.error("Error occurred while updating user");
         }
     };
 
     return (
         <>
             <div className="p-6 bg-gray-100 min-h-screen font-poppins">
+                <ToastContainer />
                 <h2 className="text-2xl font-bold mb-4 text-center">Admin Panel</h2>
 
                 {/* Add Login Statistics Chart at the top */}
                 <LoginStatisticsChart />
-
 
                 <h2 className="text-2xl font-bold mb-4 text-center">User List</h2>
                 <div className="space-y-6">
@@ -78,32 +135,24 @@ const UserList = () => {
                                             <p className="text-sm text-gray-500">Joining: {user.JoiningDate || "N/A"}</p>
                                             <p className="text-sm text-gray-500">Qualification: {user.Qualification || "N/A"}</p>
 
-                                            <div className="mt-4 flex gap-2">
-                                                <button
-                                                    className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm px-2 py-1.5 rounded transition-colors duration-200 flex items-center justify-center gap-1"
-                                                    onClick={() => {
-                                                        alert(`View details for ${user.fullName}`);
-                                                    }}
-                                                >
-                                                    <FaEye /> View
-                                                </button>
+                                            <div className="mt-4 flex justify-end gap-2">
+                                                <Link to={`/details/${user._id}`}>
+                                                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded transition-colors duration-200">
+                                                        <FaEye />
+                                                    </button>
+                                                </Link>
+
+                                                <Link to={`/details/${user._id}`}>
+                                                    <button className="bg-[#e67528] hover:bg-[#d56a24] text-white px-3 py-1.5 rounded transition-colors duration-200">
+                                                        <FaEdit />
+                                                    </button>
+                                                </Link>
 
                                                 <button
-                                                    className="flex-1 bg-[#e67528] hover:bg-[#d56a24] text-white text-sm px-2 py-1.5 rounded transition-colors duration-200 flex items-center justify-center gap-1"
-                                                    onClick={() => handleEdit(user)}
+                                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded transition-colors duration-200"
+                                                    onClick={() => handleDelete(user._id, user.fullName)}
                                                 >
-                                                    <FaEdit /> Edit
-                                                </button>
-
-                                                <button
-                                                    className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1.5 rounded transition-colors duration-200 flex items-center justify-center gap-1"
-                                                    onClick={() => {
-                                                        if (window.confirm(`Are you sure you want to delete ${user.fullName}?`)) {
-                                                            console.log("Delete user:", user._id);
-                                                        }
-                                                    }}
-                                                >
-                                                    <FaTrash /> Delete
+                                                    <FaTrash />
                                                 </button>
                                             </div>
                                         </div>

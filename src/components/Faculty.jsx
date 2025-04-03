@@ -71,7 +71,7 @@ const Faculty = (props) => {
         </div>
         <div style={{ color: '#555', fontSize: '14px' }}>{teacher.department}</div>
         <div>
-          <Link to={`/teacher/${teacher._id}`}>
+          <Link to={`/details/${teacher._id}`}>
             <button
               style={{
                 marginTop: '10px',

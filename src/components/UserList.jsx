@@ -40,7 +40,7 @@ const UserList = () => {
         if (window.confirm(`Are you sure you want to delete ${userName}?`)) {
             try {
                 const response = await fetch(`https://aditya-b.onrender.com/delete-user/${userId}`, {
-                    method: "GET",
+                    method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
                     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './DisplayProctoring.css'; // Import the CSS file
 import { toast, ToastContainer } from 'react-toastify';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
 
 const ProctoringTable = ({ proctoringData }) => {
     const [data, setData] = useState(proctoringData || []);
@@ -207,9 +207,33 @@ const ProctoringTable = ({ proctoringData }) => {
     return (
         <div>
             <ToastContainer />
-            <div className='add-proctoring-button-container' style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', marginTop: '20px' }}>
-
-                <button onClick={handleAddClick} className='add-proctoring-button no-print' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px' }}>Add Proctoring</button>
+            <div className='add-proctoring-button-container' style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                marginTop: '20px',
+                marginBottom: '20px'
+            }}>
+                <button
+                    onClick={handleAddClick}
+                    className='add-proctoring-button no-print'
+                    style={{
+                        backgroundColor: '#1a4b88',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        padding: '10px 16px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                    }}
+                >
+                    <FaPlus /> Add Proctoring
+                </button>
             </div>
             <table className="proctoring-table">
                 <thead>
@@ -222,9 +246,7 @@ const ProctoringTable = ({ proctoringData }) => {
                         <th>Pass Percentage (B/A * 100)</th>
                         <th>Average %</th>
                         <th>Self-Assessment Marks</th>
-
                         <th>Actions</th>
-
                     </tr>
                 </thead>
                 <tbody>
@@ -249,12 +271,56 @@ const ProctoringTable = ({ proctoringData }) => {
                                             <td rowSpan={data.length}>{data[data.length - 1]?.selfAssessmentMarks || selfAssessmentMarks}</td>
                                         </>
                                     )}
-                                    {(
-                                        <td style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                                            <button className='no-print' onClick={() => handleUpdateClick(proctor)} style={{ width: 'auto' }}> <FaEdit /> </button>
-                                            <button className='no-print' onClick={() => handleDelete(proctor._id)} style={{ width: 'auto', backgroundColor: 'red', color: 'white' }}> <FaTrash /> </button>
-                                        </td>
-                                    )}
+                                    <td style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                                        <button
+                                            onClick={() => handleUpdateClick(proctor)}
+                                            className='no-print'
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                padding: '8px',
+                                                margin: "2px",
+                                                border: "none",
+                                                borderRadius: "5px",
+                                                cursor: "pointer",
+                                                backgroundColor: "#1a4b88",
+                                                color: "white",
+                                                transition: "all 0.3s ease",
+                                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                width: "36px",
+                                                height: "36px"
+                                            }}
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
+                                        >
+                                            <FaEdit size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(proctor._id)}
+                                            className='no-print'
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                padding: '8px',
+                                                margin: "2px",
+                                                border: "none",
+                                                borderRadius: "5px",
+                                                cursor: "pointer",
+                                                backgroundColor: "#e74c3c",
+                                                color: "white",
+                                                transition: "all 0.3s ease",
+                                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                width: "36px",
+                                                height: "36px"
+                                            }}
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
+                                        >
+                                            <FaTrash size={18} />
+                                        </button>
+                                    </td>
                                 </tr>
                             );
                         })
@@ -265,76 +331,396 @@ const ProctoringTable = ({ proctoringData }) => {
                     )}
                 </tbody>
             </table>
+
+            {/* Modal popup for Edit Form */}
             {showEditForm && (
-                <div className="update-form">
-                    <h2>Update Proctoring Data</h2>
-                    <form onSubmit={handleEdit}>
-                        <input type="number" name="totalStudents" value={formData.totalStudents} onChange={handleInputChange} placeholder="Total Students" required />
-                        <input type="text" name="semesterBranchSec" value={formData.semesterBranchSec} onChange={handleInputChange} placeholder="Semester-Branch-Section" required />
-                        <input type="number" name="eligibleStudents" value={formData.eligibleStudents} onChange={handleInputChange} placeholder="No. of Students Eligible for End Exams (A)" required />
-                        <input type="number" name="passedStudents" value={formData.passedStudents} onChange={handleInputChange} placeholder="No. of Students Passed (B)" required />
-                        <input type="number" name="averagePercentage" value={formData.averagePercentage} onChange={handleInputChange} placeholder="Average %" required />
-                        <input type="number" name="selfAssessmentMarks" value={formData.selfAssessmentMarks} onChange={handleInputChange} placeholder="Self-Assessment Marks" required />
-                        <button className='no-print' type="submit">Save Changes</button>
-                        <button className='no-print' type="button" onClick={() => setShowEditForm(false)}>Cancel</button>
-                    </form>
+                <div className='modal-overlay' style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000
+                }}>
+                    <div className='update-form' style={{
+                        backgroundColor: 'white',
+                        padding: '25px',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                        width: '90%',
+                        maxWidth: '500px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            <h2 style={{ margin: 0, color: '#333' }}>Update Proctoring Data</h2>
+                            <button
+                                onClick={() => setShowEditForm(false)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    fontSize: '20px',
+                                    cursor: 'pointer',
+                                    color: '#777'
+                                }}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleEdit}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Total Students</label>
+                                    <input
+                                        type="number"
+                                        name="totalStudents"
+                                        value={formData.totalStudents}
+                                        onChange={handleInputChange}
+                                        placeholder="Total Students"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Semester-Branch-Section</label>
+                                    <input
+                                        type="text"
+                                        name="semesterBranchSec"
+                                        value={formData.semesterBranchSec}
+                                        onChange={handleInputChange}
+                                        placeholder="Semester-Branch-Section"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>No. of Students Eligible (A)</label>
+                                    <input
+                                        type="number"
+                                        name="eligibleStudents"
+                                        value={formData.eligibleStudents}
+                                        onChange={handleInputChange}
+                                        placeholder="No. of Students Eligible for End Exams (A)"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>No. of Students Passed (B)</label>
+                                    <input
+                                        type="number"
+                                        name="passedStudents"
+                                        value={formData.passedStudents}
+                                        onChange={handleInputChange}
+                                        placeholder="No. of Students Passed (B)"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Average %</label>
+                                    <input
+                                        type="number"
+                                        name="averagePercentage"
+                                        value={formData.averagePercentage}
+                                        onChange={handleInputChange}
+                                        placeholder="Average %"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Self-Assessment Marks</label>
+                                    <input
+                                        type="number"
+                                        name="selfAssessmentMarks"
+                                        value={formData.selfAssessmentMarks}
+                                        onChange={handleInputChange}
+                                        placeholder="Self-Assessment Marks"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Side by side buttons */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
+                                <button
+                                    type='button'
+                                    onClick={() => setShowEditForm(false)}
+                                    className='no-print'
+                                    style={{
+                                        padding: '10px 20px',
+                                        backgroundColor: '#f5f5f5',
+                                        color: '#333',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        fontWeight: '500',
+                                        width: '45%'
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type='submit'
+                                    className='no-print'
+                                    style={{
+                                        padding: '10px 20px',
+                                        backgroundColor: '#1a4b88',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        fontWeight: '500',
+                                        width: '45%'
+                                    }}
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             )}
+
+            {/* Modal popup for Add Form */}
             {showAddForm && (
-                <div className="add-form">
-                    <h2>Add Proctoring Data</h2>
-                    <form onSubmit={handleAddFormSubmit}>
-                        <input
-                            type="number"
-                            name="totalStudents"
-                            value={formData.totalStudents}
-                            onChange={handleInputChange}
-                            placeholder="Total Students"
-                            required
-                        />
-                        <input
-                            type="text"
-                            name="semesterBranchSec"
-                            value={formData.semesterBranchSec}
-                            onChange={handleInputChange}
-                            placeholder="Semester-Branch-Section"
-                            required
-                        />
-                        <input
-                            type="number"
-                            name="eligibleStudents"
-                            value={formData.eligibleStudents}
-                            onChange={handleInputChange}
-                            placeholder="No. of Students Eligible for End Exams (A)"
-                            required
-                        />
-                        <input
-                            type="number"
-                            name="passedStudents"
-                            value={formData.passedStudents}
-                            onChange={handleInputChange}
-                            placeholder="No. of Students Passed (B)"
-                            required
-                        />
-                        <input
-                            type="number"
-                            name="averagePercentage"
-                            value={formData.averagePercentage || ''}
-                            readOnly
-                            placeholder="Average % (Auto-calculated)"
-                            style={{ backgroundColor: '#f0f0f0' }}
-                        />
-                        <input
-                            type="number"
-                            name="selfAssessmentMarks"
-                            value={formData.selfAssessmentMarks}
-                            onChange={handleInputChange}
-                            placeholder="Self-Assessment Marks"
-                            required
-                        />
-                        <button className='no-print' type="submit">Add Proctoring</button>
-                        <button className='no-print' type="button" onClick={() => setShowAddForm(false)}>Cancel</button>
-                    </form>
+                <div className='modal-overlay' style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000
+                }}>
+                    <div className='add-form' style={{
+                        backgroundColor: 'white',
+                        padding: '25px',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                        width: '90%',
+                        maxWidth: '500px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            <h2 style={{ margin: 0, color: '#333' }}>Add Proctoring Data</h2>
+                            <button
+                                onClick={() => setShowAddForm(false)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    fontSize: '20px',
+                                    cursor: 'pointer',
+                                    color: '#777'
+                                }}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleAddFormSubmit}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Total Students</label>
+                                    <input
+                                        type="number"
+                                        name="totalStudents"
+                                        value={formData.totalStudents}
+                                        onChange={handleInputChange}
+                                        placeholder="Total Students"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Semester-Branch-Section</label>
+                                    <input
+                                        type="text"
+                                        name="semesterBranchSec"
+                                        value={formData.semesterBranchSec}
+                                        onChange={handleInputChange}
+                                        placeholder="Semester-Branch-Section"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>No. of Students Eligible (A)</label>
+                                    <input
+                                        type="number"
+                                        name="eligibleStudents"
+                                        value={formData.eligibleStudents}
+                                        onChange={handleInputChange}
+                                        placeholder="No. of Students Eligible for End Exams (A)"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>No. of Students Passed (B)</label>
+                                    <input
+                                        type="number"
+                                        name="passedStudents"
+                                        value={formData.passedStudents}
+                                        onChange={handleInputChange}
+                                        placeholder="No. of Students Passed (B)"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Average % (Auto-calculated)</label>
+                                    <input
+                                        type="number"
+                                        name="averagePercentage"
+                                        value={formData.averagePercentage || ''}
+                                        readOnly
+                                        placeholder="Average % (Auto-calculated)"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box',
+                                            backgroundColor: '#f0f0f0'
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Self-Assessment Marks</label>
+                                    <input
+                                        type="number"
+                                        name="selfAssessmentMarks"
+                                        value={formData.selfAssessmentMarks}
+                                        onChange={handleInputChange}
+                                        placeholder="Self-Assessment Marks"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '4px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Side by side buttons */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
+                                <button
+                                    type='button'
+                                    onClick={() => setShowAddForm(false)}
+                                    className='no-print'
+                                    style={{
+                                        padding: '10px 20px',
+                                        backgroundColor: '#f5f5f5',
+                                        color: '#333',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        fontWeight: '500',
+                                        width: '45%'
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type='submit'
+                                    className='no-print'
+                                    style={{
+                                        padding: '10px 20px',
+                                        backgroundColor: '#1a4b88',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        fontWeight: '500',
+                                        width: '45%'
+                                    }}
+                                >
+                                    Add Proctoring
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             )}
         </div>

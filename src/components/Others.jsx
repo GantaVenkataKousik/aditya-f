@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -601,10 +601,34 @@ const Others = ({ data: propsData }) => {
           6. Outreach Activities - (Resource Person/Session Chairs/Invited Talks/Guest Lecture / National / International Collaboration etc.) (1 activity outside AUS – 5 marks)
         </h2>
         <div className="flex justify-end items-center mb-2 gap-2">
-          <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} onChange={handleUpload} />
-          {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
-          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addactivity')}>
-            + Add
+          <input
+            type="file"
+            style={{
+              border: '1px solid #ccc',
+              padding: '5px',
+              borderRadius: '8px'
+            }}
+            onChange={handleUpload}
+          />
+          <button
+            className="no-print"
+            onClick={() => navigate('/addactivity')}
+            style={{
+              backgroundColor: '#1a4b88',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              padding: '10px 16px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontSize: '16px',
+              fontWeight: '500',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            }}
+          >
+            <FaPlus /> Add Activity
           </button>
         </div>
         <table className="w-full border-collapse border border-gray-300">
@@ -626,43 +650,57 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{index + 1}</td>
                   <td className="p-2 border text-center">{act.activityDetails}</td>
                   {(
-                    <td className="p-2 border text-center no-print" style={{ display: 'flex', justifyContent: 'center' }}>
-                      <button
-                        className="no-print"
-                        onClick={(e) => { e.stopPropagation(); handleActivityUpdateClick(act, index); }}
-                        style={{
-                          fontSize: "16px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "rgb(59 130 246)",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto",
-                          padding: "4px 8px"
-                        }}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="no-print"
-                        onClick={(e) => { e.stopPropagation(); handleActivityDelete(index); }}
-                        style={{
-                          fontSize: "16px",
-                          padding: "4px 8px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "#e74c3c",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto"
-                        }}
-                      >
-                        <FaTrash />
-                      </button>
+                    <td className="p-2 border text-center no-print">
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleActivityUpdateClick(act, index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#1a4b88",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
+                        >
+                          <FaEdit size={18} />
+                        </button>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleActivityDelete(index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#e74c3c",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
+                        >
+                          <FaTrash size={18} />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -692,10 +730,33 @@ const Others = ({ data: propsData }) => {
           7. Additional responsibilities in the Department / College: (College activity/Committee Convenor: 10, Committee member/Dept. Incharge – 5 marks)
         </h2>
         <div className="flex justify-end items-center mb-2 gap-2">
-          <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-          {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
-          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addresponsibility')}>
-            + Add
+          <input
+            type="file"
+            style={{
+              border: '1px solid #ccc',
+              padding: '5px',
+              borderRadius: '8px'
+            }}
+          />
+          <button
+            className="no-print"
+            onClick={() => navigate('/addresponsibility')}
+            style={{
+              backgroundColor: '#1a4b88',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              padding: '10px 16px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontSize: '16px',
+              fontWeight: '500',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            }}
+          >
+            <FaPlus /> Add Responsibility
           </button>
         </div>
         <table className="w-full border-collapse border border-gray-300">
@@ -719,55 +780,70 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{res.Responsibility}</td>
                   <td className="p-2 border text-center">{res.AssignedBy}</td>
                   {(
-                    <td style={{ display: 'flex', justifyContent: 'center' }}>
-                      <button
-                        className="no-print"
-                        onClick={(e) => { e.stopPropagation(); handleResponsibilityUpdateClick(res, index); }}
-                        style={{
-                          fontSize: "16px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "rgb(59 130 246)",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto"
-                        }}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="no-print"
-                        onClick={(e) => { e.stopPropagation(); handleResponsibilityDelete(index); }}
-                        style={{
-                          fontSize: "16px",
-                          padding: "4px 8px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "#e74c3c",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto"
-                        }}
-                      >
-                        <FaTrash />
-                      </button>
+                    <td className="p-2 border text-center no-print">
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleResponsibilityUpdateClick(res, index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#1a4b88",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
+                        >
+                          <FaEdit size={18} />
+                        </button>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleResponsibilityDelete(index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#e74c3c",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
+                        >
+                          <FaTrash size={18} />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>
               ))
             ) : (
               <tr>
-                <td className="p-2 border text-center" colSpan="3">
+                <td className="p-2 border text-center" colSpan="4">
                   No data found..
                 </td>
               </tr>
             )}
             <tr>
-              <td className="p-2 border text-center font-bold" colSpan="2">
+              <td className="p-2 border text-center font-bold" colSpan="3">
                 Self-Assessment Marks (Max: 20)
               </td>
               <td className="p-2 border text-center">
@@ -784,10 +860,33 @@ const Others = ({ data: propsData }) => {
           8. Any special contribution to the Department/College which leverage the existing process/System. (Innovation in Teaching / Technology Development / Taking GATE classes / e-content preparation / guiding students for Hackathons / Consultancy / Preparing students for Project challenges / Community Service etc. – Each activity 5 marks)
         </h2>
         <div className="flex justify-end items-center mb-2 gap-2">
-          <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-          {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}>Upload</button> */}
-          <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addcontribution')}>
-            + Add
+          <input
+            type="file"
+            style={{
+              border: '1px solid #ccc',
+              padding: '5px',
+              borderRadius: '8px'
+            }}
+          />
+          <button
+            className="no-print"
+            onClick={() => navigate('/addcontribution')}
+            style={{
+              backgroundColor: '#1a4b88',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              padding: '10px 16px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontSize: '16px',
+              fontWeight: '500',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            }}
+          >
+            <FaPlus /> Add Contribution
           </button>
         </div>
         <table className="w-full border-collapse border border-gray-300">
@@ -884,11 +983,34 @@ const Others = ({ data: propsData }) => {
       <div className="mb-6 relative">
         <div className="flex justify-between items-center mb-2">
           <h2 className="font-bold text-base">9. Awards received by Faculty:</h2>
-          <div className="flex items-center gap-2 ">
-            <input type="file" style={{ border: '1px solid #ccc', padding: '5px', borderRadius: '8px' }} />
-            {/* <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={handleUpload}  >Upload</button> */}
-            <button className="p-1 bg-blue-500 text-white rounded text-sm w-24 h-8 no-print" onClick={() => navigate('/addaward')}>
-              + Add
+          <div className="flex items-center gap-2">
+            <input
+              type="file"
+              style={{
+                border: '1px solid #ccc',
+                padding: '5px',
+                borderRadius: '8px'
+              }}
+            />
+            <button
+              className="no-print"
+              onClick={() => navigate('/addaward')}
+              style={{
+                backgroundColor: '#1a4b88',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                padding: '10px 16px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '16px',
+                fontWeight: '500',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+              }}
+            >
+              <FaPlus /> Add Award
             </button>
           </div>
         </div>
@@ -968,33 +1090,71 @@ const Others = ({ data: propsData }) => {
         </table>
       </div>
 
-      {/* Modal forms for editing */}
+      {/* Updated Modal forms for editing */}
       {showActivityUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Update Activity</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 className="text-xl font-bold mb-0">Update Activity</h2>
+              <button
+                onClick={() => setShowActivityUpdate(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#777'
+                }}
+              >
+                <FaTimes />
+              </button>
+            </div>
             <form onSubmit={handleActivityUpdate}>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Activity Details</label>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Activity Details</label>
                 <textarea
-                  className="w-full p-2 border rounded"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
                   value={activityDetails}
                   onChange={(e) => setActivityDetails(e.target.value)}
                   required
                   rows="4"
                 />
               </div>
-              <div className="flex justify-end gap-2">
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-300 rounded"
                   onClick={() => setShowActivityUpdate(false)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#f5f5f5',
+                    color: '#333',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#1a4b88',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
                 >
                   Update
                 </button>
@@ -1007,38 +1167,85 @@ const Others = ({ data: propsData }) => {
       {showResponsibilityUpdate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Update Responsibility</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 className="text-xl font-bold mb-0">Update Responsibility</h2>
+              <button
+                onClick={() => setShowResponsibilityUpdate(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#777'
+                }}
+              >
+                <FaTimes />
+              </button>
+            </div>
             <form onSubmit={handleResponsibilityUpdate}>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Responsibility</label>
-                <textarea
-                  className="w-full p-2 border rounded"
-                  value={responsibilityDetails}
-                  onChange={(e) => setResponsibilityDetails(e.target.value)}
-                  required
-                  rows="4"
-                />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Responsibility</label>
+                  <textarea
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      boxSizing: 'border-box'
+                    }}
+                    value={responsibilityDetails}
+                    onChange={(e) => setResponsibilityDetails(e.target.value)}
+                    required
+                    rows="4"
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Assigned By</label>
+                  <input
+                    type="text"
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      boxSizing: 'border-box'
+                    }}
+                    value={responsibilityAssignedBy}
+                    onChange={(e) => setResponsibilityAssignedBy(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Assigned By</label>
-                <input
-                  type="text"
-                  value={responsibilityAssignedBy}
-                  onChange={(e) => setResponsibilityAssignedBy(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex justify-end gap-2">
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-300 rounded"
                   onClick={() => setShowResponsibilityUpdate(false)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#f5f5f5',
+                    color: '#333',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#1a4b88',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
                 >
                   Update
                 </button>

@@ -3,6 +3,7 @@ import MyPieChart from './MyPiechart';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import aboutLogo from '../images/aditya-logo.webp'
+import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
 const DisplayClasses = () => {
   const [classes, setClasses] = useState([]);
@@ -190,6 +191,51 @@ const DisplayClasses = () => {
                     Share Link
                   </button>
                 </div>
+
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEdit(classItem._id)}
+                    style={{
+                      backgroundColor: '#1a4b88',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
+                      padding: '8px 12px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e67528'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#1a4b88'}
+                  >
+                    <FaEdit size={16} />
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(classItem._id)}
+                    style={{
+                      backgroundColor: '#ff3d00',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
+                      padding: '8px 12px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#d32f2f'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ff3d00'}
+                  >
+                    <FaTrash size={16} />
+                  </button>
+                </div>
               </div>
             );
           })}
@@ -197,6 +243,36 @@ const DisplayClasses = () => {
       ) : (
         <p style={{ textAlign: 'center', fontSize: '18px', color: '#FF5722' }}>No classes found.</p>
       )}
+
+      <button
+        onClick={() => setShowAddForm(true)}
+        style={{
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          padding: '10px 20px',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.3s ease',
+          margin: '20px auto',
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.backgroundColor = '#45a049';
+          e.currentTarget.style.transform = 'translateY(-2px)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.backgroundColor = '#4CAF50';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}
+      >
+        <FaPlus /> Add Course
+      </button>
     </div>
   );
 };

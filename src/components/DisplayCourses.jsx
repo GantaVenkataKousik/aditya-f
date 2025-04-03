@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './DisplayCourses.css';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 
 const DisplayCourses = ({ coursesData }) => {
@@ -166,11 +166,35 @@ const DisplayCourses = ({ coursesData }) => {
     return (
         <div>
             <ToastContainer />
-            <div className='add-course-button-container' style={{ display: 'flex', justifyContent: 'end ', alignItems: 'center', marginTop: '20px' }}>
 
-                <button onClick={handleAddClick} className='add-course-button w-200 h-10 no-print' style={{ color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer', width: '200px', height: '40px', }}>Add Course</button>
-
+            {/* Add Course button in the top right */}
+            <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                margin: '20px 0'
+            }}>
+                <button
+                    onClick={handleAddClick}
+                    className='add-course-button no-print'
+                    style={{
+                        backgroundColor: '#1a4b88',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        padding: '10px 16px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                    }}
+                >
+                    <FaPlus /> Add Course
+                </button>
             </div>
+
             <table className='courses-table'>
                 <thead>
                     <tr>
@@ -210,45 +234,54 @@ const DisplayCourses = ({ coursesData }) => {
                                 )}
 
                                 {(
-                                    <td style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <td style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleEditClick(course); }}
                                             style={{
-                                                fontSize: "16px",
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                padding: '8px',
                                                 margin: "2px",
                                                 border: "none",
-                                                borderRadius: "4px",
+                                                borderRadius: "5px",
                                                 cursor: "pointer",
-                                                backgroundColor: "rgb(59 130 246)",
+                                                backgroundColor: "#1a4b88",
                                                 color: "white",
-                                                transition: "0.3s",
-                                                width: "auto"
+                                                transition: "all 0.3s ease",
+                                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                width: "36px",
+                                                height: "36px"
                                             }}
                                             className='no-print'
-                                            onMouseOver={(e) => e.target.style.backgroundColor = "#2980b9"}
-                                            onMouseOut={(e) => e.target.style.backgroundColor = "#3498db"}
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
                                         >
-                                            <FaEdit />
+                                            <FaEdit size={18} />
                                         </button>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleDelete(course._id); }}
                                             style={{
-                                                fontSize: "16px",
-                                                padding: "4px 8px",
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                padding: '8px',
                                                 margin: "2px",
                                                 border: "none",
-                                                borderRadius: "4px",
+                                                borderRadius: "5px",
                                                 cursor: "pointer",
                                                 backgroundColor: "#e74c3c",
                                                 color: "white",
-                                                transition: "0.3s",
-                                                width: "auto"
+                                                transition: "all 0.3s ease",
+                                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                width: "36px",
+                                                height: "36px"
                                             }}
                                             className='no-print'
-                                            onMouseOver={(e) => e.target.style.backgroundColor = "#c0392b"}
-                                            onMouseOut={(e) => e.target.style.backgroundColor = "#e74c3c"}
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
                                         >
-                                            <FaTrash />
+                                            <FaTrash size={18} />
                                         </button>
                                     </td>
                                 )}
@@ -264,33 +297,299 @@ const DisplayCourses = ({ coursesData }) => {
                 </tbody>
             </table>
 
-            {showEditForm && (
-                <div className='update-form'>
-                    <h2>Update Course</h2>
-                    <form onSubmit={handleEditFormSubmit}>
-                        <input type='text' name='courseName' value={formData.courseName} onChange={handleInputChange} placeholder='Course Name' required />
-                        <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
-                        <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
-                        <input type='number' name='passCount' value={formData.passCount} onChange={handleInputChange} placeholder='Pass Count' required />
-                        <button type='submit'>Save Changes</button>
-                        <button type='button' onClick={() => setShowEditForm(false)}>Cancel</button>
-                    </form>
+            {/* Modal popup for Add Form */}
+            {showAddForm && (
+                <div className='modal-overlay' style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000
+                }}>
+                    <div className='add-form' style={{
+                        backgroundColor: 'white',
+                        padding: '25px',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                        width: '90%',
+                        maxWidth: '500px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            <h2 style={{ margin: 0, color: '#333' }}>Add Course</h2>
+                            <button
+                                onClick={() => setShowAddForm(false)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    fontSize: '20px',
+                                    cursor: 'pointer',
+                                    color: '#777'
+                                }}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        {/* Vertically stacked form fields */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Course Name</label>
+                                <input
+                                    type='text'
+                                    name='courseName'
+                                    value={formData.courseName}
+                                    onChange={handleInputChange}
+                                    placeholder='Enter course name'
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Semester</label>
+                                <input
+                                    type='text'
+                                    name='semester'
+                                    value={formData.semester}
+                                    onChange={handleInputChange}
+                                    placeholder='Enter semester'
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Number of Students</label>
+                                <input
+                                    type='number'
+                                    name='numberOfStudents'
+                                    value={formData.numberOfStudents}
+                                    onChange={handleInputChange}
+                                    placeholder='Enter number of students'
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Pass Count</label>
+                                <input
+                                    type='number'
+                                    name='passCount'
+                                    value={formData.passCount}
+                                    onChange={handleInputChange}
+                                    placeholder='Enter pass count'
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Side by side buttons */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
+                            <button
+                                onClick={() => setShowAddForm(false)}
+                                style={{
+                                    padding: '10px 20px',
+                                    backgroundColor: '#f5f5f5',
+                                    color: '#333',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontWeight: '500',
+                                    width: '45%'
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleAddFormSubmit}
+                                style={{
+                                    padding: '10px 20px',
+                                    backgroundColor: '#1a4b88',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontWeight: '500',
+                                    width: '45%'
+                                }}
+                            >
+                                Add Course
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
 
-            {showAddForm && (
-                <div className='add-form'>
-                    <h2>Add Course</h2>
-                    <form onSubmit={handleAddFormSubmit}>
-                        <input type='text' name='courseName' value={formData.courseName} onChange={handleInputChange} placeholder='Course Name' required />
-                        <input type='text' name='semester' value={formData.semester} onChange={handleInputChange} placeholder='Semester' required />
-                        <input type='number' name='numberOfStudents' value={formData.numberOfStudents} onChange={handleInputChange} placeholder='Number of Students' required />
-                        <input type='number' name='passCount' value={formData.passCount} onChange={handleInputChange} placeholder='Pass Count' required />
+            {/* Similar modal for Edit form */}
+            {showEditForm && (
+                <div className='modal-overlay' style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000
+                }}>
+                    <div className='edit-form' style={{
+                        backgroundColor: 'white',
+                        padding: '25px',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                        width: '90%',
+                        maxWidth: '500px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            <h2 style={{ margin: 0, color: '#333' }}>Edit Course</h2>
+                            <button
+                                onClick={() => setShowEditForm(false)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    fontSize: '20px',
+                                    cursor: 'pointer',
+                                    color: '#777'
+                                }}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
 
-                        <button type='submit' className='add-course-button width-100'>Add Course</button>
+                        {/* Vertically stacked form fields for Edit */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Course Name</label>
+                                <input
+                                    type='text'
+                                    name='courseName'
+                                    value={formData.courseName}
+                                    onChange={handleInputChange}
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
 
-                        <button type='button' onClick={() => setShowAddForm(false)}>Cancel</button>
-                    </form>
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Semester</label>
+                                <input
+                                    type='text'
+                                    name='semester'
+                                    value={formData.semester}
+                                    onChange={handleInputChange}
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Number of Students</label>
+                                <input
+                                    type='number'
+                                    name='numberOfStudents'
+                                    value={formData.numberOfStudents}
+                                    onChange={handleInputChange}
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Pass Count</label>
+                                <input
+                                    type='number'
+                                    name='passCount'
+                                    value={formData.passCount}
+                                    onChange={handleInputChange}
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '4px',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Side by side buttons for Edit */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
+                            <button
+                                onClick={() => setShowEditForm(false)}
+                                style={{
+                                    padding: '10px 20px',
+                                    backgroundColor: '#f5f5f5',
+                                    color: '#333',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontWeight: '500',
+                                    width: '45%'
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleEditFormSubmit}
+                                style={{
+                                    padding: '10px 20px',
+                                    backgroundColor: '#1a4b88',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontWeight: '500',
+                                    width: '45%'
+                                }}
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

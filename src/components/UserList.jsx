@@ -3,17 +3,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from "./Footer";
 import LoginStatisticsChart from "./LoginStatisticsChart";
-import { FaEdit, FaEye, FaTrash, FaHome, FaDownload } from 'react-icons/fa';
+import { FaEdit, FaEye, FaTrash, FaHome, FaDownload, FaHistory, FaCalendarAlt } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 const UserList = () => {
     const [users, setUsers] = useState({});
     const [editingUser, setEditingUser] = useState(null);
     const [formData, setFormData] = useState({});
     const navigate = useNavigate();
+    const [showOperations, setShowOperations] = useState(false);
+    const [operations, setOperations] = useState({});
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [filterModel, setFilterModel] = useState("All");
+    const [filterOperation, setFilterOperation] = useState("All");
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -23,6 +30,12 @@ const UserList = () => {
         fetchUsers();
     }, []);
 
+    useEffect(() => {
+        if (showOperations) {
+            fetchOperations(selectedDate);
+        }
+    }, [showOperations, selectedDate, filterModel, filterOperation]);
+
     const fetchUsers = async () => {
         try {
             const response = await fetch("https://aditya-b.onrender.com/users");
@@ -30,6 +43,33 @@ const UserList = () => {
             setUsers(data);
         } catch (error) {
             console.error("Error fetching users:", error);
+        }
+    };
+
+    const fetchOperations = async (date) => {
+        try {
+            const dateString = date.toISOString().split('T')[0];
+            let url = `https://aditya-b.onrender.com/operations/operations-statistics?date=${dateString}`;
+
+            if (filterModel !== "All") {
+                url += `&modelName=${filterModel}`;
+            }
+
+            if (filterOperation !== "All") {
+                url += `&operation=${filterOperation}`;
+            }
+
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.success) {
+                setOperations(data.operations);
+            } else {
+                toast.error("Failed to fetch operations");
+            }
+        } catch (error) {
+            console.error("Error fetching operations:", error);
+            toast.error("Error fetching operations");
         }
     };
 
@@ -158,6 +198,29 @@ const UserList = () => {
         });
     };
 
+    // Add a function to format timestamp
+    const formatDateTime = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+    };
+
+    // Function to render operation color
+    const getOperationBadgeColor = (operation) => {
+        switch (operation) {
+            case 'CREATE': return 'bg-green-100 text-green-800';
+            case 'UPDATE': return 'bg-blue-100 text-blue-800';
+            case 'DELETE': return 'bg-red-100 text-red-800';
+            default: return 'bg-gray-100 text-gray-800';
+        }
+    };
+
     return (
         <>
             <div id="contentToDownload" className="p-6 bg-gray-100 min-h-screen font-poppins">
@@ -198,11 +261,112 @@ const UserList = () => {
                     {/* Print button */}
                     <button
                         onClick={downloadPDF}
-                        className="no-print bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center transition-colors duration-200"
+                        className="no-print bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center transition-colors duration-200 mr-2"
                     >
                         <FaDownload className="mr-2" /> Print Report
                     </button>
+
+                    {/* Operation History button */}
+                    <button
+                        onClick={() => setShowOperations(!showOperations)}
+                        className="no-print bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center transition-colors duration-200"
+                    >
+                        <FaHistory className="mr-2" /> {showOperations ? 'Hide Operations' : 'View Operations'}
+                    </button>
                 </div>
+
+                {/* Operation History Section */}
+                {showOperations && (
+                    <div className="mb-8 bg-white rounded-lg shadow-lg p-6 no-print">
+                        <div className="flex flex-wrap items-center justify-between mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">Operations History</h3>
+
+                            <div className="flex items-center space-x-4 mt-2 sm:mt-0">
+                                <div className="flex items-center">
+                                    <FaCalendarAlt className="text-gray-500 mr-2" />
+                                    <DatePicker
+                                        selected={selectedDate}
+                                        onChange={date => setSelectedDate(date)}
+                                        className="border rounded p-2 text-sm"
+                                        dateFormat="yyyy-MM-dd"
+                                    />
+                                </div>
+
+                                <select
+                                    value={filterModel}
+                                    onChange={e => setFilterModel(e.target.value)}
+                                    className="border rounded p-2 text-sm"
+                                >
+                                    <option value="All">All Models</option>
+                                    <option value="User">User</option>
+                                    <option value="Class">Class</option>
+                                    <option value="Proctoring">Proctoring</option>
+                                    <option value="Feedback">Feedback</option>
+                                    <option value="Research">Research</option>
+                                    <option value="Workshop">Workshop</option>
+                                    <option value="Others">Others</option>
+                                </select>
+
+                                <select
+                                    value={filterOperation}
+                                    onChange={e => setFilterOperation(e.target.value)}
+                                    className="border rounded p-2 text-sm"
+                                >
+                                    <option value="All">All Operations</option>
+                                    <option value="CREATE">Create</option>
+                                    <option value="UPDATE">Update</option>
+                                    <option value="DELETE">Delete</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {Object.keys(operations).length === 0 ? (
+                            <div className="text-center py-8 text-gray-500">
+                                No operations recorded for this date with the selected filters.
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {Object.entries(operations).map(([modelName, modelOperations]) => (
+                                    <div key={modelName} className="border border-gray-200 rounded-lg overflow-hidden">
+                                        <div className="bg-gray-50 px-4 py-2 font-semibold text-gray-700 border-b">
+                                            {modelName}
+                                        </div>
+                                        <div className="divide-y divide-gray-200">
+                                            {modelOperations.map((op, index) => (
+                                                <div key={index} className="p-4 hover:bg-gray-50">
+                                                    <div className="flex items-start justify-between">
+                                                        <div>
+                                                            <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
+                                                                {op.operation}
+                                                            </span>
+                                                            <p className="mt-1 text-sm text-gray-700">
+                                                                <span className="font-medium">{op.userId?.fullName || 'Unknown'}</span>
+                                                                <span className="text-gray-500">({op.userId?.designation})</span>
+                                                            </p>
+                                                            <p className="text-xs text-gray-500">{formatDateTime(op.timestamp)}</p>
+                                                        </div>
+
+                                                        <div className="text-sm text-gray-600">
+                                                            {op.operation === 'DELETE' && op.details.deletedUser && (
+                                                                <p>Deleted: {op.details.deletedUser.fullName}</p>
+                                                            )}
+                                                            {op.operation === 'UPDATE' && op.details.changedFields && (
+                                                                <p>Updated: {Object.keys(op.details.changedFields).join(', ')}</p>
+                                                            )}
+                                                            {op.operation === 'CREATE' && op.details.newEntity && (
+                                                                <p>Created: {op.details.newEntity.name || op.details.newEntity.title || 'New entity'}</p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Add Login Statistics Chart */}
                 <LoginStatisticsChart />

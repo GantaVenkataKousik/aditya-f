@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import TotalMarksDisplay from './TotalMarksDisplay';
 
 const Others = ({ data: propsData }) => {
   const navigate = useNavigate();
@@ -911,41 +912,56 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{cont.Benefit}</td>
                   {(
                     <td style={{ display: 'flex', justifyContent: 'center' }}>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleContributionUpdateClick(cont, index); }}
-                        className="no-print"
-                        style={{
-                          fontSize: "16px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "rgb(59 130 246)",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto"
-                        }}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleContributionDelete(index); }}
-                        className="no-print"
-                        style={{
-                          fontSize: "16px",
-                          padding: "4px 8px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "#e74c3c",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto"
-                        }}
-                      >
-                        <FaTrash />
-                      </button>
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleResponsibilityUpdateClick(res, index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#1a4b88",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
+                        >
+                          <FaEdit size={18} />
+                        </button>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleResponsibilityDelete(index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#e74c3c",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
+                        >
+                          <FaTrash size={18} />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -1040,41 +1056,56 @@ const Others = ({ data: propsData }) => {
                   <td className="p-2 border text-center">{award.Description}</td>
                   {(
                     <td style={{ display: 'flex', justifyContent: 'center' }} className='no-print'>
-                      <button
-                        className='no-print'
-                        onClick={(e) => { e.stopPropagation(); handleAwardUpdateClick(award, index); }}
-                        style={{
-                          fontSize: "16px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "rgb(59 130 246)",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto"
-                        }}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className='no-print'
-                        onClick={(e) => { e.stopPropagation(); handleAwardDelete(index); }}
-                        style={{
-                          fontSize: "16px",
-                          padding: "4px 8px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "#e74c3c",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto"
-                        }}
-                      >
-                        <FaTrash />
-                      </button>
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleResponsibilityUpdateClick(res, index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#1a4b88",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
+                        >
+                          <FaEdit size={18} />
+                        </button>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleResponsibilityDelete(index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#e74c3c",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
+                        >
+                          <FaTrash size={18} />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -1343,6 +1374,35 @@ const Others = ({ data: propsData }) => {
           </div>
         </div>
       )}
+
+      {/* Total Self-Assessment Marks Table */}
+      <div className="mb-6 relative">
+        <h2 className="font-bold text-base mb-3">
+          10. Total Self-Assessment Marks obtained (Max 200):
+        </h2>
+        <table className="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border p-2 text-center" style={{ width: '70%' }}>
+                Category
+              </th>
+              <th className="border p-2 text-center" style={{ width: '30%' }}>
+                Total Marks
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="p-2 border text-center font-bold">
+                Total Self-Assessment Marks ( Max 200 )
+              </td>
+              <td className="p-2 border text-center font-bold">
+                <TotalMarksDisplay userId={getUserId()} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <ToastContainer position="bottom-right" />
     </div>

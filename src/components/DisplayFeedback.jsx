@@ -17,7 +17,31 @@ const DisplayFeedback = ({ feedbackData }) => {
         averagePercentage: 0,
         selfAssessmentMarks: 0
     });
-    const [showOperations, setShowOperations] = useState(false); // State to toggle operations view
+    const [showOperations, setShowOperations] = useState(false);
+    const [overallAverage, setOverallAverage] = useState(0);
+    const [overallSelfAssessment, setOverallSelfAssessment] = useState(0);
+
+    const calculateAverages = (feedbackData) => {
+        if (!feedbackData || feedbackData.length === 0) return { avg: 0, selfAssessment: 0 };
+
+        const totalFeedback = feedbackData.reduce((sum, item) => sum + Number(item.feedbackPercentage || 0), 0);
+        const avgFeedback = totalFeedback / feedbackData.length;
+
+        // Calculate self assessment based on average feedback
+        let selfAssessment = 4; // default
+        if (avgFeedback >= 90) {
+            selfAssessment = 10;
+        } else if (avgFeedback >= 80) {
+            selfAssessment = 8;
+        } else if (avgFeedback >= 70) {
+            selfAssessment = 6;
+        }
+
+        return {
+            avg: Number(avgFeedback.toFixed(2)),
+            selfAssessment
+        };
+    };
 
     const fetchData = async () => {
         try {
@@ -33,9 +57,16 @@ const DisplayFeedback = ({ feedbackData }) => {
 
             if (res.success) {
                 setData(res.data);
+
+                // Calculate overall averages when data is fetched
+                const { avg, selfAssessment } = calculateAverages(res.data);
+                setOverallAverage(avg);
+                setOverallSelfAssessment(selfAssessment);
             } else {
                 console.error("Unexpected API response format:", res);
                 setData([]);
+                setOverallAverage(0);
+                setOverallSelfAssessment(0);
             }
         } catch (error) {
             console.error('Error occurred while fetching data:', error);
@@ -43,8 +74,13 @@ const DisplayFeedback = ({ feedbackData }) => {
     };
 
     useEffect(() => {
-        if (feedbackData.length > 0) {
+        if (feedbackData && feedbackData.length > 0) {
             setData(feedbackData);
+
+            // Calculate overall averages when data changes
+            const { avg, selfAssessment } = calculateAverages(feedbackData);
+            setOverallAverage(avg);
+            setOverallSelfAssessment(selfAssessment);
         } else {
             fetchData();
         }
@@ -143,11 +179,11 @@ const DisplayFeedback = ({ feedbackData }) => {
             },
             body: JSON.stringify(formData),
         });
-        const data = await response.json();
-        if (data.success) {
+        const result = await response.json();
+        if (result.success) {
             toast.success("Feedback updated successfully");
             setShowEditForm(false);
-            fetchData();
+            fetchData(); // This will recalculate the averages
         } else {
             toast.error("Failed to update feedback");
         }
@@ -221,7 +257,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     return (
         <div>
             <ToastContainer />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', marginBottom: '20px' }}>
                 <button
                     onClick={handleAddClick}
                     className='add-feedback-button no-print'
@@ -242,28 +278,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                 >
                     <FaPlus /> Add Feedback
                 </button>
-
-                <button
-                    onClick={() => setShowOperations(!showOperations)}
-                    style={{
-                        backgroundColor: '#1a4b88',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '5px',
-                        padding: '10px 15px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.3s',
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0f3461'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#1a4b88'}
-                >
-                    <FaHistory /> {showOperations ? 'Hide Operations' : 'View Operations'}
-                </button>
             </div>
-
 
             <table className="courses-table">
                 <thead>
@@ -275,9 +290,7 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <th>Feedback %</th>
                         <th>Average %</th>
                         <th>Self-Assessment Marks</th>
-                        {(
-                            <th>Actions</th>
-                        )}
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -289,62 +302,67 @@ const DisplayFeedback = ({ feedbackData }) => {
                                 <td>{feedback.courseName}</td>
                                 <td>{feedback.numberOfStudents}</td>
                                 <td>{feedback.feedbackPercentage}</td>
-                                <td>{feedback.averagePercentage}</td>
-                                <td>{feedback.selfAssessmentMarks}</td>
-                                {(
-                                    <td style={{ display: 'flex', justifyContent: 'center' }}>
-                                        <div style={{ display: 'flex', gap: '10px' }}>
-                                            <button
-                                                onClick={() => handleUpdateClick(feedback)}
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    padding: '8px',
-                                                    margin: "2px",
-                                                    border: "none",
-                                                    borderRadius: "5px",
-                                                    cursor: "pointer",
-                                                    backgroundColor: "#1a4b88",
-                                                    color: "white",
-                                                    transition: "all 0.3s ease",
-                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                                                    width: "36px",
-                                                    height: "36px"
-                                                }}
-                                                className='no-print'
-                                                onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
-                                                onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
-                                            >
-                                                <FaEdit size={18} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(feedback._id)}
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    padding: '8px',
-                                                    margin: "2px",
-                                                    border: "none",
-                                                    borderRadius: "5px",
-                                                    cursor: "pointer",
-                                                    backgroundColor: "#e74c3c",
-                                                    color: "white",
-                                                    transition: "all 0.3s ease",
-                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                                                    width: "36px",
-                                                    height: "36px"
-                                                }}
-                                                className='no-print'
-                                                onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
-                                                onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
-                                            >
-                                                <FaTrash size={18} />
-                                            </button>
-                                        </div>
-                                    </td>
+
+                                {/* Display the common average only in the first row */}
+                                {index === 0 && (
+                                    <>
+                                        <td rowSpan={data.length}>{overallAverage}</td>
+                                        <td rowSpan={data.length}>{overallSelfAssessment}</td>
+                                    </>
                                 )}
+
+                                <td style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <button
+                                            onClick={() => handleUpdateClick(feedback)}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                padding: '8px',
+                                                margin: "2px",
+                                                border: "none",
+                                                borderRadius: "5px",
+                                                cursor: "pointer",
+                                                backgroundColor: "#1a4b88",
+                                                color: "white",
+                                                transition: "all 0.3s ease",
+                                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                width: "36px",
+                                                height: "36px"
+                                            }}
+                                            className='no-print'
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
+                                        >
+                                            <FaEdit size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(feedback._id)}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                padding: '8px',
+                                                margin: "2px",
+                                                border: "none",
+                                                borderRadius: "5px",
+                                                cursor: "pointer",
+                                                backgroundColor: "#e74c3c",
+                                                color: "white",
+                                                transition: "all 0.3s ease",
+                                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                width: "36px",
+                                                height: "36px"
+                                            }}
+                                            className='no-print'
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
+                                        >
+                                            <FaTrash size={18} />
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         ))
                     ) : (
@@ -508,7 +526,6 @@ const DisplayFeedback = ({ feedbackData }) => {
                                 </div>
                             </div>
 
-                            {/* Side by side buttons */}
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
                                 <button
                                     type='button'
@@ -679,7 +696,6 @@ const DisplayFeedback = ({ feedbackData }) => {
                                 </div>
                             </div>
 
-                            {/* Side by side buttons */}
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
                                 <button
                                     type='button'

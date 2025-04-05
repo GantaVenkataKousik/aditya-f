@@ -42,11 +42,17 @@ const DisplayResearches = () => {
 
   const handleDelete = async (id) => {
     const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error("User ID not found");
+      return;
+    }
+
     try {
       const response = await fetch(`https://aditya-b.onrender.com/research/delete/${id}?userId=${userId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'userId': userId
         },
       });
 
@@ -63,6 +69,11 @@ const DisplayResearches = () => {
 
   const handleUpdate = async (id) => {
     const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error("User ID not found");
+      return;
+    }
+
     const updatedTitle = prompt('Enter the new title:');
     const updatedDescription = prompt('Enter the new description:');
 
@@ -75,11 +86,13 @@ const DisplayResearches = () => {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
+          'userId': userId
         },
         body: JSON.stringify({
           title: updatedTitle,
           description: updatedDescription,
+          userId
         }),
       });
 

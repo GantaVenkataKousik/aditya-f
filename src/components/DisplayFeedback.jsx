@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './DisplayCourses.css'; // Import the CSS file
-import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaTimes, FaHistory } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,6 +17,7 @@ const DisplayFeedback = ({ feedbackData }) => {
         averagePercentage: 0,
         selfAssessmentMarks: 0
     });
+    const [showOperations, setShowOperations] = useState(false); // State to toggle operations view
 
     const fetchData = async () => {
         try {
@@ -133,9 +134,9 @@ const DisplayFeedback = ({ feedbackData }) => {
     };
 
     const handleEdit = async (e) => {
-        const userId = localStorage.getItem('userId');
         e.preventDefault();
-        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${selectedFeedback._id}??userId=${userId}`, {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${selectedFeedback._id}?userId=${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -220,13 +221,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     return (
         <div>
             <ToastContainer />
-            <div className='add-feedback-button-container' style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                marginTop: '20px',
-                marginBottom: '20px'
-            }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <button
                     onClick={handleAddClick}
                     className='add-feedback-button no-print'
@@ -247,7 +242,29 @@ const DisplayFeedback = ({ feedbackData }) => {
                 >
                     <FaPlus /> Add Feedback
                 </button>
+
+                <button
+                    onClick={() => setShowOperations(!showOperations)}
+                    style={{
+                        backgroundColor: '#1a4b88',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        padding: '10px 15px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.3s',
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0f3461'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#1a4b88'}
+                >
+                    <FaHistory /> {showOperations ? 'Hide Operations' : 'View Operations'}
+                </button>
             </div>
+
+
             <table className="courses-table">
                 <thead>
                     <tr>

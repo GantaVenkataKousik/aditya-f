@@ -3,7 +3,7 @@ import MyPieChart from './MyPiechart';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import aboutLogo from '../images/aditya-logo.webp'
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaHistory } from 'react-icons/fa';
 
 const DisplayClasses = () => {
   const [classes, setClasses] = useState([]);
@@ -15,6 +15,7 @@ const DisplayClasses = () => {
     below75: 0,
     passPercentage: 0,
   });
+  const [showOperations, setShowOperations] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,11 +74,61 @@ const DisplayClasses = () => {
 
     fetchData();
   }, []);
+
+  const handleEdit = async (id) => {
+    const userId = localStorage.getItem('userId');
+    navigate(`/update-class/${id}?userId=${userId}`);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this course?")) {
+      try {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${id}?userId=${userId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          fetchData();
+        } else {
+          console.error("Failed to delete the course");
+        }
+      } catch (error) {
+        console.error("Error deleting course:", error);
+      }
+    }
+  };
+
   return (
     <div style={{ padding: '30px', fontFamily: 'Arial, sans-serif' }}>
-
-
       <h1 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>Class Performance Dashboard</h1>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+        <button
+          onClick={() => setShowOperations(!showOperations)}
+          style={{
+            backgroundColor: '#1a4b88',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            padding: '10px 15px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s',
+          }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0f3461'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#1a4b88'}
+        >
+          <FaHistory /> {showOperations ? 'Hide Operations' : 'View Operations'}
+        </button>
+      </div>
+
+
       <h2 style={{
         textAlign: 'center',
         color: 'rgb(255, 127, 39)',
@@ -86,7 +137,6 @@ const DisplayClasses = () => {
         paddingBottom: '10px',
         display: 'inline-block',
         marginBottom: '30px',
-
       }}>
         Overall Rating: {rating}
       </h2>
@@ -127,7 +177,6 @@ const DisplayClasses = () => {
                     fontSize: '1.5rem',
                     color: '#4CAF50',
                   }}>
-
                     {classItem.courseName}
                   </h3>
                   <span style={{
@@ -168,7 +217,6 @@ const DisplayClasses = () => {
                   borderRadius: '5px',
                   border: '1px solid #eee',
                 }}>
-
                   <MyPieChart id={`chart-${classItem._id}`} chartData={chartData} />
                 </div>
 

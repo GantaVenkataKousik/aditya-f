@@ -50,12 +50,20 @@ const DisplayOthers = ({ data }) => {
     const handleEdit = async (type, id, data) => {
         try {
             const userId = localStorage.getItem('userId');
+            if (!userId) {
+                toast.error("User ID not found. Please login again.");
+                return;
+            }
+
             const response = await fetch(`https://aditya-b.onrender.com/${type}/${userId}/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    ...data,
+                    userId // Add userId to the request body
+                })
             });
 
             if (response.ok) {
@@ -76,10 +84,16 @@ const DisplayOthers = ({ data }) => {
 
         try {
             const userId = localStorage.getItem('userId');
+            if (!userId) {
+                toast.error("User ID not found. Please login again.");
+                return;
+            }
+
             const response = await fetch(`https://aditya-b.onrender.com/${type}/${userId}/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'userId': userId // Add userId to headers
                 }
             });
 

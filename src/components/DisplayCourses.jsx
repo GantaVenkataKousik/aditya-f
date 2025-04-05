@@ -61,6 +61,7 @@ const DisplayCourses = ({ coursesData }) => {
             if (response.ok) {
                 setData(data.filter((course) => course._id !== id));
                 toast.success('Course deleted successfully');
+                fetchData();
             }
         } catch (error) {
             toast.error('Failed to delete course');
@@ -116,6 +117,7 @@ const DisplayCourses = ({ coursesData }) => {
                 setShowEditForm(false); // Close the form after successful update
                 setSelectedCourse(null); // Clear the selection
                 toast.success('Course updated successfully');
+                fetchData();
             } else {
                 toast.error('Failed to update course');
             }
@@ -140,8 +142,8 @@ const DisplayCourses = ({ coursesData }) => {
             if (response.ok) {
                 const newCourse = await response.json();
                 setData([...data, newCourse]);
-                setShowAddForm(false); // Close the form after successful addition
                 fetchData();
+                setShowAddForm(false);
                 toast.success('Course added successfully');
             } else {
                 toast.error('Failed to add course');

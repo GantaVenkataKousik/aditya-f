@@ -197,6 +197,7 @@ const DisplayWorkshops = ({ workshopsData }) => {
         localStorage.setItem('workshopmarks', validatedMarks);
         setWorkshopMarks(validatedMarks);
         toast.success('Marks updated successfully');
+        fetchWorkshops();
       } else {
         toast.error('Failed to update marks');
       }

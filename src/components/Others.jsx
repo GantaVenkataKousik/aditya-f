@@ -158,7 +158,6 @@ const Others = ({ data: propsData }) => {
         toast.success('Activity updated successfully');
         setShowActivityUpdate(false);
 
-        // Update local state
         setActivities(prevActivities => {
           const updatedActivities = [...prevActivities];
           updatedActivities[currentIndex] = {
@@ -167,6 +166,7 @@ const Others = ({ data: propsData }) => {
           };
           return updatedActivities;
         });
+        fetchAll();
       } else {
         toast.error(data.message || 'Failed to update activity');
         console.error('Update failed:', data);
@@ -213,6 +213,7 @@ const Others = ({ data: propsData }) => {
         setActivities(prevActivities =>
           prevActivities.filter((_, i) => i !== index)
         );
+        fetchAll();
       } else {
         toast.error(data.message || 'Failed to delete activity');
         console.error('Delete failed:', data);
@@ -276,6 +277,7 @@ const Others = ({ data: propsData }) => {
           };
           return updatedItems;
         });
+        fetchAll();
       } else {
         toast.error(data.message || 'Failed to update responsibility');
         console.error('Update failed:', data);
@@ -322,6 +324,7 @@ const Others = ({ data: propsData }) => {
         setResponsibilities(prevItems =>
           prevItems.filter((_, i) => i !== index)
         );
+        fetchAll();
       } else {
         toast.error(data.message || 'Failed to delete responsibility');
         console.error('Delete failed:', data);
@@ -385,6 +388,7 @@ const Others = ({ data: propsData }) => {
           };
           return updatedItems;
         });
+        fetchAll();
       } else {
         toast.error(data.message || 'Failed to update contribution');
         console.error('Update failed:', data);
@@ -431,6 +435,7 @@ const Others = ({ data: propsData }) => {
         setContribution(prevItems =>
           prevItems.filter((_, i) => i !== index)
         );
+        fetchAll();
       } else {
         toast.error(data.message || 'Failed to delete contribution');
         console.error('Delete failed:', data);
@@ -489,6 +494,7 @@ const Others = ({ data: propsData }) => {
           };
           return updatedItems;
         });
+        fetchAll();
       } else {
         toast.error(data.message || 'Failed to update award');
         console.error('Update failed:', data);
@@ -586,6 +592,7 @@ const Others = ({ data: propsData }) => {
             setAdditionalMarks(calculatedValue);
             break;
         }
+        fetchAll();
       }
     } catch (error) {
       console.error('Error updating marks:', error);

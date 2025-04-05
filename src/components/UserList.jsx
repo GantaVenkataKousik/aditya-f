@@ -229,12 +229,6 @@ const UserList = () => {
 
                                             <div className="mt-4 flex justify-end gap-2 no-print">
                                                 <Link to={`/details/${user._id}`}>
-                                                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded transition-colors duration-200">
-                                                        <FaEye />
-                                                    </button>
-                                                </Link>
-
-                                                <Link to={`/details/${user._id}`}>
                                                     <button className="bg-[#e67528] hover:bg-[#d56a24] text-white px-3 py-1.5 rounded transition-colors duration-200">
                                                         <FaEdit />
                                                     </button>

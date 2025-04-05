@@ -179,7 +179,15 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
 
   const UpdateForm = () => (
     <div className="update-form-overlay">
-      <form className="update-form" onSubmit={handleFormSubmit}>
+      <form
+        className="update-form"
+        onSubmit={handleFormSubmit}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+          }
+        }}
+      >
         <h2>Update Profile</h2>
         <button
           type="button"
@@ -189,176 +197,187 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
           ×
         </button>
 
-        {/* General Information */}
-        <h3>1. General Information</h3>
-        <div className="form-group">
-          <label>Full Name:</label>
-          <input
-            type="text"
-            name="fullName"
-            value={formData.fullName || ''}
-            onChange={handleFormChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Employee ID:</label>
-          <input
-            type="text"
-            name="EmpID"
-            value={formData.EmpID || ''}
-            onChange={handleFormChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Designation:</label>
-          <input
-            type="text"
-            name="designation"
-            value={formData.designation || ''}
-            onChange={handleFormChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Department:</label>
-          <input
-            type="text"
-            name="department"
-            value={formData.department || ''}
-            onChange={handleFormChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Date of Joining:</label>
-          <input
-            type="date"
-            name="JoiningDate"
-            value={formData.JoiningDate || ''}
-            onChange={handleFormChange}
-          />
-        </div>
-
-        {/* Academic Qualifications */}
-        <h3>2. Academic Qualifications</h3>
-
-        <div className="qualification-section">
-          <h4>Undergraduate</h4>
+        <div
+          className="form-content"
+          style={{
+            overflow: 'auto',
+            maxHeight: '80vh',
+            position: 'relative'
+          }}
+        >
+          {/* General Information */}
+          <h3>1. General Information</h3>
           <div className="form-group">
-            <label>UG Institution:</label>
+            <label>Full Name:</label>
             <input
               type="text"
-              name="UG"
-              value={formData.UG || ''}
+              name="fullName"
+              value={formData.fullName || ''}
               onChange={handleFormChange}
             />
           </div>
-          <div className="form-group">
-            <label>UG Year:</label>
-            <input
-              type="text"
-              name="UGYear"
-              value={formData.UGYear || ''}
-              onChange={handleFormChange}
-            />
-          </div>
-        </div>
 
-        <div className="qualification-section">
-          <h4>Postgraduate</h4>
           <div className="form-group">
-            <label>PG Institution:</label>
+            <label>Employee ID:</label>
             <input
               type="text"
-              name="PG"
-              value={formData.PG || ''}
+              name="EmpID"
+              value={formData.EmpID || ''}
               onChange={handleFormChange}
             />
           </div>
-          <div className="form-group">
-            <label>PG Year:</label>
-            <input
-              type="text"
-              name="PGYear"
-              value={formData.PGYear || ''}
-              onChange={handleFormChange}
-            />
-          </div>
-        </div>
 
-        <div className="qualification-section">
-          <h4>PhD</h4>
           <div className="form-group">
-            <label>PhD Details:</label>
+            <label>Designation:</label>
             <input
               type="text"
-              name="Phd"
-              value={formData.Phd || ''}
+              name="designation"
+              value={formData.designation || ''}
               onChange={handleFormChange}
             />
           </div>
+
           <div className="form-group">
-            <label>PhD Year:</label>
+            <label>Department:</label>
             <input
               type="text"
-              name="PhdYear"
-              value={formData.PhdYear || ''}
+              name="department"
+              value={formData.department || ''}
               onChange={handleFormChange}
             />
           </div>
-        </div>
 
-        <div className="qualification-section">
-          <h4>Other Qualifications</h4>
           <div className="form-group">
-            <label>Other Institution:</label>
+            <label>Date of Joining:</label>
             <input
-              type="text"
-              name="OtherInst"
-              value={formData.OtherInst || ''}
+              type="date"
+              name="JoiningDate"
+              value={formData.JoiningDate || ''}
               onChange={handleFormChange}
             />
           </div>
+
+          {/* Academic Qualifications */}
+          <h3>2. Academic Qualifications</h3>
+
+          <div className="qualification-section">
+            <h4>Undergraduate</h4>
+            <div className="form-group">
+              <label>UG Institution:</label>
+              <input
+                type="text"
+                name="UG"
+                value={formData.UG || ''}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>UG Year:</label>
+              <input
+                type="text"
+                name="UGYear"
+                value={formData.UGYear || ''}
+                onChange={handleFormChange}
+              />
+            </div>
+          </div>
+
+          <div className="qualification-section">
+            <h4>Postgraduate</h4>
+            <div className="form-group">
+              <label>PG Institution:</label>
+              <input
+                type="text"
+                name="PG"
+                value={formData.PG || ''}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>PG Year:</label>
+              <input
+                type="text"
+                name="PGYear"
+                value={formData.PGYear || ''}
+                onChange={handleFormChange}
+              />
+            </div>
+          </div>
+
+          <div className="qualification-section">
+            <h4>PhD</h4>
+            <div className="form-group">
+              <label>PhD Details:</label>
+              <input
+                type="text"
+                name="Phd"
+                value={formData.Phd || ''}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>PhD Year:</label>
+              <input
+                type="text"
+                name="PhdYear"
+                value={formData.PhdYear || ''}
+                onChange={handleFormChange}
+              />
+            </div>
+          </div>
+
+          <div className="qualification-section">
+            <h4>Other Qualifications</h4>
+            <div className="form-group">
+              <label>Other Institution:</label>
+              <input
+                type="text"
+                name="OtherInst"
+                value={formData.OtherInst || ''}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Other Year:</label>
+              <input
+                type="text"
+                name="OtherYear"
+                value={formData.OtherYear || ''}
+                onChange={handleFormChange}
+              />
+            </div>
+          </div>
+
+          {/* Experience */}
+          <h3>3. Experience</h3>
           <div className="form-group">
-            <label>Other Year:</label>
+            <label>Industrial Experience:</label>
             <input
               type="text"
-              name="OtherYear"
-              value={formData.OtherYear || ''}
+              name="Industry"
+              value={formData.Industry || ''}
               onChange={handleFormChange}
+              onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
             />
           </div>
-        </div>
 
-        {/* Experience */}
-        <h3>3. Experience</h3>
-        <div className="form-group">
-          <label>Industrial Experience:</label>
-          <input
-            type="text"
-            name="Industry"
-            value={formData.Industry || ''}
-            onChange={handleFormChange}
-          />
-        </div>
+          <div className="form-group">
+            <label>Total Teaching Experience (years):</label>
+            <input
+              type="number"
+              name="TExp"
+              value={formData.TExp || ''}
+              onChange={handleFormChange}
+              onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Total Teaching Experience (years):</label>
-          <input
-            type="number"
-            name="TExp"
-            value={formData.TExp || ''}
-            onChange={handleFormChange}
-          />
-        </div>
-
-        <div className="form-actions">
-          <button type="submit" className="save-button">Save Changes</button>
-          <button type="button" className="cancel-button" onClick={() => setShowUpdateForm(false)}>
-            Cancel
-          </button>
+          <div className="form-actions">
+            <button type="submit" className="save-button">Save Changes</button>
+            <button type="button" className="cancel-button" onClick={() => setShowUpdateForm(false)}>
+              Cancel
+            </button>
+          </div>
         </div>
       </form>
     </div>
@@ -368,54 +387,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
     return (
       <p style={{ marginLeft: "20px", marginBottom: "10px", padding: "10px" }}>
         <strong>{label}:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
-        {editingField === field ? (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
-            <input
-              type="text"
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              style={{
-                padding: '2px 5px',
-                border: '1px solid #ccc',
-                borderRadius: '4px'
-              }}
-            />
-            <button
-              onClick={() => handleUpdateField(field)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'green' }}
-            >
-              <FaCheck />
-            </button>
-            <button
-              onClick={() => setEditingField(null)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'red' }}
-            >
-              <FaTimes />
-            </button>
-          </span>
-        ) : (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
-            {value}
-            <button
-              onClick={() => handleEditClick(field, value)}
-              style={{
-                fontSize: "16px",
-                margin: "2px",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                backgroundColor: "rgb(59 130 246)",
-                color: "white",
-                transition: "0.3s",
-                width: "auto",
-                padding: "4px 8px"
-              }}
-              className="no-print"
-            >
-              <FaEdit />
-            </button>
-          </span>
-        )}
+        <span>{value}</span>
       </p>
     );
   };
@@ -468,29 +440,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
             <tbody>
               <tr>
                 <td>UG</td>
-                <td>
-                  {editingField === 'UG' ? (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <input
-                        type="text"
-                        value={editValue}
-                        onChange={(e) => setEditValue(e.target.value)}
-                        style={{ width: '100%' }}
-                      />
-                      <FaCheck onClick={() => handleUpdateField('UG')} style={{ cursor: 'pointer', color: 'green' }} />
-                      <FaTimes onClick={() => setEditingField(null)} style={{ cursor: 'pointer', color: 'red' }} />
-                    </span>
-                  ) : (
-                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      {lecturerDetails.UG}
-                      <FaEdit
-                        onClick={() => handleEditClick('UG', lecturerDetails.UG)}
-                        className="no-print"
-                        style={{ cursor: 'pointer' }}
-                      />
-                    </span>
-                  )}
-                </td>
+                <td>{lecturerDetails.UG}</td>
                 <td>{lecturerDetails.UGYear}</td>
               </tr>
               <tr>

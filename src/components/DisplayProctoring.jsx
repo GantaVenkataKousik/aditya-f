@@ -123,6 +123,7 @@ const ProctoringTable = ({ proctoringData }) => {
     };
 
     const handleEdit = async (e) => {
+        const userId = localStorage.getItem('userId');
         e.preventDefault();
         const response = await fetch(`https://aditya-b.onrender.com/proctoring/${selectedProctor._id}`, {
             method: 'PUT',
@@ -189,7 +190,8 @@ const ProctoringTable = ({ proctoringData }) => {
     };
 
     const handleDelete = async (id) => {
-        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${id}`, {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${id}?userId=${userId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

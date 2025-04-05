@@ -133,8 +133,9 @@ const DisplayFeedback = ({ feedbackData }) => {
     };
 
     const handleEdit = async (e) => {
+        const userId = localStorage.getItem('userId');
         e.preventDefault();
-        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${selectedFeedback._id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${selectedFeedback._id}??userId=${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -195,11 +196,13 @@ const DisplayFeedback = ({ feedbackData }) => {
     };
 
     const handleDelete = async (id) => {
+        const userId = localStorage.getItem('userId');
+
         if (!id) {
             console.error('Feedback ID is undefined');
             return;
         }
-        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${id}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${id}?userId=${userId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

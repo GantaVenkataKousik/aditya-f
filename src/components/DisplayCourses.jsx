@@ -48,12 +48,13 @@ const DisplayCourses = ({ coursesData }) => {
     };
 
     const handleDelete = async (id) => {
+        const userId = localStorage.getItem('userId');
         if (!id) {
             console.error('Course ID is undefined');
             return;
         }
         try {
-            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${id}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${id}?userId=${userId}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -92,9 +93,10 @@ const DisplayCourses = ({ coursesData }) => {
     };
 
     const handleEditFormSubmit = async (e) => {
+        const userId = localStorage.getItem('userId');
         e.preventDefault();
         try {
-            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${selectedCourse._id}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/classes/courses/${selectedCourse._id}?userId=${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

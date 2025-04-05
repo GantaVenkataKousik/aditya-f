@@ -84,12 +84,13 @@ const DisplayWorkshops = ({ workshopsData }) => {
   };
 
   const handleEdit = async (e) => {
+    const userId = localStorage.getItem('userId');
     e.preventDefault();
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}/${selectedWorkshop._id}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}/${selectedWorkshop._id}?userId=${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -119,7 +120,7 @@ const DisplayWorkshops = ({ workshopsData }) => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/workshop/${userId}?userId=${userId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -147,6 +148,7 @@ const DisplayWorkshops = ({ workshopsData }) => {
   };
 
   const handleDelete = async (workshopId) => {
+    const userId = localStorage.getItem('userId');
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');

@@ -41,8 +41,9 @@ const DisplayResearches = () => {
   }, []);
 
   const handleDelete = async (id) => {
+    const userId = localStorage.getItem('userId');
     try {
-      const response = await fetch(`https://aditya-b.onrender.com/research/delete/${id}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/research/delete/${id}?userId=${userId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -61,6 +62,7 @@ const DisplayResearches = () => {
   };
 
   const handleUpdate = async (id) => {
+    const userId = localStorage.getItem('userId');
     const updatedTitle = prompt('Enter the new title:');
     const updatedDescription = prompt('Enter the new description:');
 
@@ -68,7 +70,7 @@ const DisplayResearches = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://aditya-b.onrender.com/research/update/${id}`, {
+      const response = await fetch(`https://aditya-b.onrender.com/research/update/${id}?userId=${userId}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {

@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from "./Footer";
 import LoginStatisticsChart from "./LoginStatisticsChart";
-import { FaEdit, FaEye, FaTrash, FaHome } from 'react-icons/fa';
+import { FaEdit, FaEye, FaTrash, FaHome, FaDownload } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const UserList = () => {
     const [users, setUsers] = useState({});
@@ -106,15 +108,65 @@ const UserList = () => {
         }
     };
 
+    const downloadPDF = () => {
+        const input = document.getElementById('contentToDownload');
+        if (!input) {
+            console.error('Element with id "contentToDownload" not found.');
+            return;
+        }
+
+        // Hide all elements with class "no-print" before capturing
+        const noPrintElements = input.querySelectorAll('.no-print');
+        noPrintElements.forEach(el => {
+            el.style.display = 'none';
+        });
+
+        html2canvas(input, {
+            scale: 2,
+            ignoreElements: element => element.classList.contains('no-print')
+        }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210;
+            const pageHeight = 297;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+            const currentDate = new Date().toISOString().split('T')[0];
+            pdf.save(`admin_report_${currentDate}.pdf`);
+
+            // Restore visibility after PDF generation
+            noPrintElements.forEach(el => {
+                el.style.display = '';
+            });
+        }).catch((error) => {
+            console.error('Error generating PDF:', error);
+            // Restore visibility even if there's an error
+            noPrintElements.forEach(el => {
+                el.style.display = '';
+            });
+        });
+    };
+
     return (
         <>
-            <div className="p-6 bg-gray-100 min-h-screen font-poppins">
+            <div id="contentToDownload" className="p-6 bg-gray-100 min-h-screen font-poppins">
                 <ToastContainer />
 
-                {/* Home button similar to Navbar */}
+                {/* Home button and header */}
                 <div className="flex items-center mb-4">
                     <div
-                        className='home-button'
+                        className='home-button no-print'
                         onClick={() => navigate('/home')}
                         style={{
                             width: '50px',
@@ -142,6 +194,14 @@ const UserList = () => {
                         <FaHome />
                     </div>
                     <h2 className="text-2xl font-bold ml-4 flex-1 text-center">Admin Panel</h2>
+
+                    {/* Print button */}
+                    <button
+                        onClick={downloadPDF}
+                        className="no-print bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center transition-colors duration-200"
+                    >
+                        <FaDownload className="mr-2" /> Print Report
+                    </button>
                 </div>
 
                 {/* Add Login Statistics Chart */}
@@ -167,7 +227,7 @@ const UserList = () => {
                                             <p className="text-sm text-gray-500">Joining: {user.JoiningDate || "N/A"}</p>
                                             <p className="text-sm text-gray-500">Qualification: {user.Qualification || "N/A"}</p>
 
-                                            <div className="mt-4 flex justify-end gap-2">
+                                            <div className="mt-4 flex justify-end gap-2 no-print">
                                                 <Link to={`/details/${user._id}`}>
                                                     <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded transition-colors duration-200">
                                                         <FaEye />
@@ -195,9 +255,9 @@ const UserList = () => {
                     })}
                 </div>
 
-                {/* Edit Modal */}
+                {/* Edit Modal with no-print class */}
                 {editingUser && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center no-print">
                         <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
                             <h3 className="text-lg font-semibold mb-4">Edit User</h3>
                             <div className="grid grid-cols-2 gap-4">
@@ -218,7 +278,7 @@ const UserList = () => {
                                 <input type="text" name="Industry" value={formData.Industry || ""} onChange={handleChange} className="border p-2 rounded" placeholder="Industry" />
                                 <input type="number" name="TExp" value={formData.TExp || ""} onChange={handleChange} className="border p-2 rounded" placeholder="Total Experience" />
                             </div>
-                            <div className="flex justify-end space-x-2 mt-4">
+                            <div className="flex justify-end space-x-2 mt-4 no-print">
                                 <button onClick={handleUpdate} className="bg-[#e67528] text-white px-4 py-2 rounded hover:bg-[#d56a24]">Update</button>
                                 <button onClick={() => setEditingUser(null)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel</button>
                             </div>

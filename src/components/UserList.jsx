@@ -11,6 +11,12 @@ import html2canvas from 'html2canvas';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
+// Add this helper function to calculate pass percentage correctly
+const calculatePassPercentage = (students, passCount) => {
+    if (!students || students <= 0) return 0;
+    return ((passCount / students) * 100).toFixed(2);
+};
+
 const UserList = () => {
     const [users, setUsers] = useState({});
     const [editingUser, setEditingUser] = useState(null);
@@ -270,7 +276,17 @@ const UserList = () => {
         }
         else if (op.operation === 'UPDATE') {
             if (op.details && op.details.originalEntity) {
-                return op.details.originalEntity;
+                // Create a new object with original data
+                const data = { ...op.details.originalEntity };
+
+                // Apply changes from changedFields to show the UPDATED values
+                if (op.details.changedFields) {
+                    Object.keys(op.details.changedFields).forEach(key => {
+                        data[key] = op.details.changedFields[key].to;
+                    });
+                }
+
+                return data;
             }
         }
         return {};
@@ -394,7 +410,24 @@ const UserList = () => {
                                             {renderCellWithHighlight(op, 'semester', entityData.semester)}
                                             {renderCellWithHighlight(op, 'numberOfStudents', entityData.numberOfStudents)}
                                             {renderCellWithHighlight(op, 'passCount', entityData.passCount)}
-                                            {renderCellWithHighlight(op, 'passPercentage', entityData.passPercentage)}
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {/* Dynamically calculate the pass percentage */}
+                                                {op.operation === 'UPDATE' && op.details?.changedFields?.passCount || op.details?.changedFields?.numberOfStudents ? (
+                                                    <div className="flex flex-col">
+                                                        <span className="line-through text-red-500">
+                                                            {entityData.passPercentage || calculatePassPercentage(entityData.numberOfStudents, entityData.passCount)}%
+                                                        </span>
+                                                        <span className="text-green-600 font-medium">
+                                                            {calculatePassPercentage(
+                                                                op.details?.changedFields?.numberOfStudents?.to || entityData.numberOfStudents,
+                                                                op.details?.changedFields?.passCount?.to || entityData.passCount
+                                                            )}%
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span>{calculatePassPercentage(entityData.numberOfStudents, entityData.passCount)}%</span>
+                                                )}
+                                            </td>
                                         </tr>
                                     );
                                 })}
@@ -403,7 +436,50 @@ const UserList = () => {
                     </div>
                 );
 
-            // Add similar cases for other models
+            case 'Feedback':
+                return (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Name</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Students</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feedback %</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {modelOperations.map((op, idx) => {
+                                    const entityData = getEntityDataFromOperation(op);
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50">
+                                            <td className="px-3 py-2 whitespace-nowrap">
+                                                <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
+                                                    {op.operation}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                                                {formatDateTime(op.timestamp)}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {op.userId?.fullName || 'Unknown'}
+                                            </td>
+                                            {renderCellWithHighlight(op, 'courseName', entityData.courseName)}
+                                            {renderCellWithHighlight(op, 'semester', entityData.semester)}
+                                            {renderCellWithHighlight(op, 'numberOfStudents', entityData.numberOfStudents)}
+                                            {renderCellWithHighlight(op, 'feedbackPercentage', entityData.feedbackPercentage)}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+
+            // Add more cases for Research, Workshop, Others, etc.
             default:
                 return (
                     <div className="overflow-x-auto">

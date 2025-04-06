@@ -144,9 +144,10 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
         fetchLecturerDetails();
         toast.success("Profile updated successfully");
         setShowUpdateForm(false);
-        fetchLecturerDetails();
       } else {
+        // Display the specific error message from the server
         toast.error(data.message || "Failed to update profile");
+        console.error("Update error:", data);
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -398,7 +399,6 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
               name="Industry"
               value={formData.Industry || ''}
               onChange={handleFormChange}
-              onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
             />
           </div>
 
@@ -409,7 +409,6 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
               name="TExp"
               value={formData.TExp || ''}
               onChange={handleFormChange}
-              onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
             />
           </div>
 

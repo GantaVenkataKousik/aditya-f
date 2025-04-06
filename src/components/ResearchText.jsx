@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const ResearchText = ({ data: propsData }) => {
   const [data, setData] = useState(propsData || null);
+  const { id } = useParams();
+  const fetchData = async () => {
+    try {
+      let userId = localStorage.getItem('userId');
+      if (id) {
+        userId = id;
+      }
+      const response = await fetch(`https://aditya-b.onrender.com/research/researchtext?userId=${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-  useEffect(() => {
-    // Only fetch data if propsData is not available
-    if (!propsData) {
-      const fetchData = async () => {
-        try {
-          const userId = localStorage.getItem('userId');
-          const response = await fetch(`https://aditya-b.onrender.com/research/researchtext?userId=${userId}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (response.ok) {
-            const responseData = await response.json();
-            setData(responseData);
-          } else {
-            console.error('Error:', response.statusText);
-          }
-        } catch (error) {
-          console.error('Fetch error:', error);
-        }
-      };
-
-      fetchData();
+      if (response.ok) {
+        const responseData = await response.json();
+        setData(responseData);
+      } else {
+        console.error('Error:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
     }
+  };
+  useEffect(() => {
+    fetchData();
   }, [propsData]);
 
   if (!data) {

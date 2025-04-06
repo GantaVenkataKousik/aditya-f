@@ -82,32 +82,36 @@ const FacultyScoreTable = ({ appraisalData }) => {
 
     try {
       const userId = localStorage.getItem('userId');
+      const adminId = localStorage.getItem('userId'); // Current user making the change
+
       if (!userId) {
+        toast.error('User ID not found. Please log in again.');
         return;
       }
 
       // Map parameter name to API field name
       const parameterToFieldMap = {
         "Courses Average Pass %": "couAvgPerMarks",
-        "Course Feedback": "coufeedMarks",
-        "Proctoring Students Average Pass %": "proctoringMarks",
-        "Research - SCI papers": "sciMarks",
-        "Research - Scopus/WoS Papers": "wosMarks",
-        "Research – Proposals Submitted/funded": "proposalMarks",
-        "Research - Others": "researchSelfAssesMarks",
-        "Workshops, FDPs, STTP attended": "workSelfAssesMarks",
-        "Outreach Activities": "outreachSelfAssesMarks",
-        "Additional responsibilities in the Department / College": "addSelfAssesMarks",
-        "Special Contribution": "specialSelfAssesMarks"
+        "Course Feedback": "CoufeedMarks",
+        "Proctoring Students Average Pass %": "ProctoringMarks",
+        "Research - SCI papers": "SciMarks",
+        "Research - Scopus/WoS Papers": "WosMarks",
+        "Research – Proposals Submitted/funded": "ProposalMarks",
+        "Research - Others": "ResearchSelfAsses",
+        "Workshops, FDPs, STTP attended": "WorkSelfAsses",
+        "Outreach Activities": "OutreachSelfAsses",
+        "Additional responsibilities in the Department / College": "AddSelfAsses",
+        "Special Contribution": "SpeacialSelfAsses"
       };
 
       const fieldName = parameterToFieldMap[currentParameter];
       if (!fieldName) {
+        toast.error('Invalid parameter name');
         return;
       }
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://aditya-b.onrender.com/research/update-score`, {
+      const response = await fetch(`https://aditya-b.onrender.com/faculty/update-score?userId=${adminId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -116,7 +120,8 @@ const FacultyScoreTable = ({ appraisalData }) => {
         body: JSON.stringify({
           userId,
           field: fieldName,
-          value: parseInt(editedScore) || 0
+          value: parseInt(editedScore) || 0,
+          parameter: currentParameter
         })
       });
 
@@ -141,6 +146,7 @@ const FacultyScoreTable = ({ appraisalData }) => {
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error('Network error while updating score');
     }
   };
 
@@ -153,6 +159,8 @@ const FacultyScoreTable = ({ appraisalData }) => {
     const row = data[index];
     try {
       const userId = localStorage.getItem('userId');
+      const adminId = localStorage.getItem('userId'); // Current user making the change
+
       if (!userId) {
         toast.error('User ID not found. Please log in again.');
         return;
@@ -161,26 +169,27 @@ const FacultyScoreTable = ({ appraisalData }) => {
       // Map parameter name to API field name (same mapping as in handleUpdate)
       const parameterToFieldMap = {
         "Courses Average Pass %": "couAvgPerMarks",
-        "Course Feedback": "coufeedMarks",
-        "Proctoring Students Average Pass %": "proctoringMarks",
-        "Research - SCI papers": "sciMarks",
-        "Research - Scopus/WoS Papers": "wosMarks",
-        "Research – Proposals Submitted/funded": "proposalMarks",
-        "Research - Others": "researchSelfAssesMarks",
-        "Workshops, FDPs, STTP attended": "workSelfAssesMarks",
-        "Outreach Activities": "outreachSelfAssesMarks",
-        "Additional responsibilities in the Department / College": "addSelfAssesMarks",
-        "Special Contribution": "specialSelfAssesMarks"
+        "Course Feedback": "CoufeedMarks",
+        "Proctoring Students Average Pass %": "ProctoringMarks",
+        "Research - SCI papers": "SciMarks",
+        "Research - Scopus/WoS Papers": "WosMarks",
+        "Research – Proposals Submitted/funded": "ProposalMarks",
+        "Research - Others": "ResearchSelfAsses",
+        "Workshops, FDPs, STTP attended": "WorkSelfAsses",
+        "Outreach Activities": "OutreachSelfAsses",
+        "Additional responsibilities in the Department / College": "AddSelfAsses",
+        "Special Contribution": "SpeacialSelfAsses"
       };
 
       const fieldName = parameterToFieldMap[row.parameter];
       if (!fieldName) {
+        toast.error('Invalid parameter name');
         return;
       }
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://aditya-b.onrender.com/research/update-score`, {
-        method: 'PUT',
+      const response = await fetch(`https://aditya-b.onrender.com/faculty/reset-score?userId=${adminId}`, {
+        method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -188,7 +197,7 @@ const FacultyScoreTable = ({ appraisalData }) => {
         body: JSON.stringify({
           userId,
           field: fieldName,
-          value: 0
+          parameter: row.parameter
         })
       });
 
@@ -211,6 +220,7 @@ const FacultyScoreTable = ({ appraisalData }) => {
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error('Network error while resetting score');
     }
   };
 
@@ -245,43 +255,57 @@ const FacultyScoreTable = ({ appraisalData }) => {
                   <td className="border border-gray-400 px-4 py-2">{row.min_score_non_doctorate}</td>
                   <td className="border border-gray-400 px-4 py-2">{row.obtained_score}</td>
                   {canModify && (
-                    <td className="border border-gray-400 px-4 py-2 no-print" style={{ display: 'flex', justifyContent: 'center' }}>
-                      <button
-                        className="no-print"
-                        onClick={() => handleEditClick(row, index)}
-                        style={{
-                          fontSize: "16px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "rgb(59 130 246)",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto",
-                          padding: "4px 8px"
-                        }}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="no-print"
-                        onClick={() => handleScoreReset(index)}
-                        style={{
-                          fontSize: "16px",
-                          padding: "4px 8px",
-                          margin: "2px",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          backgroundColor: "#e74c3c",
-                          color: "white",
-                          transition: "0.3s",
-                          width: "auto"
-                        }}
-                      >
-                        <FaTrash />
-                      </button>
+                    <td className="border border-gray-400 px-4 py-2 no-print">
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleEditClick(row, index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#1a4b88",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#e67528"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#1a4b88"}
+                        >
+                          <FaEdit size={18} />
+                        </button>
+                        <button
+                          className="no-print"
+                          onClick={(e) => { e.stopPropagation(); handleScoreReset(index); }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            margin: "2px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            backgroundColor: "#e74c3c",
+                            color: "white",
+                            transition: "all 0.3s ease",
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            width: "36px",
+                            height: "36px"
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#c0392b"}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e74c3c"}
+                        >
+                          <FaTrash size={18} />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>

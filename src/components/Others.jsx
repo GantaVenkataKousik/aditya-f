@@ -233,8 +233,13 @@ const Others = ({ data: propsData }) => {
 
   // ======== RESPONSIBILITIES HANDLERS ========
   const handleResponsibilityUpdateClick = (responsibility, index) => {
+    console.log("Responsibility data:", responsibility); // Debug log to see exact data structure
+
     setResponsibilityDetails(responsibility.Responsibility || '');
-    setResponsibilityAssignedBy(responsibility.assignedBy || '');
+
+    // Fix this line - use AssignedBy with capital 'A' to match your database schema
+    setResponsibilityAssignedBy(responsibility.AssignedBy || '');
+
     setCurrentIndex(index);
     setCurrentItemId(responsibility._id || null);
     setShowResponsibilityUpdate(true);
@@ -268,7 +273,7 @@ const Others = ({ data: propsData }) => {
         },
         body: JSON.stringify({
           Responsibility: responsibilityDetails,
-          assignedBy: responsibilityAssignedBy
+          AssignedBy: responsibilityAssignedBy // Use capital 'A' to match backend expectations
         })
       });
 
@@ -285,7 +290,7 @@ const Others = ({ data: propsData }) => {
           updatedItems[currentIndex] = {
             ...updatedItems[currentIndex],
             Responsibility: responsibilityDetails,
-            assignedBy: responsibilityAssignedBy
+            AssignedBy: responsibilityAssignedBy // Use capital 'A' here too
           };
           return updatedItems;
         });
@@ -602,14 +607,10 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // Log the payload for debugging
-      console.log("Sending activity data:", { activityDetails });
-
-      // Fix the request to match the backend expected format
+      // Make sure to send exactly what the backend expects - an object with 'activityDetails' property
       const response = await fetch(`${backendUrl}/add-activity/${userId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -617,23 +618,22 @@ const Others = ({ data: propsData }) => {
         })
       });
 
-      // Log the raw response for debugging
-      console.log("Raw response:", response);
-
+      // Debug the response
+      console.log("Response status:", response.status);
       const data = await response.json();
-      console.log("Activity add response:", data);
+      console.log("Response data:", data);
 
       if (response.ok && data.success) {
         toast.success('Activity added successfully');
         setActivityDetails('');
         setShowActivityAdd(false);
-        fetchAll();
+        fetchAll(); // Refresh the data
       } else {
         toast.error(data.message || 'Failed to add activity');
         console.error('Add failed:', data);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error during activity add:', error);
       toast.error('Error adding activity: ' + (error.message || 'Unknown error'));
     }
   };

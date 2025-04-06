@@ -14,8 +14,7 @@ const DisplayFeedback = ({ feedbackData }) => {
         semester: '',
         numberOfStudents: 0,
         feedbackPercentage: 0,
-        averagePercentage: 0,
-        selfAssessmentMarks: 0
+        averagePercentage: 0
     });
     const [showOperations, setShowOperations] = useState(false);
     const [overallAverage, setOverallAverage] = useState(0);
@@ -99,8 +98,7 @@ const DisplayFeedback = ({ feedbackData }) => {
             semester: '',
             numberOfStudents: 0,
             feedbackPercentage: 0,
-            averagePercentage: 0,
-            selfAssessmentMarks: 0
+            averagePercentage: 0
         });
         setShowAddForm(true);
         setShowEditForm(false);
@@ -147,21 +145,9 @@ const DisplayFeedback = ({ feedbackData }) => {
 
                 // Calculate average feedback
                 newFormData.averagePercentage = calculateAverageFeedback(feedbackPercent);
-
-                // Set self assessment marks based on feedback percentage
-                if (feedbackPercent >= 90) {
-                    newFormData.selfAssessmentMarks = 10;
-                } else if (feedbackPercent >= 80) {
-                    newFormData.selfAssessmentMarks = 8;
-                } else if (feedbackPercent >= 70) {
-                    newFormData.selfAssessmentMarks = 6;
-                } else {
-                    newFormData.selfAssessmentMarks = 4;
-                }
             } else {
                 newFormData.feedbackPercentage = 0;
                 newFormData.averagePercentage = 0;
-                newFormData.selfAssessmentMarks = 4;
             }
         }
 
@@ -204,8 +190,7 @@ const DisplayFeedback = ({ feedbackData }) => {
             semester: formData.semester,
             numberOfStudents: Number(formData.numberOfStudents),
             feedbackPercentage: Number(feedbackPercent),
-            averagePercentage: Number(formData.averagePercentage),
-            selfAssessmentMarks: Number(formData.selfAssessmentMarks)
+            averagePercentage: Number(formData.averagePercentage)
         };
 
         try {
@@ -289,7 +274,6 @@ const DisplayFeedback = ({ feedbackData }) => {
                         <th>No. of students</th>
                         <th>Feedback %</th>
                         <th>Average %</th>
-                        <th>Self-Assessment Marks</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -505,25 +489,6 @@ const DisplayFeedback = ({ feedbackData }) => {
                                         }}
                                     />
                                 </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Self-Assessment Marks</label>
-                                    <input
-                                        type='number'
-                                        name='selfAssessmentMarks'
-                                        value={formData.selfAssessmentMarks}
-                                        onChange={handleInputChange}
-                                        placeholder='Self-Assessment Marks'
-                                        required
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px',
-                                            border: '1px solid #ddd',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box'
-                                        }}
-                                    />
-                                </div>
                             </div>
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
@@ -692,7 +657,6 @@ const DisplayFeedback = ({ feedbackData }) => {
                                 }}>
                                     <p style={{ margin: '5px 0', fontWeight: '500' }}>Feedback Percentage: <span style={{ color: '#1a4b88' }}>{formData.feedbackPercentage}%</span></p>
                                     <p style={{ margin: '5px 0', fontWeight: '500' }}>Average Percentage: <span style={{ color: '#1a4b88' }}>{formData.averagePercentage}%</span></p>
-                                    <p style={{ margin: '5px 0', fontWeight: '500' }}>Self-Assessment Marks: <span style={{ color: '#1a4b88' }}>{formData.selfAssessmentMarks}</span></p>
                                 </div>
                             </div>
 

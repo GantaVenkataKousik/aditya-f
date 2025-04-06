@@ -109,6 +109,10 @@ const Teacher = ({ faculty }) => {
     }
   };
 
+  const refreshData = () => {
+    fetchTeacherData();
+  };
+
   useEffect(() => {
     fetchLecturerDetails();
     fetchTeacherData();
@@ -158,26 +162,29 @@ const Teacher = ({ faculty }) => {
             <>
               <div>
                 <h2>1. Courses Average Pass Percentage:</h2>
-                <DisplayCourses coursesData={teacherData?.classes} />
-              </div>
-              <div>
-                <h2>2. Course Feedback:</h2>
-                <DisplayFeedback feedbackData={teacherData?.feedback} />
-              </div>
-              <div>
-                <h2>3. Proctoring:</h2>
-                <ProctoringTable proctoringData={teacherData?.proctoring} />
-              </div>
-              <div>
-                <ResearchText data={teacherData?.research} />
-              </div>
-              <div>
-                <DisplayWorkshops
-                  data={teacherData.workshop}
+                <DisplayCourses
+                  coursesData={teacherData?.classes}
+                  onDataChange={refreshData}
+                  userId={id}
+                  viewMode={true}
                 />
               </div>
               <div>
-                <Others data={teacherData.others[0]} />
+                <h2>2. Course Feedback:</h2>
+                <DisplayFeedback feedbackData={teacherData?.feedback} onDataChange={refreshData} userId={id} />
+              </div>
+              <div>
+                <h2>3. Proctoring:</h2>
+                <ProctoringTable proctoringData={teacherData?.proctoring} onDataChange={refreshData} userId={id} />
+              </div>
+              <div>
+                <ResearchText data={teacherData?.research} onDataChange={refreshData} userId={id} />
+              </div>
+              <div>
+                <DisplayWorkshops data={teacherData.workshop} onDataChange={refreshData} userId={id} />
+              </div>
+              <div>
+                <Others data={teacherData.others[0]} onDataChange={refreshData} userId={id} />
               </div>
             </>
           )}

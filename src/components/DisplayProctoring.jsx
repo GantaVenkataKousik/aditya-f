@@ -3,7 +3,7 @@ import './DisplayProctoring.css'; // Import the CSS file
 import { toast, ToastContainer } from 'react-toastify';
 import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
 
-const ProctoringTable = ({ proctoringData }) => {
+const ProctoringTable = ({ proctoringData, onDataChange, userId, viewMode = false }) => {
     const [data, setData] = useState(proctoringData || []);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
@@ -21,8 +21,8 @@ const ProctoringTable = ({ proctoringData }) => {
 
     const fetchData = async () => {
         try {
-            const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/proctoring/${userId}`, {
+            const userIdToUse = viewMode ? userId : localStorage.getItem('userId');
+            const response = await fetch(`https://aditya-b.onrender.com/proctoring/${userIdToUse}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,6 +40,10 @@ const ProctoringTable = ({ proctoringData }) => {
             } else {
                 console.error("Unexpected API response format:", fetchedData);
                 setData([]);
+            }
+
+            if (onDataChange) {
+                onDataChange();
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -123,9 +127,9 @@ const ProctoringTable = ({ proctoringData }) => {
     };
 
     const handleEdit = async (e) => {
-        const userId = localStorage.getItem('userId');
+        const userIdToUse = viewMode ? userId : localStorage.getItem('userId');
         e.preventDefault();
-        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${selectedProctor._id}?userId=${userId}`, {
+        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${selectedProctor._id}?userId=${userIdToUse}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -145,7 +149,7 @@ const ProctoringTable = ({ proctoringData }) => {
     // Modified handleAddFormSubmit
     const handleAddFormSubmit = async (e) => {
         e.preventDefault();
-        const userId = localStorage.getItem('userId');
+        const userIdToUse = viewMode ? userId : localStorage.getItem('userId');
 
         // Calculate the pass percentage for the new record
         const passPercentage = calculatePassPercentage(
@@ -163,7 +167,7 @@ const ProctoringTable = ({ proctoringData }) => {
         ]);
 
         try {
-            const response = await fetch(`https://aditya-b.onrender.com/proctoring/${userId}`, {
+            const response = await fetch(`https://aditya-b.onrender.com/proctoring/${userIdToUse}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -190,8 +194,8 @@ const ProctoringTable = ({ proctoringData }) => {
     };
 
     const handleDelete = async (id) => {
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${id}?userId=${userId}`, {
+        const userIdToUse = viewMode ? userId : localStorage.getItem('userId');
+        const response = await fetch(`https://aditya-b.onrender.com/proctoring/${id}?userId=${userIdToUse}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -203,6 +207,10 @@ const ProctoringTable = ({ proctoringData }) => {
             fetchData();
         } else {
             toast.error("Failed to delete proctoring data");
+        }
+
+        if (onDataChange) {
+            onDataChange();
         }
     };
 
@@ -458,26 +466,7 @@ const ProctoringTable = ({ proctoringData }) => {
                                         value={formData.averagePercentage}
                                         onChange={handleInputChange}
                                         placeholder="Average %"
-                                        required
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px',
-                                            border: '1px solid #ddd',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box'
-                                        }}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Self-Assessment Marks</label>
-                                    <input
-                                        type="number"
-                                        name="selfAssessmentMarks"
-                                        value={formData.selfAssessmentMarks}
-                                        onChange={handleInputChange}
-                                        placeholder="Self-Assessment Marks"
-                                        required
+                                        readOnly
                                         style={{
                                             width: '100%',
                                             padding: '10px',
@@ -635,44 +624,6 @@ const ProctoringTable = ({ proctoringData }) => {
                                         value={formData.passedStudents}
                                         onChange={handleInputChange}
                                         placeholder="No. of Students Passed (B)"
-                                        required
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px',
-                                            border: '1px solid #ddd',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box'
-                                        }}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Average % (Auto-calculated)</label>
-                                    <input
-                                        type="number"
-                                        name="averagePercentage"
-                                        value={formData.averagePercentage || ''}
-                                        readOnly
-                                        placeholder="Average % (Auto-calculated)"
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px',
-                                            border: '1px solid #ddd',
-                                            borderRadius: '4px',
-                                            boxSizing: 'border-box',
-                                            backgroundColor: '#f0f0f0'
-                                        }}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Self-Assessment Marks</label>
-                                    <input
-                                        type="number"
-                                        name="selfAssessmentMarks"
-                                        value={formData.selfAssessmentMarks}
-                                        onChange={handleInputChange}
-                                        placeholder="Self-Assessment Marks"
                                         required
                                         style={{
                                             width: '100%',

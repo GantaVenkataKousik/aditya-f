@@ -260,6 +260,146 @@ const UserList = () => {
         }));
     };
 
+    // Function to get entity data from operation
+    const getEntityDataFromOperation = (op) => {
+        if (op.operation === 'CREATE' && op.details && op.details.newEntity) {
+            return op.details.newEntity;
+        }
+        else if (op.operation === 'DELETE' && op.details && op.details.deletedEntity) {
+            return op.details.deletedEntity;
+        }
+        else if (op.operation === 'UPDATE') {
+            // Handle update case...
+            return { ...};
+        }
+        return {};
+    };
+
+    // Function to handle model-specific operation tables
+    const renderModelOperationsTable = (modelName, modelOperations) => {
+        switch (modelName) {
+            case 'Proctoring':
+                return (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sem-Branch-Sec</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Students</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Eligible Students</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passed Students</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Average %</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {modelOperations.map((op, idx) => {
+                                    const entityData = getEntityDataFromOperation(op);
+
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50">
+                                            <td className="px-3 py-2 whitespace-nowrap">
+                                                <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
+                                                    {op.operation}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                                                {formatDateTime(op.timestamp)}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {op.userId?.fullName || 'Unknown'}
+                                                {op.userId?.designation && (
+                                                    <span className="text-gray-500 ml-1">
+                                                        ({op.userId.designation})
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {entityData.semesterBranchSec || '-'}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {entityData.totalStudents || '-'}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {entityData.eligibleStudents || '-'}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {entityData.passedStudents || '-'}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {entityData.averagePercentage || '-'}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+
+            case 'Class':
+                return (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Name</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Students</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pass Count</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pass %</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {modelOperations.map((op, idx) => {
+                                    const entityData = getEntityDataFromOperation(op);
+
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50">
+                                            <td className="px-3 py-2 whitespace-nowrap">
+                                                <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
+                                                    {op.operation}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                                                {formatDateTime(op.timestamp)}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {op.userId?.fullName || 'Unknown'}
+                                                {op.userId?.designation && (
+                                                    <span className="text-gray-500 ml-1">
+                                                        ({op.userId.designation})
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.courseName || '-'}</td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.semester || '-'}</td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.numberOfStudents || '-'}</td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.passCount || '-'}</td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.passPercentage || '-'}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+
+            // Add similar cases for other models
+            default:
+                return (
+                    <div className="overflow-x-auto">
+                        <p className="p-4 text-gray-500">Operations table for {modelName} not specifically implemented.</p>
+                    </div>
+                );
+        }
+    };
+
     return (
         <>
             <div id="contentToDownload" className="p-6 bg-gray-100 min-h-screen font-poppins">
@@ -371,384 +511,8 @@ const UserList = () => {
                                             <span>{modelName}</span>
                                             <span className="text-sm font-normal">{modelOperations.length} operations</span>
                                         </div>
-
-                                        {/* Model-specific tables for operations */}
                                         <div className="p-2">
-                                            {modelName === 'User' && (
-                                                <div className="overflow-x-auto">
-                                                    <table className="min-w-full divide-y divide-gray-200">
-                                                        <thead className="bg-gray-50">
-                                                            <tr>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Emp ID</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody className="bg-white divide-y divide-gray-200">
-                                                            {modelOperations.map((op, idx) => {
-                                                                // Get entity data based on operation type
-                                                                let entityData = op.operation === 'DELETE' ?
-                                                                    op.details.deletedEntity :
-                                                                    (op.operation === 'CREATE' ? op.details.newEntity : {});
-
-                                                                // For UPDATE, merge the changes
-                                                                if (op.operation === 'UPDATE' && op.details.changedFields) {
-                                                                    entityData = {};
-                                                                    Object.entries(op.details.changedFields).forEach(([field, values]) => {
-                                                                        entityData[field] = values.to;
-                                                                    });
-                                                                }
-
-                                                                return (
-                                                                    <tr key={idx} className="hover:bg-gray-50">
-                                                                        <td className="px-3 py-2 whitespace-nowrap">
-                                                                            <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
-                                                                                {op.operation}
-                                                                            </span>
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
-                                                                            {formatDateTime(op.timestamp)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {op.userId?.fullName || 'Unknown'}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {entityData.fullName || '-'}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {entityData.email || '-'}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {entityData.EmpID || '-'}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {entityData.designation || '-'}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {entityData.department || '-'}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                            })}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            )}
-
-                                            {modelName === 'Class' && (
-                                                <div className="overflow-x-auto">
-                                                    <table className="min-w-full divide-y divide-gray-200">
-                                                        <thead className="bg-gray-50">
-                                                            <tr>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Name</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Students</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pass Count</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pass %</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody className="bg-white divide-y divide-gray-200">
-                                                            {modelOperations.map((op, idx) => {
-                                                                // Extract entity data from operation details
-                                                                let entityData = {};
-                                                                let originalData = {};
-
-                                                                if (op.operation === 'DELETE' && op.details && op.details.deletedEntity) {
-                                                                    entityData = op.details.deletedEntity;
-                                                                } else if (op.operation === 'CREATE' && op.details && op.details.newEntity) {
-                                                                    entityData = op.details.newEntity;
-                                                                } else if (op.operation === 'UPDATE' && op.details && op.details.changedFields) {
-                                                                    // For updates, we need both original and changed data
-                                                                    Object.entries(op.details.changedFields).forEach(([field, values]) => {
-                                                                        originalData[field] = values.from;
-                                                                        entityData[field] = values.to;
-                                                                    });
-                                                                }
-
-                                                                // Calculate pass percentage for display if needed
-                                                                const calcPassPercentage = () => {
-                                                                    if (entityData.passCount && entityData.numberOfStudents) {
-                                                                        const percentage = (entityData.passCount / entityData.numberOfStudents) * 100;
-                                                                        return percentage.toFixed(2) + "%";
-                                                                    } else if (entityData.passPercentage) {
-                                                                        return entityData.passPercentage + "%";
-                                                                    }
-                                                                    return "-";
-                                                                };
-
-                                                                // Function to check if a field has been updated
-                                                                const wasUpdated = (field) => {
-                                                                    return op.operation === 'UPDATE' &&
-                                                                        op.details &&
-                                                                        op.details.changedFields &&
-                                                                        op.details.changedFields[field] !== undefined;
-                                                                };
-
-                                                                // Function to render cell content with highlighting for updates
-                                                                const renderCell = (field, displayValue) => {
-                                                                    if (wasUpdated(field)) {
-                                                                        return (
-                                                                            <div>
-                                                                                <div className="text-xs text-red-600 line-through">
-                                                                                    {originalData[field] !== undefined ? originalData[field] : '-'}
-                                                                                </div>
-                                                                                <div className="font-bold text-green-600">
-                                                                                    {displayValue || '-'}
-                                                                                </div>
-                                                                            </div>
-                                                                        );
-                                                                    }
-                                                                    return displayValue || '-';
-                                                                };
-
-                                                                return (
-                                                                    <tr key={idx} className="hover:bg-gray-50">
-                                                                        <td className="px-3 py-2 whitespace-nowrap">
-                                                                            <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
-                                                                                {op.operation}
-                                                                            </span>
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
-                                                                            {formatDateTime(op.timestamp)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {op.userId?.fullName || 'Unknown'}
-                                                                            {op.userId?.designation && (
-                                                                                <span className="text-gray-500 ml-1">
-                                                                                    ({op.userId.designation})
-                                                                                </span>
-                                                                            )}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('courseName', entityData.courseName)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('semester', entityData.semester)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('numberOfStudents', entityData.numberOfStudents)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('passCount', entityData.passCount)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('passPercentage', calcPassPercentage())}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                            })}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            )}
-
-                                            {modelName === 'Workshop' && (
-                                                <div className="overflow-x-auto">
-                                                    <table className="min-w-full divide-y divide-gray-200">
-                                                        <thead className="bg-gray-50">
-                                                            <tr>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Workshop Title</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organizer</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody className="bg-white divide-y divide-gray-200">
-                                                            {modelOperations.map((op, idx) => {
-                                                                // Extract entity data from operation details
-                                                                let entityData = {};
-                                                                let originalData = {};
-
-                                                                if (op.operation === 'DELETE' && op.details && op.details.deletedEntity) {
-                                                                    entityData = op.details.deletedEntity;
-                                                                } else if (op.operation === 'CREATE' && op.details && op.details.newEntity) {
-                                                                    entityData = op.details.newEntity;
-                                                                } else if (op.operation === 'UPDATE' && op.details && op.details.changedFields) {
-                                                                    // For updates, we need both original and changed data
-                                                                    Object.entries(op.details.changedFields).forEach(([field, values]) => {
-                                                                        originalData[field] = values.from;
-                                                                        entityData[field] = values.to;
-                                                                    });
-                                                                }
-
-                                                                // Function to format date
-                                                                const formatDate = (dateString) => {
-                                                                    if (!dateString) return '-';
-                                                                    return new Date(dateString).toLocaleDateString();
-                                                                };
-
-                                                                // Function to check if a field has been updated
-                                                                const wasUpdated = (field) => {
-                                                                    return op.operation === 'UPDATE' &&
-                                                                        op.details &&
-                                                                        op.details.changedFields &&
-                                                                        op.details.changedFields[field] !== undefined;
-                                                                };
-
-                                                                // Function to render cell content with highlighting for updates
-                                                                const renderCell = (field, displayValue, formatter = null) => {
-                                                                    const formattedValue = formatter ? formatter(displayValue) : displayValue;
-
-                                                                    if (wasUpdated(field)) {
-                                                                        const formattedOriginal = formatter ? formatter(originalData[field]) : originalData[field];
-
-                                                                        return (
-                                                                            <div>
-                                                                                <div className="text-xs text-red-600 line-through">
-                                                                                    {formattedOriginal || '-'}
-                                                                                </div>
-                                                                                <div className="font-bold text-green-600">
-                                                                                    {formattedValue || '-'}
-                                                                                </div>
-                                                                            </div>
-                                                                        );
-                                                                    }
-                                                                    return formattedValue || '-';
-                                                                };
-
-                                                                return (
-                                                                    <tr key={idx} className="hover:bg-gray-50">
-                                                                        <td className="px-3 py-2 whitespace-nowrap">
-                                                                            <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
-                                                                                {op.operation}
-                                                                            </span>
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
-                                                                            {formatDateTime(op.timestamp)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {op.userId?.fullName || 'Unknown'}
-                                                                            {op.userId?.designation && (
-                                                                                <span className="text-gray-500 ml-1">
-                                                                                    ({op.userId.designation})
-                                                                                </span>
-                                                                            )}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('workshopTitle', entityData.workshopTitle)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('date', entityData.date, formatDate)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('location', entityData.location)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('organizer', entityData.organizer)}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                            })}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            )}
-
-                                            {modelName === 'Proctoring' && (
-                                                <div className="overflow-x-auto">
-                                                    <table className="min-w-full divide-y divide-gray-200">
-                                                        <thead className="bg-gray-50">
-                                                            <tr>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sem-Branch-Sec</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Students</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Eligible Students</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passed Students</th>
-                                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Average %</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody className="bg-white divide-y divide-gray-200">
-                                                            {modelOperations.map((op, idx) => {
-                                                                // Extract entity data from operation details
-                                                                let entityData = {};
-                                                                let originalData = {};
-
-                                                                if (op.operation === 'DELETE' && op.details && op.details.deletedEntity) {
-                                                                    entityData = op.details.deletedEntity;
-                                                                } else if (op.operation === 'CREATE' && op.details && op.details.newEntity) {
-                                                                    entityData = op.details.newEntity;
-                                                                } else if (op.operation === 'UPDATE' && op.details && op.details.changedFields) {
-                                                                    // For updates, we need both original and changed data
-                                                                    Object.entries(op.details.changedFields).forEach(([field, values]) => {
-                                                                        originalData[field] = values.from;
-                                                                        entityData[field] = values.to;
-                                                                    });
-                                                                }
-
-                                                                // Function to check if a field has been updated
-                                                                const wasUpdated = (field) => {
-                                                                    return op.operation === 'UPDATE' &&
-                                                                        op.details &&
-                                                                        op.details.changedFields &&
-                                                                        op.details.changedFields[field] !== undefined;
-                                                                };
-
-                                                                // Function to render cell content with highlighting for updates
-                                                                const renderCell = (field, displayValue) => {
-                                                                    if (wasUpdated(field)) {
-                                                                        return (
-                                                                            <div>
-                                                                                <div className="text-xs text-red-600 line-through">
-                                                                                    {originalData[field] !== undefined ? originalData[field] : '-'}
-                                                                                </div>
-                                                                                <div className="font-bold text-green-600">
-                                                                                    {displayValue || '-'}
-                                                                                </div>
-                                                                            </div>
-                                                                        );
-                                                                    }
-                                                                    return displayValue || '-';
-                                                                };
-
-                                                                return (
-                                                                    <tr key={idx} className="hover:bg-gray-50">
-                                                                        <td className="px-3 py-2 whitespace-nowrap">
-                                                                            <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
-                                                                                {op.operation}
-                                                                            </span>
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
-                                                                            {formatDateTime(op.timestamp)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {op.userId?.fullName || 'Unknown'}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('semesterBranchSec', entityData.semesterBranchSec)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('totalStudents', entityData.totalStudents)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('eligibleStudents', entityData.eligibleStudents)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('passedStudents', entityData.passedStudents)}
-                                                                        </td>
-                                                                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                                            {renderCell('averagePercentage',
-                                                                                entityData.averagePercentage ? `${entityData.averagePercentage}%` : '-')}
-                                                                        </td>
-                                                                    </tr>
-                                                                );
-                                                            })}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            )}
+                                            {renderModelOperationsTable(modelName, modelOperations)}
                                         </div>
                                     </div>
                                 ))}

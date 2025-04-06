@@ -141,8 +141,8 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Now using userId instead of document ID
-      const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${currentIndex}`, {
+      // FIXED: Added userId as query parameter for operation logging
+      const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${currentIndex}?userId=${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -194,8 +194,8 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Now using userId instead of document ID
-      const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${index}`, {
+      // FIXED: Added userId as query parameter for operation logging
+      const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${index}?userId=${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

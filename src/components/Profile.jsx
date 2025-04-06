@@ -123,6 +123,37 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
     }
   };
 
+  const handleUpdateFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const userId = localStorage.getItem("userId");
+
+      // Send the complete formData object to update all fields at once
+      const response = await fetch(`https://aditya-b.onrender.com/fetchData/update-field/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Refresh the lecturer details
+        fetchLecturerDetails();
+        toast.success("Profile updated successfully");
+        setShowUpdateForm(false);
+        fetchLecturerDetails();
+      } else {
+        toast.error(data.message || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Error updating profile. Please try again.");
+    }
+  };
+
   const handleShowUpdateForm = () => {
     setFormData({
       fullName: lecturerDetails.fullName || '',
@@ -147,17 +178,27 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    // Format date strings consistently if needed
+    if (name === 'JoiningDate' && value) {
+      // Ensure the date is in proper format for server
+      const formattedDate = new Date(value).toISOString().split('T')[0];
+      setFormData(prev => ({
+        ...prev,
+        [name]: formattedDate
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
       const userId = localStorage.getItem("userId");
-      const response = await fetch(`https://aditya-b.onrender.com/addUser`, {
+      const response = await fetch(`https://aditya-b.onrender.com/addUser?userId=${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +222,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
     <div className="update-form-overlay">
       <form
         className="update-form"
-        onSubmit={handleFormSubmit}
+        onSubmit={handleUpdateFormSubmit}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             e.preventDefault();

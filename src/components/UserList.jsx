@@ -269,9 +269,33 @@ const UserList = () => {
             return op.details.deletedEntity;
         }
         else if (op.operation === 'UPDATE') {
-            return { ...op.details.updatedEntity };
+            if (op.details && op.details.originalEntity) {
+                return op.details.originalEntity;
+            }
         }
         return {};
+    };
+
+    // Function to render table cells with highlighted changes
+    const renderCellWithHighlight = (op, fieldName, currentValue) => {
+        if (op.operation === 'UPDATE' && op.details && op.details.changedFields && op.details.changedFields[fieldName]) {
+            const change = op.details.changedFields[fieldName];
+
+            return (
+                <td className="px-3 py-2 whitespace-nowrap text-sm">
+                    <div className="flex flex-col">
+                        <span className="line-through text-red-500">{change.from || '-'}</span>
+                        <span className="text-green-600 font-medium">{change.to || '-'}</span>
+                    </div>
+                </td>
+            );
+        }
+
+        return (
+            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                {currentValue || '-'}
+            </td>
+        );
     };
 
     // Function to handle model-specific operation tables
@@ -315,21 +339,11 @@ const UserList = () => {
                                                     </span>
                                                 )}
                                             </td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                {entityData.semesterBranchSec || '-'}
-                                            </td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                {entityData.totalStudents || '-'}
-                                            </td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                {entityData.eligibleStudents || '-'}
-                                            </td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                {entityData.passedStudents || '-'}
-                                            </td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
-                                                {entityData.averagePercentage || '-'}
-                                            </td>
+                                            {renderCellWithHighlight(op, 'semesterBranchSec', entityData.semesterBranchSec)}
+                                            {renderCellWithHighlight(op, 'totalStudents', entityData.totalStudents)}
+                                            {renderCellWithHighlight(op, 'eligibleStudents', entityData.eligibleStudents)}
+                                            {renderCellWithHighlight(op, 'passedStudents', entityData.passedStudents)}
+                                            {renderCellWithHighlight(op, 'averagePercentage', entityData.averagePercentage)}
                                         </tr>
                                     );
                                 })}
@@ -376,11 +390,11 @@ const UserList = () => {
                                                     </span>
                                                 )}
                                             </td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.courseName || '-'}</td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.semester || '-'}</td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.numberOfStudents || '-'}</td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.passCount || '-'}</td>
-                                            <td className="px-3 py-2 whitespace-nowrap text-sm">{entityData.passPercentage || '-'}</td>
+                                            {renderCellWithHighlight(op, 'courseName', entityData.courseName)}
+                                            {renderCellWithHighlight(op, 'semester', entityData.semester)}
+                                            {renderCellWithHighlight(op, 'numberOfStudents', entityData.numberOfStudents)}
+                                            {renderCellWithHighlight(op, 'passCount', entityData.passCount)}
+                                            {renderCellWithHighlight(op, 'passPercentage', entityData.passPercentage)}
                                         </tr>
                                     );
                                 })}

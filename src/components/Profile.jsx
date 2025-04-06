@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import "./Profile.css";
@@ -9,7 +9,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = ({ lecturerDetails: initialDetails }) => {
-  const { id } = useParams();
+  const params = useParams();
+  const { id: paramId, userId: paramUserId } = params;
   const [lecturerDetails, setLecturerDetails] = useState(initialDetails || {});
   const [loading, setLoading] = useState(!initialDetails);
   const [error, setError] = useState(null);
@@ -18,17 +19,27 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
+  const modalRef = useRef(null);
+  const activeInputRef = useRef(null);
+
+  const getUserId = () => {
+    if (paramId) {
+      return paramId;
+    } else {
+      return localStorage.getItem("userId");
+    }
+  };
+
   const fetchLecturerDetails = async () => {
     try {
       setLoading(true);
-      let userId = localStorage.getItem("userId");
+      let userId = getUserId();
+
       if (!userId) {
         setError("User ID not found. Please login again.");
         return;
       }
-      if (id) {
-        userId = id;
-      }
+
       const response = await fetch(`https://aditya-b.onrender.com/fetchData?userId=${userId}`, {
         method: "GET",
         headers: {
@@ -50,6 +61,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchLecturerDetails();
   }, []);
@@ -95,7 +107,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
 
   const handleUpdateField = async (field) => {
     try {
-      const userId = localStorage.getItem("userId");
+      const userId = getUserId();
       const response = await fetch(`https://aditya-b.onrender.com/fetchData/update-field/${userId}`, {
         method: "PATCH",
         headers: {
@@ -126,7 +138,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
   const handleUpdateFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userId = localStorage.getItem("userId");
+      const userId = getUserId();
 
       // Send the complete formData object to update all fields at once
       const response = await fetch(`https://aditya-b.onrender.com/fetchData/update-field/${userId}`, {
@@ -179,26 +191,48 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    // Format date strings consistently if needed
-    if (name === 'JoiningDate' && value) {
-      // Ensure the date is in proper format for server
-      const formattedDate = new Date(value).toISOString().split('T')[0];
-      setFormData(prev => ({
-        ...prev,
-        [name]: formattedDate
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+
+    // Capture cursor position
+    const cursorPosition = e.target.selectionStart;
+
+    // Save the current scroll position
+    const scrollPosition = modalRef.current?.scrollTop;
+
+    // Save the active input
+    const activeElement = e.target;
+
+    // Update form data with minimal re-rendering
+    setFormData(prev => {
+      const newData = { ...prev };
+
+      if (name === 'JoiningDate' && value) {
+        newData[name] = new Date(value).toISOString().split('T')[0];
+      } else {
+        newData[name] = value;
+      }
+
+      return newData;
+    });
+
+    // Use a more immediate approach to restore focus
+    requestAnimationFrame(() => {
+      // Restore scroll position
+      if (modalRef.current) {
+        modalRef.current.scrollTop = scrollPosition;
+      }
+
+      // Restore focus and cursor position
+      if (activeElement) {
+        activeElement.focus();
+        activeElement.setSelectionRange(cursorPosition, cursorPosition);
+      }
+    });
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userId = localStorage.getItem("userId");
+      const userId = getUserId();
       const response = await fetch(`https://aditya-b.onrender.com/addUser?userId=${userId}`, {
         method: 'PUT',
         headers: {
@@ -220,206 +254,248 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
   };
 
   const UpdateForm = () => (
-    <div className="update-form-overlay">
-      <form
-        className="update-form"
-        onSubmit={handleUpdateFormSubmit}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-          }
-        }}
-      >
-        <h2>Update Profile</h2>
-        <button
-          type="button"
-          className="close-button"
-          onClick={() => setShowUpdateForm(false)}
-        >
-          ×
-        </button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg w-full max-w-2xl">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h2 className="text-xl font-bold mb-0">Update Profile</h2>
+          <button
+            onClick={() => setShowUpdateForm(false)}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '20px',
+              cursor: 'pointer',
+              color: '#777'
+            }}
+          >
+            <FaTimes />
+          </button>
+        </div>
 
-        <div
-          className="form-content"
-          style={{
-            overflow: 'auto',
-            maxHeight: '80vh',
-            position: 'relative'
+        <form
+          onSubmit={handleUpdateFormSubmit}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+            }
           }}
         >
-          {/* General Information */}
-          <h3>1. General Information</h3>
-          <div className="form-group">
-            <label>Full Name:</label>
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName || ''}
-              onChange={handleFormChange}
-            />
-          </div>
+          <div
+            ref={modalRef}
+            style={{
+              overflow: 'auto',
+              maxHeight: '70vh',
+              padding: '10px'
+            }}
+            className="form-content-scrollable"
+          >
+            {/* General Information */}
+            <h3 className="text-lg font-semibold mb-3 mt-2">1. General Information</h3>
 
-          <div className="form-group">
-            <label>Employee ID:</label>
-            <input
-              type="text"
-              name="EmpID"
-              value={formData.EmpID || ''}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Designation:</label>
-            <input
-              type="text"
-              name="designation"
-              value={formData.designation || ''}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Department:</label>
-            <input
-              type="text"
-              name="department"
-              value={formData.department || ''}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Date of Joining:</label>
-            <input
-              type="date"
-              name="JoiningDate"
-              value={formData.JoiningDate || ''}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          {/* Academic Qualifications */}
-          <h3>2. Academic Qualifications</h3>
-
-          <div className="qualification-section">
-            <h4>Undergraduate</h4>
-            <div className="form-group">
-              <label>UG Institution:</label>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-1">Full Name:</label>
               <input
                 type="text"
-                name="UG"
-                value={formData.UG || ''}
+                name="fullName"
+                value={formData.fullName || ''}
                 onChange={handleFormChange}
+                className="w-full p-2 border rounded"
               />
             </div>
-            <div className="form-group">
-              <label>UG Year:</label>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-1">Employee ID:</label>
               <input
                 type="text"
-                name="UGYear"
-                value={formData.UGYear || ''}
+                name="EmpID"
+                value={formData.EmpID || ''}
                 onChange={handleFormChange}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-1">Designation:</label>
+              <input
+                type="text"
+                name="designation"
+                value={formData.designation || ''}
+                onChange={handleFormChange}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-1">Department:</label>
+              <input
+                type="text"
+                name="department"
+                value={formData.department || ''}
+                onChange={handleFormChange}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-1">Date of Joining:</label>
+              <input
+                type="date"
+                name="JoiningDate"
+                value={formData.JoiningDate || ''}
+                onChange={handleFormChange}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            {/* Academic Qualifications */}
+            <h3 className="text-lg font-semibold mb-3 mt-5">2. Academic Qualifications</h3>
+
+            <div className="mb-4">
+              <h4 className="font-medium mb-2">Undergraduate</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 mb-1">UG Institution:</label>
+                  <input
+                    type="text"
+                    name="UG"
+                    value={formData.UG || ''}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1">UG Year:</label>
+                  <input
+                    type="text"
+                    name="UGYear"
+                    value={formData.UGYear || ''}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <h4 className="font-medium mb-2">Postgraduate</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 mb-1">PG Institution:</label>
+                  <input
+                    type="text"
+                    name="PG"
+                    value={formData.PG || ''}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1">PG Year:</label>
+                  <input
+                    type="text"
+                    name="PGYear"
+                    value={formData.PGYear || ''}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <h4 className="font-medium mb-2">PhD</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 mb-1">PhD Details:</label>
+                  <input
+                    type="text"
+                    name="Phd"
+                    value={formData.Phd || ''}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1">PhD Year:</label>
+                  <input
+                    type="text"
+                    name="PhdYear"
+                    value={formData.PhdYear || ''}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <h4 className="font-medium mb-2">Other Qualifications</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 mb-1">Other Institution:</label>
+                  <input
+                    type="text"
+                    name="OtherInst"
+                    value={formData.OtherInst || ''}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1">Other Year:</label>
+                  <input
+                    type="text"
+                    name="OtherYear"
+                    value={formData.OtherYear || ''}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Experience */}
+            <h3 className="text-lg font-semibold mb-3 mt-5">3. Experience</h3>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-1">Industrial Experience:</label>
+              <input
+                type="text"
+                name="Industry"
+                value={formData.Industry || ''}
+                onChange={handleFormChange}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-1">Total Teaching Experience (years):</label>
+              <input
+                type="number"
+                name="TExp"
+                value={formData.TExp || ''}
+                onChange={handleFormChange}
+                className="w-full p-2 border rounded"
               />
             </div>
           </div>
 
-          <div className="qualification-section">
-            <h4>Postgraduate</h4>
-            <div className="form-group">
-              <label>PG Institution:</label>
-              <input
-                type="text"
-                name="PG"
-                value={formData.PG || ''}
-                onChange={handleFormChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>PG Year:</label>
-              <input
-                type="text"
-                name="PGYear"
-                value={formData.PGYear || ''}
-                onChange={handleFormChange}
-              />
-            </div>
-          </div>
-
-          <div className="qualification-section">
-            <h4>PhD</h4>
-            <div className="form-group">
-              <label>PhD Details:</label>
-              <input
-                type="text"
-                name="Phd"
-                value={formData.Phd || ''}
-                onChange={handleFormChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>PhD Year:</label>
-              <input
-                type="text"
-                name="PhdYear"
-                value={formData.PhdYear || ''}
-                onChange={handleFormChange}
-              />
-            </div>
-          </div>
-
-          <div className="qualification-section">
-            <h4>Other Qualifications</h4>
-            <div className="form-group">
-              <label>Other Institution:</label>
-              <input
-                type="text"
-                name="OtherInst"
-                value={formData.OtherInst || ''}
-                onChange={handleFormChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>Other Year:</label>
-              <input
-                type="text"
-                name="OtherYear"
-                value={formData.OtherYear || ''}
-                onChange={handleFormChange}
-              />
-            </div>
-          </div>
-
-          {/* Experience */}
-          <h3>3. Experience</h3>
-          <div className="form-group">
-            <label>Industrial Experience:</label>
-            <input
-              type="text"
-              name="Industry"
-              value={formData.Industry || ''}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Total Teaching Experience (years):</label>
-            <input
-              type="number"
-              name="TExp"
-              value={formData.TExp || ''}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="form-actions">
-            <button type="submit" className="save-button">Save Changes</button>
-            <button type="button" className="cancel-button" onClick={() => setShowUpdateForm(false)}>
+          <div className="flex justify-end gap-4 mt-6">
+            <button
+              type="button"
+              onClick={() => setShowUpdateForm(false)}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+            >
               Cancel
             </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Save Changes
+            </button>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 

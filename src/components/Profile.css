@@ -190,3 +190,25 @@ tr:nth-child(even) {
   cursor: pointer;
   color: #666;
 }
+
+/* Add this to Profile.css */
+input,
+textarea,
+select {
+  box-sizing: border-box !important;
+  transition: none !important;
+}
+
+/* Prevent any movement or animations that might disrupt focus */
+.form-content-scrollable * {
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Better handling of focus states */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #4299e1;
+  outline-offset: -1px;
+}

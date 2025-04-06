@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TotalMarksDisplay from './TotalMarksDisplay';
-
+import { backendUrl } from '../../routes';
 const Others = ({ data: propsData }) => {
+  const params = useParams();
+  const { id: paramId, userId: paramUserId } = params;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!propsData);
   const [outreachMarks, setOutreachMarks] = useState(0);
@@ -40,6 +42,18 @@ const Others = ({ data: propsData }) => {
   const [level, setLevel] = useState('');
   const [description, setDescription] = useState('');
 
+  // Add these state variables near your other state declarations (around line 30)
+  const [showActivityAdd, setShowActivityAdd] = useState(false);
+  const [showResponsibilityAdd, setShowResponsibilityAdd] = useState(false);
+  const [showContributionAdd, setShowContributionAdd] = useState(false);
+  const [showAwardAdd, setShowAwardAdd] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteType, setDeleteType] = useState('');
+  const [deleteIndex, setDeleteIndex] = useState(null);
+
+  // Add this state variable with your other state declarations
+  const [totalScore, setTotalScore] = useState(70);
+
   // IMPORTANT: Get userId from localStorage as the document ID
   const getUserId = () => {
     return localStorage.getItem('userId');
@@ -50,7 +64,7 @@ const Others = ({ data: propsData }) => {
     try {
       setLoading(true);
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/others-data?userId=${userId}`, {
+      const response = await fetch(`${backendUrl}/others-data/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -119,6 +133,34 @@ const Others = ({ data: propsData }) => {
     setAdditionalMarks(additionalMarks);
   }, []);
 
+  // Add this useEffect to update the total whenever data changes
+  useEffect(() => {
+    // Calculate total score
+    const activityScore = activities.length > 0 ? 10 : 0;
+    const contributionScore = contribution.length > 0 ? 10 : 0;
+    const responsibilityScore = responsibilities.length > 0 ? 20 : 0;
+    const awardScore = awards.length > 0 ? 5 : 0;
+
+    const totalScore = activityScore + contributionScore + responsibilityScore + awardScore;
+
+    // Update localStorage
+    localStorage.setItem('totalmarks', totalScore);
+
+    // You could also update a state variable if needed
+    // setTotalScore(totalScore);
+  }, [activities, contribution, responsibilities, awards]);
+
+  // Add this useEffect to fetch the total score from API or calculate it
+  useEffect(() => {
+    // Option 1: Get from localStorage if stored by FacultyScoreTable
+    const storedTotal = localStorage.getItem('totalFacultyScore');
+    if (storedTotal) {
+      setTotalScore(Number(storedTotal));
+    }
+    // Option 2: Calculate based on your data
+    // You would add calculation logic here
+  }, []);
+
   // ======== ACTIVITIES HANDLERS ========
   const handleActivityUpdateClick = (activity, index) => {
     setActivityDetails(activity.activityDetails || '');
@@ -130,7 +172,12 @@ const Others = ({ data: propsData }) => {
   const handleActivityUpdate = async (e) => {
     e.preventDefault();
     try {
-      const userId = getUserId();
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
       console.log("User ID for activity update:", userId);
       console.log("Current activity index:", currentIndex);
 
@@ -142,7 +189,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // Added userId as query parameter for operation logging
-      const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${currentIndex}?userId=${userId}`, {
+      const response = await fetch(`${backendUrl}/activities/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -177,51 +224,10 @@ const Others = ({ data: propsData }) => {
     }
   };
 
-  const handleActivityDelete = async (index) => {
-    if (!window.confirm('Are you sure you want to delete this activity?')) {
-      return;
-    }
-
-    try {
-      const userId = getUserId();
-      console.log("User ID for activity delete:", userId);
-      console.log("Deleting activity at index:", index);
-
-      if (!userId) {
-        toast.error('User ID not found. Please log in again.');
-        return;
-      }
-
-      const token = localStorage.getItem('token');
-
-      // Added userId as query parameter for operation logging
-      const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${index}?userId=${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      });
-
-      const data = await response.json();
-      console.log("Activity delete response:", data);
-
-      if (response.ok && data.success) {
-        toast.success('Activity deleted successfully');
-
-        // Update local state
-        setActivities(prevActivities =>
-          prevActivities.filter((_, i) => i !== index)
-        );
-        fetchAll();
-      } else {
-        toast.error(data.message || 'Failed to delete activity');
-        console.error('Delete failed:', data);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Error deleting activity');
-    }
+  const handleActivityDelete = (index) => {
+    setDeleteType('activity');
+    setDeleteIndex(index);
+    setShowDeleteConfirm(true);
   };
 
   // ======== RESPONSIBILITIES HANDLERS ========
@@ -236,7 +242,12 @@ const Others = ({ data: propsData }) => {
   const handleResponsibilityUpdate = async (e) => {
     e.preventDefault();
     try {
-      const userId = getUserId();
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
       console.log("User ID for responsibility update:", userId);
       console.log("Current responsibility index:", currentIndex);
 
@@ -248,7 +259,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // Added userId as query parameter for operation logging
-      const response = await fetch(`https://aditya-b.onrender.com/responsibilities/${userId}/${currentIndex}?userId=${userId}`, {
+      const response = await fetch(`${backendUrl}/responsibilities/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -288,51 +299,10 @@ const Others = ({ data: propsData }) => {
     }
   };
 
-  const handleResponsibilityDelete = async (index) => {
-    if (!window.confirm('Are you sure you want to delete this responsibility?')) {
-      return;
-    }
-
-    try {
-      const userId = getUserId();
-      console.log("User ID for responsibility delete:", userId);
-      console.log("Deleting responsibility at index:", index);
-
-      if (!userId) {
-        toast.error('User ID not found. Please log in again.');
-        return;
-      }
-
-      const token = localStorage.getItem('token');
-
-      // Added userId as query parameter for operation logging
-      const response = await fetch(`https://aditya-b.onrender.com/responsibilities/${userId}/${index}?userId=${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      });
-
-      const data = await response.json();
-      console.log("Responsibility delete response:", data);
-
-      if (response.ok && data.success) {
-        toast.success('Responsibility deleted successfully');
-
-        // Update local state
-        setResponsibilities(prevItems =>
-          prevItems.filter((_, i) => i !== index)
-        );
-        fetchAll();
-      } else {
-        toast.error(data.message || 'Failed to delete responsibility');
-        console.error('Delete failed:', data);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Error deleting responsibility');
-    }
+  const handleResponsibilityDelete = (index) => {
+    setDeleteType('responsibility');
+    setDeleteIndex(index);
+    setShowDeleteConfirm(true);
   };
 
   // ======== CONTRIBUTION HANDLERS ========
@@ -347,7 +317,12 @@ const Others = ({ data: propsData }) => {
   const handleContributionUpdate = async (e) => {
     e.preventDefault();
     try {
-      const userId = getUserId();
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
       console.log("User ID for contribution update:", userId);
       console.log("Current contribution index:", currentIndex);
 
@@ -359,7 +334,7 @@ const Others = ({ data: propsData }) => {
       const token = localStorage.getItem('token');
 
       // Added userId as query parameter for operation logging
-      const response = await fetch(`https://aditya-b.onrender.com/contribution/${userId}/${currentIndex}?userId=${userId}`, {
+      const response = await fetch(`${backendUrl}/contribution/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -399,51 +374,10 @@ const Others = ({ data: propsData }) => {
     }
   };
 
-  const handleContributionDelete = async (index) => {
-    if (!window.confirm('Are you sure you want to delete this contribution?')) {
-      return;
-    }
-
-    try {
-      const userId = getUserId();
-      console.log("User ID for contribution delete:", userId);
-      console.log("Deleting contribution at index:", index);
-
-      if (!userId) {
-        toast.error('User ID not found. Please log in again.');
-        return;
-      }
-
-      const token = localStorage.getItem('token');
-
-      // Added userId as query parameter for operation logging
-      const response = await fetch(`https://aditya-b.onrender.com/contribution/${userId}/${index}?userId=${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      });
-
-      const data = await response.json();
-      console.log("Contribution delete response:", data);
-
-      if (response.ok && data.success) {
-        toast.success('Contribution deleted successfully');
-
-        // Update local state
-        setContribution(prevItems =>
-          prevItems.filter((_, i) => i !== index)
-        );
-        fetchAll();
-      } else {
-        toast.error(data.message || 'Failed to delete contribution');
-        console.error('Delete failed:', data);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Error deleting contribution');
-    }
+  const handleContributionDelete = (index) => {
+    setDeleteType('contribution');
+    setDeleteIndex(index);
+    setShowDeleteConfirm(true);
   };
 
   // ======== AWARDS HANDLERS ========
@@ -460,14 +394,16 @@ const Others = ({ data: propsData }) => {
   const handleAwardUpdate = async (e) => {
     e.preventDefault();
     try {
-      const userId = getUserId();
-      const token = localStorage.getItem('token');
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
 
-      // Added userId as query parameter for operation logging
-      const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${currentIndex}?userId=${userId}`, {
+      const response = await fetch(`${backendUrl}/awards/${userId}/${currentIndex}`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -506,51 +442,10 @@ const Others = ({ data: propsData }) => {
     }
   };
 
-  const handleAwardDelete = async (index) => {
-    if (!window.confirm('Are you sure you want to delete this award?')) {
-      return;
-    }
-
-    try {
-      const userId = getUserId();
-      console.log("User ID for award delete:", userId);
-      console.log("Deleting award at index:", index);
-
-      if (!userId) {
-        toast.error('User ID not found. Please log in again.');
-        return;
-      }
-
-      const token = localStorage.getItem('token');
-
-      // Added userId as query parameter for operation logging
-      const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${index}?userId=${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      });
-
-      const data = await response.json();
-      console.log("Award delete response:", data);
-
-      if (response.ok && data.success) {
-        toast.success('Award deleted successfully');
-
-        // Update local state
-        setAwards(prevItems =>
-          prevItems.filter((_, i) => i !== index)
-        );
-        fetchAll();
-      } else {
-        toast.error(data.message || 'Failed to delete award');
-        console.error('Delete failed:', data);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Error deleting award');
-    }
+  const handleAwardDelete = (index) => {
+    setDeleteType('award');
+    setDeleteIndex(index);
+    setShowDeleteConfirm(true);
   };
 
   const handleUpload = async () => {
@@ -562,14 +457,19 @@ const Others = ({ data: propsData }) => {
     // This function is no longer needed as marks are calculated automatically
     // You can remove it or keep it for API synchronization
     try {
-      const userId = getUserId();
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
       const calculatedValue = type === 'additional' ?
         (responsibilities.length > 0 ? 20 : 0) :
         (type === 'outreach' ?
           (activities.length > 0 ? 10 : 0) :
           (contribution.length > 0 ? 10 : 0));
 
-      const response = await fetch(`https://aditya-b.onrender.com/update-marks/${userId}`, {
+      const response = await fetch(`${backendUrl}/update-marks/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -601,6 +501,254 @@ const Others = ({ data: propsData }) => {
     }
   };
 
+  // Function to execute deletion when confirmed
+  const confirmDelete = async () => {
+    try {
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
+
+      if (!userId) {
+        toast.error('User ID not found. Please log in again.');
+        setShowDeleteConfirm(false);
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      let url, updateState;
+
+      switch (deleteType) {
+        case 'activity':
+          url = `${backendUrl}/activities/${userId}/${deleteIndex}`;
+          updateState = () => setActivities(prev => prev.filter((_, i) => i !== deleteIndex));
+          break;
+        case 'responsibility':
+          url = `${backendUrl}/responsibilities/${userId}/${deleteIndex}`;
+          updateState = () => setResponsibilities(prev => prev.filter((_, i) => i !== deleteIndex));
+          break;
+        case 'contribution':
+          url = `${backendUrl}/contribution/${userId}/${deleteIndex}`;
+          updateState = () => setContribution(prev => prev.filter((_, i) => i !== deleteIndex));
+          break;
+        case 'award':
+          url = `${backendUrl}/awards/${userId}/${deleteIndex}`;
+          updateState = () => setAwards(prev => prev.filter((_, i) => i !== deleteIndex));
+          break;
+        default:
+          toast.error('Unknown item type');
+          setShowDeleteConfirm(false);
+          return;
+      }
+
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success(`${deleteType.charAt(0).toUpperCase() + deleteType.slice(1)} deleted successfully`);
+        updateState();
+        fetchAll();
+      } else {
+        toast.error(data.message || `Failed to delete ${deleteType}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error(`Error deleting ${deleteType}`);
+    } finally {
+      setShowDeleteConfirm(false);
+    }
+  };
+
+  // Add handlers for adding items
+  const handleActivityAdd = async (e) => {
+    e.preventDefault();
+    try {
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
+
+      if (!userId) {
+        toast.error('User ID not found. Please log in again.');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${backendUrl}/add-activity/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ activityDetails })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success('Activity added successfully');
+        setActivityDetails('');
+        setShowActivityAdd(false);
+        fetchAll();
+      } else {
+        toast.error(data.message || 'Failed to add activity');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error adding activity');
+    }
+  };
+
+  const handleResponsibilityAdd = async (e) => {
+    e.preventDefault();
+    try {
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
+
+      if (!userId) {
+        toast.error('User ID not found. Please log in again.');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${backendUrl}/add-responsibility/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          Responsibility: responsibilityDetails,
+          AssignedBy: responsibilityAssignedBy
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success('Responsibility added successfully');
+        setResponsibilityDetails('');
+        setResponsibilityAssignedBy('');
+        setShowResponsibilityAdd(false);
+        fetchAll();
+      } else {
+        toast.error(data.message || 'Failed to add responsibility');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error adding responsibility');
+    }
+  };
+
+  const handleContributionAdd = async (e) => {
+    e.preventDefault();
+    try {
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
+
+      if (!userId) {
+        toast.error('User ID not found. Please log in again.');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${backendUrl}/add-contribution/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contributionDetails,
+          Benefit: contributionBenefit
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success('Contribution added successfully');
+        setContributionDetails('');
+        setContributionBenefit('');
+        setShowContributionAdd(false);
+        fetchAll();
+      } else {
+        toast.error(data.message || 'Failed to add contribution');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error adding contribution');
+    }
+  };
+
+  const handleAwardAdd = async (e) => {
+    e.preventDefault();
+    try {
+      let userId;
+      if (paramId) {
+        userId = paramId;
+      } else {
+        userId = getUserId();
+      }
+
+      if (!userId) {
+        toast.error('User ID not found. Please log in again.');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${backendUrl}/add-award/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          Award: AwardName,
+          AwardedBy: AwardedBy,
+          Level: level,
+          Description: description
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success('Award added successfully');
+        setAwardName('');
+        setAwardedBy('');
+        setLevel('');
+        setDescription('');
+        setShowAwardAdd(false);
+        fetchAll();
+      } else {
+        toast.error(data.message || 'Failed to add award');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error adding award');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -622,7 +770,7 @@ const Others = ({ data: propsData }) => {
           />
           <button
             className="no-print"
-            onClick={() => navigate('/addactivity')}
+            onClick={() => setShowActivityAdd(true)}
             style={{
               backgroundColor: '#1a4b88',
               color: 'white',
@@ -750,7 +898,7 @@ const Others = ({ data: propsData }) => {
           />
           <button
             className="no-print"
-            onClick={() => navigate('/addresponsibility')}
+            onClick={() => setShowResponsibilityAdd(true)}
             style={{
               backgroundColor: '#1a4b88',
               color: 'white',
@@ -880,7 +1028,7 @@ const Others = ({ data: propsData }) => {
           />
           <button
             className="no-print"
-            onClick={() => navigate('/addcontribution')}
+            onClick={() => setShowContributionAdd(true)}
             style={{
               backgroundColor: '#1a4b88',
               color: 'white',
@@ -1019,7 +1167,7 @@ const Others = ({ data: propsData }) => {
             />
             <button
               className="no-print"
-              onClick={() => navigate('/addaward')}
+              onClick={() => setShowAwardAdd(true)}
               style={{
                 backgroundColor: '#1a4b88',
                 color: 'white',
@@ -1068,7 +1216,7 @@ const Others = ({ data: propsData }) => {
                       <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
                         <button
                           className="no-print"
-                          onClick={(e) => { e.stopPropagation(); handleResponsibilityUpdateClick(res, index); }}
+                          onClick={(e) => { e.stopPropagation(); handleAwardUpdateClick(award, index); }}
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -1092,7 +1240,7 @@ const Others = ({ data: propsData }) => {
                         </button>
                         <button
                           className="no-print"
-                          onClick={(e) => { e.stopPropagation(); handleResponsibilityDelete(index); }}
+                          onClick={(e) => { e.stopPropagation(); handleAwardDelete(index); }}
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -1364,7 +1512,7 @@ const Others = ({ data: propsData }) => {
                   required
                 />
               </div>
-              <div className="flex justify-end gap-2">
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
                 <button
                   type="button"
                   className="px-4 py-2 bg-gray-300 rounded"
@@ -1380,6 +1528,429 @@ const Others = ({ data: propsData }) => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Activity Add Modal */}
+      {showActivityAdd && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 className="text-xl font-bold mb-0">Add Activity</h2>
+              <button
+                onClick={() => setShowActivityAdd(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#777'
+                }}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <form onSubmit={handleActivityAdd}>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Activity Details</label>
+                <textarea
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
+                  value={activityDetails}
+                  onChange={(e) => setActivityDetails(e.target.value)}
+                  required
+                  rows="4"
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowActivityAdd(false)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#f5f5f5',
+                    color: '#333',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#1a4b88',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Responsibility Add Modal */}
+      {showResponsibilityAdd && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 className="text-xl font-bold mb-0">Add Responsibility</h2>
+              <button
+                onClick={() => setShowResponsibilityAdd(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#777'
+                }}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <form onSubmit={handleResponsibilityAdd}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Responsibility</label>
+                  <textarea
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      boxSizing: 'border-box'
+                    }}
+                    value={responsibilityDetails}
+                    onChange={(e) => setResponsibilityDetails(e.target.value)}
+                    required
+                    rows="4"
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Assigned By</label>
+                  <input
+                    type="text"
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      boxSizing: 'border-box'
+                    }}
+                    value={responsibilityAssignedBy}
+                    onChange={(e) => setResponsibilityAssignedBy(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowResponsibilityAdd(false)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#f5f5f5',
+                    color: '#333',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#1a4b88',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Contribution Add Modal */}
+      {showContributionAdd && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 className="text-xl font-bold mb-0">Add Contribution</h2>
+              <button
+                onClick={() => setShowContributionAdd(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#777'
+                }}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <form onSubmit={handleContributionAdd}>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Contribution Details</label>
+                <textarea
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
+                  value={contributionDetails}
+                  onChange={(e) => setContributionDetails(e.target.value)}
+                  required
+                  rows="4"
+                />
+              </div>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Benefit to College/Department</label>
+                <input
+                  type="text"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
+                  value={contributionBenefit}
+                  onChange={(e) => setContributionBenefit(e.target.value)}
+                  required
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowContributionAdd(false)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#f5f5f5',
+                    color: '#333',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#1a4b88',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Award Add Modal */}
+      {showAwardAdd && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 className="text-xl font-bold mb-0">Add Award</h2>
+              <button
+                onClick={() => setShowAwardAdd(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#777'
+                }}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <form onSubmit={handleAwardAdd}>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Award Name</label>
+                <input
+                  type="text"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
+                  value={AwardName}
+                  onChange={(e) => setAwardName(e.target.value)}
+                  required
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Awarded By</label>
+                <input
+                  type="text"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
+                  value={AwardedBy}
+                  onChange={(e) => setAwardedBy(e.target.value)}
+                  required
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Level</label>
+                <input
+                  type="text"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
+                  value={level}
+                  onChange={(e) => setLevel(e.target.value)}
+                  required
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: '500' }}>Description</label>
+                <input
+                  type="text"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box'
+                  }}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '15px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowAwardAdd(false)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#f5f5f5',
+                    color: '#333',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#1a4b88',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '45%'
+                  }}
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <h2 className="text-xl font-bold mb-4">Confirm Deletion</h2>
+              <p>Are you sure you want to delete this {deleteType}?</p>
+              <p className="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#f5f5f5',
+                  color: '#333',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: '500',
+                  width: '45%'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#e74c3c',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: '500',
+                  width: '45%'
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1406,7 +1977,7 @@ const Others = ({ data: propsData }) => {
                 Total Self-Assessment Marks ( Max 200 )
               </td>
               <td className="p-2 border text-center font-bold">
-                <TotalMarksDisplay userId={getUserId()} />
+                {totalScore}
               </td>
             </tr>
           </tbody>

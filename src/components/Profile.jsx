@@ -7,7 +7,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { backendUrl } from '../../routes';
 const Profile = ({ lecturerDetails: initialDetails }) => {
   const params = useParams();
   const { id: paramId, userId: paramUserId } = params;
@@ -40,7 +40,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
         return;
       }
 
-      const response = await fetch(`https://aditya-b.onrender.com/fetchData?userId=${userId}`, {
+      const response = await fetch(`${backendUrl}/fetchData?userId=${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
   const handleUpdateField = async (field) => {
     try {
       const userId = getUserId();
-      const response = await fetch(`https://aditya-b.onrender.com/fetchData/update-field/${userId}`, {
+      const response = await fetch(`${backendUrl}/fetchData/update-field/${userId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -141,7 +141,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
       const userId = getUserId();
 
       // Send the complete formData object to update all fields at once
-      const response = await fetch(`https://aditya-b.onrender.com/fetchData/update-field/${userId}`, {
+      const response = await fetch(`${backendUrl}/fetchData/update-field/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -233,7 +233,7 @@ const Profile = ({ lecturerDetails: initialDetails }) => {
     e.preventDefault();
     try {
       const userId = getUserId();
-      const response = await fetch(`https://aditya-b.onrender.com/addUser?userId=${userId}`, {
+      const response = await fetch(`${backendUrl}/addUser?userId=${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

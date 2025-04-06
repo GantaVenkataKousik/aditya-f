@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { toast, ToastContainer } from 'react-toastify';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-
+import { backendUrl } from '../../routes';
 const FacultyScoreTable = ({ appraisalData }) => {
   const [data, setData] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
@@ -12,11 +12,14 @@ const FacultyScoreTable = ({ appraisalData }) => {
   const [dataSource, setDataSource] = useState('loading');
   const [showNavbar, setShowNavbar] = useState(true);
   const [canModify, setCanModify] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [totalScore, setTotalScore] = useState(0);
+
   const fetchData = async () => {
     try {
       setDataSource('loading');
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`https://aditya-b.onrender.com/research/getdata?userId=${userId}`, {
+      const response = await fetch(`${backendUrl}/research/getdata?userId=${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -29,9 +32,9 @@ const FacultyScoreTable = ({ appraisalData }) => {
 
         // Convert object responseData into an array format
         const formattedData = [
-          { s_no: 1, parameter: "Courses Average Pass %", max_score: 20, min_score_doctorate: 10, min_score_non_doctorate: 10, obtained_score: responseData.CouAvgPerMarks ?? '-' },
-          { s_no: 2, parameter: "Course Feedback", max_score: 20, min_score_doctorate: 10, min_score_non_doctorate: 10, obtained_score: responseData.CoufeedMarks ?? '-' },
-          { s_no: 3, parameter: "Proctoring Students Average Pass %", max_score: 20, min_score_doctorate: 10, min_score_non_doctorate: 10, obtained_score: responseData.ProctoringMarks ?? '-' },
+          { s_no: 1, parameter: "Courses Average Pass %", max_score: 20, min_score_doctorate: 10, min_score_non_doctorate: 10, obtained_score: responseData.AvgSelfAsses ?? '-' },
+          { s_no: 2, parameter: "Course Feedback", max_score: 20, min_score_doctorate: 10, min_score_non_doctorate: 10, obtained_score: responseData.feedSelfAsses ?? '-' },
+          { s_no: 3, parameter: "Proctoring Students Average Pass %", max_score: 20, min_score_doctorate: 10, min_score_non_doctorate: 10, obtained_score: responseData.ProctorSelfAsses ?? '-' },
           { s_no: "4a", parameter: "Research - SCI papers", max_score: 60, min_score_doctorate: 40, min_score_non_doctorate: 30, obtained_score: responseData.SciMarks ?? '-' },
           { s_no: "4b", parameter: "Research - Scopus/WoS Papers", max_score: 60, min_score_doctorate: 40, min_score_non_doctorate: 30, obtained_score: responseData.WosMarks ?? '-' },
           { s_no: "4c", parameter: "Research – Proposals Submitted/funded", max_score: 10, min_score_doctorate: 10, min_score_non_doctorate: 0, obtained_score: responseData.ProposalMarks ?? '-' },
@@ -44,11 +47,54 @@ const FacultyScoreTable = ({ appraisalData }) => {
 
         setData(formattedData);
         setDataSource('fetched');
+        setUserData(responseData);
       } else {
         console.error('Error:', response.statusText);
       }
     } catch (error) {
       console.error('Fetch error:', error);
+    }
+  };
+
+  const fetchTotalScore = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`${backendUrl}/research/getdata?userId=${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const scoreData = await response.json();
+        console.log("Score data from API:", scoreData);
+
+        // Calculate total exactly like FacultyScoreTable does
+        const allScores = [
+          Number(scoreData.AvgSelfAsses || 0),
+          Number(scoreData.feedSelfAsses || 0),
+          Number(scoreData.ProctorSelfAsses || 0),
+          Number(scoreData.SciMarks || 0),
+          Number(scoreData.WosMarks || 0),
+          Number(scoreData.ProposalMarks || 0),
+          Number(scoreData.ResearchSelfAssesMarks || 0),
+          Number(scoreData.WorkSelfAssesMarks || 0),
+          Number(scoreData.OutreachSelfAssesMarks || 0),
+          Number(scoreData.AddSelfAssesMarks || 0),
+          Number(scoreData.SpecialSelfAssesMarks || 0)
+        ];
+
+        // Sum all scores
+        const calculatedTotal = allScores.reduce((sum, score) => sum + score, 0);
+        console.log("Individual scores:", allScores);
+        console.log("Calculated total:", calculatedTotal);
+
+        // Update state with the calculated total
+        setTotalScore(calculatedTotal);
+      }
+    } catch (error) {
+      console.error("Error fetching total score:", error);
     }
   };
 
@@ -66,6 +112,9 @@ const FacultyScoreTable = ({ appraisalData }) => {
     } else {
       fetchData();
     }
+
+    // Fetch the total score using the same method as FacultyScoreTable
+    fetchTotalScore();
   }, [appraisalData]);
 
   // Open edit modal with the selected row data
@@ -221,6 +270,46 @@ const FacultyScoreTable = ({ appraisalData }) => {
     } catch (error) {
       console.error('Error:', error);
       toast.error('Network error while resetting score');
+    }
+  };
+
+  // When retrieving the data for the table, map the user model fields correctly
+  const getObtainedScore = (param) => {
+    switch (param) {
+      case 'Courses Average Pass %':
+        return userData.AvgSelfAsses || 0; // Use the correct field
+      case 'Course Feedback':
+        return userData.feedSelfAsses || 0; // Use the correct field
+      case 'Proctoring Students Average Pass %':
+        return userData.ProctorSelfAsses || 0; // Use the correct field
+      // Add other cases as needed
+      default:
+        return 0;
+    }
+  };
+
+  const updateUserScore = async (scoreValue) => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`https://aditya-b.onrender.com/update-user-score`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          field: 'AvgSelfAsses', // Use the correct field name for this component
+          value: scoreValue
+        })
+      });
+
+      if (response.ok) {
+        console.log('User score updated successfully');
+      } else {
+        console.error('Failed to update user score');
+      }
+    } catch (error) {
+      console.error('Error updating user score:', error);
     }
   };
 

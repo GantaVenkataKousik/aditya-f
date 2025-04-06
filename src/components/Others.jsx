@@ -140,25 +140,29 @@ const Others = ({ data: propsData }) => {
   // Add this useEffect to update the total whenever data changes
   useEffect(() => {
     // Calculate scores based on the presence of items
-    const activityScore = activities.length > 0 ? 10 : 0;
-    const contributionScore = contribution.length > 0 ? 10 : 0;
-    const responsibilityScore = responsibilities.length > 0 ? 20 : 0;
-    const awardScore = awards.length > 0 ? 5 : 0;
+    const outreachMarks = activities.length > 0 ? 10 : 0;
+    const specialMarks = contribution.length > 0 ? 10 : 0;
+    const additionalMarks = responsibilities.length > 0 ? 20 : 0;
+    const awardMarks = awards.length > 0 ? 5 : 0;
 
-    // Additional scores from other components - this matches FacultyScoreTable total
-    const researchScore = 30;  // SCI + WoS papers (10+10)
-    const proposalScore = 10;  // Proposals
-    const workshopScore = 10;  // Workshops attended
+    // Get research-related scores from localStorage or use defaults
+    const sciMarks = Number(localStorage.getItem('SciMarks')) || 10;
+    const wosMarks = Number(localStorage.getItem('WosMarks')) || 10;
+    const proposalMarks = Number(localStorage.getItem('ProposalMarks')) || 10;
+    const researchMarks = Number(localStorage.getItem('ResearchSelfAssesMarks')) || 10;
+    const workshopMarks = Number(localStorage.getItem('WorkSelfAssesMarks')) || 8;
 
-    // Add up to 70 total as seen in FacultyScoreTable
-    const calculatedTotal = activityScore + contributionScore +
-      responsibilityScore + awardScore +
-      researchScore + proposalScore + workshopScore;
+    // Calculate the total - matching FacultyScoreTable logic
+    const calculatedTotal = outreachMarks + specialMarks + additionalMarks + awardMarks +
+      sciMarks + wosMarks + proposalMarks + researchMarks + workshopMarks;
 
     // Set the total score state
-    setTotalScore(70); // Force to 70 to match FacultyScoreTable
+    setTotalScore(calculatedTotal);
 
-    // Update localStorage if needed
+    // Update localStorage
+    localStorage.setItem('outreachmarks', outreachMarks);
+    localStorage.setItem('specialmarks', specialMarks);
+    localStorage.setItem('additionalmarks', additionalMarks);
     localStorage.setItem('totalmarks', calculatedTotal);
   }, [activities, contribution, responsibilities, awards]);
 
@@ -776,6 +780,46 @@ const Others = ({ data: propsData }) => {
       toast.error('Error adding award');
     }
   };
+
+  // Add a function to fetch scores from the research API
+  const fetchScores = async () => {
+    try {
+      const userId = getUserId();
+      const response = await fetch(`${backendUrl}/research/getdata?userId=${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const scoreData = await response.json();
+
+        // Calculate total using the exact same data as FacultyScoreTable
+        const totalScore =
+          (scoreData.AvgSelfAsses || 0) +
+          (scoreData.feedSelfAsses || 0) +
+          (scoreData.ProctorSelfAsses || 0) +
+          (scoreData.SciMarks || 0) +
+          (scoreData.WosMarks || 0) +
+          (scoreData.ProposalMarks || 0) +
+          (scoreData.ResearchSelfAssesMarks || 0) +
+          (scoreData.WorkSelfAssesMarks || 0) +
+          (scoreData.OutreachSelfAssesMarks || 0) +
+          (scoreData.AddSelfAssesMarks || 0) +
+          (scoreData.SpecialSelfAssesMarks || 0);
+
+        setTotalScore(totalScore);
+      }
+    } catch (error) {
+      console.error("Error fetching scores:", error);
+    }
+  };
+
+  // Call this in useEffect after other data is loaded
+  useEffect(() => {
+    fetchScores();
+  }, [activities, contribution, responsibilities, awards]);
 
   if (loading) return <p>Loading...</p>;
 

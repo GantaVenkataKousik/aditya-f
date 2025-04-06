@@ -3,7 +3,7 @@ import './DisplayCourses.css'; // Import the CSS file
 import { FaEdit, FaTrash, FaPlus, FaTimes, FaHistory } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { backendUrl } from '../../routes';
 const DisplayFeedback = ({ feedbackData }) => {
     const [data, setData] = useState(feedbackData || []);
     const [showEditForm, setShowEditForm] = useState(false);
@@ -12,9 +12,10 @@ const DisplayFeedback = ({ feedbackData }) => {
     const [formData, setFormData] = useState({
         courseName: '',
         semester: '',
-        numberOfStudents: 0,
-        feedbackPercentage: 0,
-        averagePercentage: 0
+        numberOfStudents: '',
+        feedbackPercentage: '',
+        averagePercentage: '',
+        passCount: ''
     });
     const [showOperations, setShowOperations] = useState(false);
     const [overallAverage, setOverallAverage] = useState(0);
@@ -45,7 +46,7 @@ const DisplayFeedback = ({ feedbackData }) => {
     const fetchData = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/fdata/${userId}`, {
+            const response = await fetch(`${backendUrl}/classes/feedback/fdata/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,9 +97,10 @@ const DisplayFeedback = ({ feedbackData }) => {
         setFormData({
             courseName: '',
             semester: '',
-            numberOfStudents: 0,
-            feedbackPercentage: 0,
-            averagePercentage: 0
+            numberOfStudents: '',
+            feedbackPercentage: '',
+            averagePercentage: '',
+            passCount: ''
         });
         setShowAddForm(true);
         setShowEditForm(false);
@@ -119,59 +121,113 @@ const DisplayFeedback = ({ feedbackData }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
+        // Log the change event
+        console.log(`Field ${name} changing to value: ${value}`);
+
+        // Create a copy of form data
         const newFormData = { ...formData };
 
-        // Update the current field
+        // Handle field value based on input type
         if (name === 'courseName' || name === 'semester') {
+            // Text fields - store as is
             newFormData[name] = value;
+        } else if (name === 'feedbackPercentage') {
+            // Direct edit of feedback percentage
+            const numValue = value === '' ? '' : Number(value);
+            newFormData.feedbackPercentage = numValue;
+
+            // If this is a valid number, update self-assessment marks
+            if (!isNaN(numValue) && numValue !== '') {
+                if (numValue >= 90) newFormData.selfAssessmentMarks = 10;
+                else if (numValue >= 80) newFormData.selfAssessmentMarks = 8;
+                else if (numValue >= 70) newFormData.selfAssessmentMarks = 6;
+                else newFormData.selfAssessmentMarks = 4;
+            }
         } else {
-            newFormData[name] = Number(value) || 0;
-        }
+            // Number fields
+            newFormData[name] = value === '' ? '' : Number(value);
 
-        // Calculate values when numberOfStudents or passCount changes
-        if (name === 'numberOfStudents' || name === 'passCount') {
-            const students = Number(newFormData.numberOfStudents);
-            const passed = Number(newFormData.passCount);
+            // If we're changing numberOfStudents or passCount, recalculate the feedback percentage
+            if ((name === 'numberOfStudents' || name === 'passCount') &&
+                newFormData.numberOfStudents && newFormData.passCount) {
 
-            // Validate passCount cannot be greater than numberOfStudents
-            if (name === 'passCount' && passed > students) {
-                newFormData.passCount = students;
-            }
+                const students = Number(newFormData.numberOfStudents);
+                const passed = Number(newFormData.passCount);
 
-            // Calculate feedback percentage
-            if (students > 0) {
-                const feedbackPercent = (passed / students) * 100;
-                newFormData.feedbackPercentage = Number(feedbackPercent.toFixed(2));
+                if (students > 0) {
+                    const feedbackPercent = (passed / students) * 100;
+                    newFormData.feedbackPercentage = Number(feedbackPercent.toFixed(2));
 
-                // Calculate average feedback
-                newFormData.averagePercentage = calculateAverageFeedback(feedbackPercent);
-            } else {
-                newFormData.feedbackPercentage = 0;
-                newFormData.averagePercentage = 0;
+                    // Update self assessment marks too
+                    if (feedbackPercent >= 90) newFormData.selfAssessmentMarks = 10;
+                    else if (feedbackPercent >= 80) newFormData.selfAssessmentMarks = 8;
+                    else if (feedbackPercent >= 70) newFormData.selfAssessmentMarks = 6;
+                    else newFormData.selfAssessmentMarks = 4;
+                }
             }
         }
 
-        console.log('Updated form data:', newFormData); // Debug log
+        // Log the updated form data
+        console.log('Updated form data:', newFormData);
+
+        // Update state
         setFormData(newFormData);
     };
 
     const handleEdit = async (e) => {
         e.preventDefault();
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${selectedFeedback._id}?userId=${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
-        const result = await response.json();
-        if (result.success) {
-            toast.success("Feedback updated successfully");
-            setShowEditForm(false);
-            fetchData(); // This will recalculate the averages
-        } else {
-            toast.error("Failed to update feedback");
+
+        try {
+            const userId = localStorage.getItem('userId');
+
+            // Make sure the form data is properly formatted with correct types
+            const payload = {
+                courseName: formData.courseName,
+                semester: formData.semester,
+                numberOfStudents: Number(formData.numberOfStudents),
+                feedbackPercentage: Number(formData.feedbackPercentage),
+                averagePercentage: Number(formData.averagePercentage),
+                selfAssessmentMarks: Number(formData.selfAssessmentMarks || 0),
+            };
+
+            // Log what we're sending to the server
+            console.log("Sending update payload:", payload);
+
+            const response = await fetch(`${backendUrl}/classes/feedback/${selectedFeedback._id}?userId=${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // Log the entire response for debugging
+            const responseText = await response.text();
+            console.log("Raw response:", responseText);
+
+            let result;
+            try {
+                // Try to parse the response as JSON
+                result = JSON.parse(responseText);
+            } catch (err) {
+                console.error("Failed to parse response as JSON:", err);
+                toast.error("Server returned an invalid response");
+                return;
+            }
+
+            if (response.ok && result.success) {
+                toast.success("Feedback updated successfully");
+                setShowEditForm(false);
+                fetchData(); // Refresh the data
+            } else {
+                // Show a detailed error message
+                toast.error(result.message || "Failed to update feedback");
+                console.error("Update failed:", result);
+            }
+        } catch (error) {
+            console.error("Error in handleEdit:", error);
+            toast.error(`Error: ${error.message}`);
         }
     };
 
@@ -184,17 +240,31 @@ const DisplayFeedback = ({ feedbackData }) => {
         const passed = Number(formData.passCount);
         const feedbackPercent = students > 0 ? ((passed / students) * 100).toFixed(2) : 0;
 
+        // Calculate self-assessment marks based on feedback percentage
+        let selfAssessment = 4; // default value
+        const feedbackPercentNumber = Number(feedbackPercent);
+        if (feedbackPercentNumber >= 90) {
+            selfAssessment = 10;
+        } else if (feedbackPercentNumber >= 80) {
+            selfAssessment = 8;
+        } else if (feedbackPercentNumber >= 70) {
+            selfAssessment = 6;
+        }
+
         // Prepare payload matching the schema
         const payload = {
             courseName: formData.courseName,
             semester: formData.semester,
             numberOfStudents: Number(formData.numberOfStudents),
             feedbackPercentage: Number(feedbackPercent),
-            averagePercentage: Number(formData.averagePercentage)
+            averagePercentage: Number(formData.averagePercentage),
+            selfAssessmentMarks: Number(selfAssessment) // Include this value
         };
 
+        console.log("Sending feedback data:", payload); // Debug log to verify payload
+
         try {
-            const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${userId}`, {
+            const response = await fetch(`${backendUrl}/classes/feedback/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -202,18 +272,21 @@ const DisplayFeedback = ({ feedbackData }) => {
                 body: JSON.stringify(payload)
             });
 
-            if (response.ok) {
-                const result = await response.json();
+            const result = await response.json();
+            console.log("Server response:", result); // Debug log to see response
+
+            if (response.ok && result.success) {
                 setData([...data, result.feedback]);
                 setShowAddForm(false);
                 fetchData();
                 toast.success('Feedback added successfully');
             } else {
-                toast.error('Failed to add feedback');
+                toast.error(result.error || 'Failed to add feedback');
+                console.error('Error response:', result);
             }
         } catch (error) {
             console.error('Error adding feedback:', error);
-            toast.error('Failed to add feedback');
+            toast.error('Failed to add feedback: ' + error.message);
         }
     };
 
@@ -224,7 +297,7 @@ const DisplayFeedback = ({ feedbackData }) => {
             console.error('Feedback ID is undefined');
             return;
         }
-        const response = await fetch(`https://aditya-b.onrender.com/classes/feedback/${id}?userId=${userId}`, {
+        const response = await fetch(`${backendUrl}/classes/feedback/${id}?userId=${userId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -657,6 +730,11 @@ const DisplayFeedback = ({ feedbackData }) => {
                                 }}>
                                     <p style={{ margin: '5px 0', fontWeight: '500' }}>Feedback Percentage: <span style={{ color: '#1a4b88' }}>{formData.feedbackPercentage}%</span></p>
                                     <p style={{ margin: '5px 0', fontWeight: '500' }}>Average Percentage: <span style={{ color: '#1a4b88' }}>{formData.averagePercentage}%</span></p>
+                                    <p style={{ margin: '5px 0', fontWeight: '500' }}>Self-Assessment Marks: <span style={{ color: '#1a4b88' }}>
+                                        {formData.feedbackPercentage >= 90 ? 10 :
+                                            formData.feedbackPercentage >= 80 ? 8 :
+                                                formData.feedbackPercentage >= 70 ? 6 : 4}
+                                    </span></p>
                                 </div>
                             </div>
 

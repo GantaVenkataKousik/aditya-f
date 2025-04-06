@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import './DisplayProctoring.css'; // Import the CSS file
 import { toast, ToastContainer } from 'react-toastify';
 import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ProctoringTable = ({ proctoringData, onDataChange, userId, viewMode = false }) => {
     const [data, setData] = useState(proctoringData || []);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedProctor, setSelectedProctor] = useState(null);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         totalStudents: '',

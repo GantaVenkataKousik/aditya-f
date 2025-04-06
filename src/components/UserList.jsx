@@ -269,8 +269,7 @@ const UserList = () => {
             return op.details.deletedEntity;
         }
         else if (op.operation === 'UPDATE') {
-            // Handle update case...
-            return { ...};
+            return { ...op.details.updatedEntity };
         }
         return {};
     };

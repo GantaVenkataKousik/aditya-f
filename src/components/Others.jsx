@@ -141,7 +141,7 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Added userId as query parameter for operation logging
+      // Added userId as query parameter for operation logging
       const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${currentIndex}?userId=${userId}`, {
         method: 'PUT',
         headers: {
@@ -194,7 +194,7 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Added userId as query parameter for operation logging
+      // Added userId as query parameter for operation logging
       const response = await fetch(`https://aditya-b.onrender.com/activities/${userId}/${index}?userId=${userId}`, {
         method: 'DELETE',
         headers: {
@@ -247,8 +247,8 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Now using userId instead of document ID
-      const response = await fetch(`https://aditya-b.onrender.com/responsibilities/${userId}/${currentIndex}`, {
+      // Added userId as query parameter for operation logging
+      const response = await fetch(`https://aditya-b.onrender.com/responsibilities/${userId}/${currentIndex}?userId=${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -305,8 +305,8 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Now using userId instead of document ID
-      const response = await fetch(`https://aditya-b.onrender.com/responsibilities/${userId}/${index}`, {
+      // Added userId as query parameter for operation logging
+      const response = await fetch(`https://aditya-b.onrender.com/responsibilities/${userId}/${index}?userId=${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -358,8 +358,8 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Now using userId instead of document ID
-      const response = await fetch(`https://aditya-b.onrender.com/contribution/${userId}/${currentIndex}`, {
+      // Added userId as query parameter for operation logging
+      const response = await fetch(`https://aditya-b.onrender.com/contribution/${userId}/${currentIndex}?userId=${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -416,8 +416,8 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Now using userId instead of document ID
-      const response = await fetch(`https://aditya-b.onrender.com/contribution/${userId}/${index}`, {
+      // Added userId as query parameter for operation logging
+      const response = await fetch(`https://aditya-b.onrender.com/contribution/${userId}/${index}?userId=${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -463,7 +463,8 @@ const Others = ({ data: propsData }) => {
       const userId = getUserId();
       const token = localStorage.getItem('token');
 
-      const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${currentIndex}`, {
+      // Added userId as query parameter for operation logging
+      const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${currentIndex}?userId=${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -471,7 +472,7 @@ const Others = ({ data: propsData }) => {
         },
         body: JSON.stringify({
           Award: AwardName,
-          Aware: AwardedBy,
+          AwardedBy: AwardedBy,
           Level: level,
           Description: description
         })
@@ -522,8 +523,8 @@ const Others = ({ data: propsData }) => {
 
       const token = localStorage.getItem('token');
 
-      // FIXED: Now using userId instead of document ID
-      const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${index}`, {
+      // Added userId as query parameter for operation logging
+      const response = await fetch(`https://aditya-b.onrender.com/awards/${userId}/${index}?userId=${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -541,6 +542,7 @@ const Others = ({ data: propsData }) => {
         setAwards(prevItems =>
           prevItems.filter((_, i) => i !== index)
         );
+        fetchAll();
       } else {
         toast.error(data.message || 'Failed to delete award');
         console.error('Delete failed:', data);
@@ -922,7 +924,7 @@ const Others = ({ data: propsData }) => {
                       <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
                         <button
                           className="no-print"
-                          onClick={(e) => { e.stopPropagation(); handleResponsibilityUpdateClick(res, index); }}
+                          onClick={(e) => { e.stopPropagation(); handleContributionUpdateClick(cont, index); }}
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -946,7 +948,7 @@ const Others = ({ data: propsData }) => {
                         </button>
                         <button
                           className="no-print"
-                          onClick={(e) => { e.stopPropagation(); handleResponsibilityDelete(index); }}
+                          onClick={(e) => { e.stopPropagation(); handleContributionDelete(index); }}
                           style={{
                             display: 'flex',
                             alignItems: 'center',

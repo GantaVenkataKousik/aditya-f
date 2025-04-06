@@ -479,7 +479,185 @@ const UserList = () => {
                     </div>
                 );
 
-            // Add more cases for Research, Workshop, Others, etc.
+            case 'Others.Activity':
+                return (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity Details</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {modelOperations.map((op, idx) => {
+                                    const entityData = getEntityDataFromOperation(op);
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50">
+                                            <td className="px-3 py-2 whitespace-nowrap">
+                                                <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
+                                                    {op.operation}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                                                {formatDateTime(op.timestamp)}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {op.userId?.fullName || 'Unknown'}
+                                                {op.userId?.designation && (
+                                                    <span className="text-gray-500 ml-1">
+                                                        ({op.userId.designation})
+                                                    </span>
+                                                )}
+                                            </td>
+                                            {renderCellWithHighlight(op, 'activityDetails', entityData.activityDetails)}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+
+            case 'Others.Responsibility':
+                return (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responsibility</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned By</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {modelOperations.map((op, idx) => {
+                                    const entityData = getEntityDataFromOperation(op);
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50">
+                                            <td className="px-3 py-2 whitespace-nowrap">
+                                                <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
+                                                    {op.operation}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                                                {formatDateTime(op.timestamp)}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {op.userId?.fullName || 'Unknown'}
+                                                {op.userId?.designation && (
+                                                    <span className="text-gray-500 ml-1">
+                                                        ({op.userId.designation})
+                                                    </span>
+                                                )}
+                                            </td>
+                                            {renderCellWithHighlight(op, 'Responsibility', entityData.Responsibility)}
+                                            {renderCellWithHighlight(op, 'assignedBy', entityData.assignedBy)}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+
+            case 'Others.Contribution':
+                return (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contribution Details</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Benefit</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {modelOperations.map((op, idx) => {
+                                    const entityData = getEntityDataFromOperation(op);
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50">
+                                            <td className="px-3 py-2 whitespace-nowrap">
+                                                <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
+                                                    {op.operation}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                                                {formatDateTime(op.timestamp)}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {op.userId?.fullName || 'Unknown'}
+                                                {op.userId?.designation && (
+                                                    <span className="text-gray-500 ml-1">
+                                                        ({op.userId.designation})
+                                                    </span>
+                                                )}
+                                            </td>
+                                            {renderCellWithHighlight(op, 'contributionDetails', entityData.contributionDetails)}
+                                            {renderCellWithHighlight(op, 'Benefit', entityData.Benefit)}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+
+            case 'Others.Award':
+                return (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operation</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Award Name</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Awarded By</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
+                                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {modelOperations.map((op, idx) => {
+                                    const entityData = getEntityDataFromOperation(op);
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50">
+                                            <td className="px-3 py-2 whitespace-nowrap">
+                                                <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getOperationBadgeColor(op.operation)}`}>
+                                                    {op.operation}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                                                {formatDateTime(op.timestamp)}
+                                            </td>
+                                            <td className="px-3 py-2 whitespace-nowrap text-sm">
+                                                {op.userId?.fullName || 'Unknown'}
+                                                {op.userId?.designation && (
+                                                    <span className="text-gray-500 ml-1">
+                                                        ({op.userId.designation})
+                                                    </span>
+                                                )}
+                                            </td>
+                                            {renderCellWithHighlight(op, 'Award', entityData.Award)}
+                                            {renderCellWithHighlight(op, 'AwardedBy', entityData.AwardedBy)}
+                                            {renderCellWithHighlight(op, 'Level', entityData.Level)}
+                                            {renderCellWithHighlight(op, 'Description', entityData.Description)}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+
+            // Existing default case or other model types...
             default:
                 return (
                     <div className="overflow-x-auto">
@@ -572,7 +750,10 @@ const UserList = () => {
                                     <option value="Feedback">Feedback</option>
                                     <option value="Research">Research</option>
                                     <option value="Workshop">Workshop</option>
-                                    <option value="Others">Others</option>
+                                    <option value="Others.Activity">Activity</option>
+                                    <option value="Others.Responsibility">Responsibility</option>
+                                    <option value="Others.Contribution">Contribution</option>
+                                    <option value="Others.Award">Award</option>
                                 </select>
 
                                 <select
